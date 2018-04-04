@@ -1,0 +1,3 @@
+pipenv install discord-rewrite
+pipenv shell
+pip install --process-dependency-links -U Red-Discordbot\[test,docs\]
