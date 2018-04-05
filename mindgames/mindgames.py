@@ -3,7 +3,7 @@ import random
 
 from discord.ext import commands
 from redbot.core import checks
-from redbot.core import Config
+from redbot.core import Config, bank
 
 from redbot.core.bot import Red
 
