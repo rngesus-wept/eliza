@@ -3,6 +3,7 @@ import discord
 import re
 
 
+MAX_DESC_CAPACITY = 2048
 MAX_FIELD_CAPACITY = 1024
 RE_HANGING_PARAGRAPHS = re.compile(r'\n(?=\S)')
 
@@ -20,10 +21,39 @@ class OverlongEmbedComponentError(UtilityError):
         len(item), MAX_FIELD_CAPACITY, item))
 
 
-def paginated_embed(*,
-                    fields,
-                    break_re=RE_HANGING_PARAGRAPHS,
-                    **embed_kwargs):
+def paginated_embed_content(*,
+                            title,
+                            content,
+                            break_re=RE_HANGING_PARAGRAPHS,
+                            rejoin='\n',
+                            **embed_kwargs):
+  """Generate a list of embeds, resulting from the pagination of CONTENT."""
+  embed_descs, capacity = [[]], MAX_DESC_CAPACITY
+  for fragment in re.split(break_re, content):
+    if len(fragment) > MAX_DESC_CAPACITY:
+      raise OverlongEmbedComponentError(fragment)
+    if len(fragment) < capacity:
+      embed_descs[-1].append(fragment)
+      capacity -= len(fragment) + 1
+    else:
+      embed_descs.append([fragment])
+      capacity = MAX_DESC_CAPACITY - len(fragment)
+
+  if len(embed_descs) == 1:
+    return [discord.Embed(title=title,
+                          description=rejoin.join(embed_descs[0]),
+                          **embed_kwargs)]
+  else:
+    return [discord.Embed(title='%s (%d/%d)' % (title, idx, len(embed_descs)),
+                          description=rejoin.join(fragments),
+                          **embed_kwargs)
+            for idx, fragments in enumerate(embed_descs, start=1)]
+
+
+def paginated_embed_fields(*,
+                           fields,
+                           break_re=RE_HANGING_PARAGRAPHS,
+                           **embed_kwargs):
   """Generate a list of embeds, resulting from the pagination of FIELDS content.
 
   Args:

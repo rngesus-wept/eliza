@@ -115,8 +115,9 @@ Go on, tell it where the bodies are buried!"""
       }
       await guild_secrets.set(secrets_dict)
 
-      await ctx.send('{} just told me a secret about `{}`: `{}...`'.format(
-          ctx.author.mention, desc, digest[:8]))
+      await ctx.author.send(
+          ':thumbsup: Stored your secret about {} as `{}...`'.format(
+            desc, digest[:8]))
 
   async def check_permission(self, user: discord.Member, whitelist):
     keys = ['u:' + user.id] + ['r:' + role.id for role in user.roles]
@@ -156,18 +157,37 @@ Go on, tell it where the bodies are buried!"""
     else:
       secrets_dict = await self.get_some_secrets(ctx.guild, prefix)
 
-    for embed in utils.paginated_embed(
+    for embed in utils.paginated_embed_fields(
         title='Secrets', color=0xDD3333,
         fields=format_secrets_list(secrets_dict, ctx.author)):
       await ctx.send(embed=embed)
       await asyncio.sleep(.5)
 
-    # embed = format_secrets_list(secrets_dict, ctx.author)
-    # await ctx.send(embed=embed)
+  @_secret.command(name='mine')
+  async def secret_mine(self, ctx: commands.Context, prefix=None):
+    """List secrets created by the caller."""
+    if prefix is None:
+      secrets_dict = await self.get_all_secrets(ctx.guild)
+    else:
+      secrets_dict = await self.get_some_secrets(ctx.guild, prefix)
+
+    my_secrets_dict = {digest: secret for digest, secret in secrets_dict.items()
+                       if secret['creator'] == ctx.author.mention}
+
+    for embed in utils.paginated_embed_content(
+        title='Your secrets',
+        content='\n'.join(format_secret(digest, secret)
+                          for digest, secret
+                          in trim_digest_display(my_secrets_dict)),
+        color=0x3333DD):
+      await ctx.send(embed=embed)
+      await asyncio.sleep(.5)
 
   @_secret.command(name='delete')
   async def secret_delete(self, ctx: commands.Context, digest):
     """Delete a secret."""
+    secrets_dict = await self.get_some_secrets(ctx.guild, digest)
+
     pass
 
   @_secret.command(name='share')
@@ -195,20 +215,24 @@ def rng_salt(chars, length):
   return ''.join(random.choice(chars) for _ in range(length))
 
 
-def format_secret_public(digest, secret):
+def trim_digest_display(secrets_dict):
+  """Trim digest keys down as much as possible, preserving uniqueness."""
+  for prefix_length in range(8, 100):
+    new_keys = set(digest[:prefix_length] for digest in secrets_dict)
+    if len(new_keys) == len(secrets_dict):
+      return sorted(((digest[:prefix_length], secret)
+                     for digest, secret in secrets_dict.items()),
+                    key=lambda pair: pair[0])
+
+
+def format_secret(digest, secret):
   return '`{}...`: {}\n    by {} at {}'.format(
     digest, secret['desc'], secret['creator'],
     time.strftime('%Y-%m-%d %H:%M:%S UTC%z', time.localtime(secret['created'])))
 
 
 def format_secrets_list(secrets_dict, user: discord.Member):
-  for prefix_length in range(8, 100):
-    new_keys = set(digest[:prefix_length] for digest in secrets_dict)
-    if len(new_keys) == len(secrets_dict):
-      new_dict = sorted(((digest[:prefix_length], secret)
-                         for digest, secret in secrets_dict.items()),
-                        key=lambda pair: pair[0])
-      break
+  new_dict = trim_digest_display(secrets_dict)
 
   private, peekable, showable = [], [], []
   user_keys = set(['u:%d' % user.id] + ['r:%d' % role.id for role in user.roles])
@@ -224,16 +248,13 @@ def format_secrets_list(secrets_dict, user: discord.Member):
   if showable:
     content.append((
       'Secrets you may `reveal`',
-      '\n'.join(format_secret_public(digest, secret)
-                for digest, secret in showable)))
+      '\n'.join(format_secret(digest, secret) for digest, secret in showable)))
   if peekable:
     content.append((
       'Secrets you may `peek` at',
-      '\n'.join(format_secret_public(digest, secret)
-                for digest, secret in peekable)))
+      '\n'.join(format_secret(digest, secret) for digest, secret in peekable)))
   if private:
     content.append((
       'Secrets hidden from you',
-      '\n'.join(format_secret_public(digest, secret)
-                for digest, secret in private)))
+      '\n'.join(format_secret(digest, secret) for digest, secret in private)))
   return content
