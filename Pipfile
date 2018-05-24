@@ -1,13 +1,11 @@
 [[source]]
+url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
-url = "https://pypi.python.org/simple"
 
-[requires]
-python_version = "3.5"
+[packages]
 
 [dev-packages]
 
-[packages]
-discord-rewrite = "*"
-red-discordbot = "*"
+[requires]
+python_version = "3.6"
