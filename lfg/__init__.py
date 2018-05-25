@@ -3,4 +3,5 @@ from .lfg import Lfg
 
 
 def setup(bot: Red):
-  bot.add_cog(Lfg(bot))
+  lfg_module = Lfg(bot)
+  bot.add_cog(lfg_module)
