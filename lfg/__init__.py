@@ -1,5 +1,5 @@
 from redbot.core.bot import Red
-from .lfg import Lfg
+from .lfg import GuildQueue, Lfg
 
 
 def setup(bot: Red):
