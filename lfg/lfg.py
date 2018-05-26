@@ -1,6 +1,8 @@
 """Cog for tracking players looking to play certain games."""
 
 import asyncio
+import heapq
+import itertools
 import logging
 import time
 
@@ -26,7 +28,54 @@ class NoSuchQueueError(Exception):
 
 
 class GuildQueue:
-  pass
+
+  REMOVED = '<removed-member>'
+
+  def __init__(self, name, guild, role, default_time):
+    self.name = name
+    self.role = role                  # discord.py Role object
+    self.default_time = default_time  # time to wait in queue, in minutes
+
+    self.queue = []  # maintain using heapq
+    self.finder = {}
+    self.id_count = itertools.count()
+
+  def __contains__(self, member):
+    return member in self.finder
+
+  def __len__(self):
+    return len(self.queue)
+
+  def Clear(self):
+    self.queue = []
+    self.finder = {}
+
+  def AddMember(self, member, wait_time=None):
+    wait_time = wait_time or self.default_time
+    if member in self.finder:
+      self.RemoveMember(member)
+    count = next(id_count)
+    queued_member = [int(time.time()) + wait_time * 60,
+                     count, member]
+    self.finder[member] = queued_member
+    heapq.heappush(self.queue, queued_member)
+
+  def RemoveMember(self, member):
+    queued_member = self.finder.pop(member)
+    queued_member[-1] = GuildQueue.REMOVED
+
+  def PopMember(self):
+    member = heapq.heappop(self.queue)[2]
+    del self.finder[member]
+    return member
+
+  def ListMembers(self):
+    return [queued_member[2] for queued_member in self.queue]
+
+  def Overdue(self):
+    while self.queue[0][2] == GuildQueue.REMOVED:
+      heapq.heappop(self.queue)
+    return (time.time() > self.queue[0][0]) if self.queue else False
 
 
 class Lfg:
