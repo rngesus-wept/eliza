@@ -20,6 +20,15 @@ log = logging.getLogger('lfg')
 
 ## TODO: Refactor queue name validation to happen at get-time
 
+
+class NoSuchQueueError(Exception):
+  pass
+
+
+class GuildQueue:
+  pass
+
+
 class Lfg:
 
   default_guild_settings = {
@@ -39,20 +48,67 @@ class Lfg:
     self.monitoring = {}
     self.watch_interval = 60  # seconds
 
+  def __unload(self):
+    for guild_id in self.monitoring:
+      self.monitoring[guild_id] = False
+
+  ####### Internal accessors
+
+  async def get_queue_data(self, guild, queue_name):
+    """Returns a dictionary containing the config data for the QUEUE_NAME queue in GUILD.
+
+    Currently, this return value has keys 'name', 'role_id', 'mention', and 'default_time'."""
+    queue_data = await self.config.guild(guild).get_raw(
+        'queues', queue_name.lower(), default=None)
+    if queue_data is None:
+      raise NoSuchQueueError
+    return queue_data
+
+  async def set_queue_data(self, guild, queue_name, datum):
+    """Sets the QUEUE_NAME queue in GUILD to have config DATUM."""
+    await self.config.guild(guild).set_raw(
+        'queues', queue_name.lower(), value=datum)
+
+  async def add_to_queue(self, person, guild, queue, minutes):
+    """Add a PERSON to QUEUE in GUILD for MINUTES.
+
+    Returns True if that person was new to the queue, or False if their time is
+    just being refreshed."""
+    new_in_queue, queue_name = True, queue['name'].lower()
+    queue_role = discord.utils.get(guild.roles, id=queue['role_id'])
+    async with self.config.member(person).queues() as queues:
+      if queue_name not in queues:
+        queues.append(queue_name)
+    async with self.config.guild(guild).timeouts() as timeouts:
+      if (person.id, queue_name) in timeouts:
+        new_in_queue = False
+      timeouts[repr((person.id, queue_name))] = int(time.time()) + 60 * minutes
+    await person.add_roles(queue_role)
+    return new_in_queue
+
+  async def remove_from_queue(self, person, guild, queue):
+    """Remove a PERSON from QUEUE in GUILD."""
+    queue_name = queue['name'].lower()
+    queue_role = discord.utils.get(guild.roles, id=queue['role_id'])
+    async with self.config.member(person).queues() as queues:
+      queues.remove(queue_name)
+    async with self.config.guild(guild).timeouts() as timeouts:
+      del timeouts[repr((person.id, queue_name))]
+    await person.remove_roles(queue_role)
+
+  async def remove_from_all_queues(self, person, guild):
+    for queue_name in (await self.config.member(person).queues())[:]:
+      await self.remove_from_queue(person, guild,
+                                   await self.get_queue_data(guild, queue_name))
+
+  ####### Commands
+
   @commands.group(name='queue', invoke_without_command=True)
   async def _queue(self, ctx: commands.Context):
     """LFG queue management functions.
 
     To actually join or leave queues, see the `lfg` command group."""
     await ctx.send_help()
-
-  async def get_queue_data(self, guild, queue_name):
-    return await self.config.guild(guild).get_raw(
-        'queues', queue_name.lower(), default=None)
-
-  async def set_queue_data(self, guild, queue_name, datum):
-    await self.config.guild(guild).set_raw(
-        'queues', queue_name.lower(), value=datum)
 
   @_queue.command(name='create')
   @commands.guild_only()
@@ -114,7 +170,18 @@ class Lfg:
     await ctx.send('Okay, starting queue monitoring.')
     self.monitoring[ctx.guild.id] = True
     while self.monitoring[ctx.guild.id]:
-      await ctx.send('Heartbeat')
+      now = int(time.time())
+      async with self.config.guild(ctx.guild).timeouts() as timeouts:
+        timeout_data = list(timeouts.items())
+        for key, deadline in timeout_data:
+          member_id, queue_name = eval(key)
+          if now >= deadline:
+            member = ctx.guild.get_member(member_id)
+            queue = await self.get_queue_data(ctx.guild, queue_name)
+            await self.remove_from_queue(member, ctx.guild, queue)
+            await ctx.send(
+                '%s has stopped waiting in the `%s` queue due to timeout.' % (
+                    member.mention, queue_name))
       await asyncio.sleep(self.watch_interval)
 
   @_queue.command(name='stop')
@@ -124,42 +191,6 @@ class Lfg:
     """Stop the background process for queue monitoring in the current guild."""
     await ctx.send('Okay, stopping queue monitoring for this guild.')
     self.monitoring[ctx.guild.id] = False
-
-  def __unload(self):
-    for guild_id in self.monitoring:
-      self.monitoring[guild_id] = False
-
-  async def add_to_queue(self, person, guild, queue, minutes):
-    """Add a PERSON to QUEUE in GUILD for MINUTES.
-
-    Returns True if that person was new to the queue, or False if their time is
-    just being refreshed."""
-    new_in_queue, queue_name = True, queue['name'].lower()
-    queue_role = discord.utils.get(guild.roles, id=queue['role_id'])
-    async with self.config.member(person).queues() as queues:
-      if queue_name not in queues:
-        queues.append(queue_name)
-    async with self.config.guild(guild).timeouts() as timeouts:
-      if (person.id, queue_name) in timeouts:
-        new_in_queue = False
-      timeouts[repr((person.id, queue_name))] = minutes
-    await person.add_roles(queue_role)
-    return new_in_queue
-
-  async def remove_from_queue(self, person, guild, queue):
-    """Remove a PERSON from QUEUE in GUILD."""
-    queue_name = queue['name'].lower()
-    queue_role = discord.utils.get(guild.roles, id=queue['role_id'])
-    async with self.config.member(person).queues() as queues:
-      queues.remove(queue_name)
-    async with self.config.guild(guild).timeouts() as timeouts:
-      del timeouts[repr((person.id, queue_name))]
-    await person.remove_roles(queue_role)
-
-  async def remove_from_all_queues(self, person, guild):
-    for queue_name in (await self.config.member(person).queues())[:]:
-      await self.remove_from_queue(person, guild,
-                                   await self.get_queue_data(guild, queue_name))
 
   @commands.group(name='lfg', invoke_without_command=True)
   @commands.guild_only()
@@ -190,3 +221,11 @@ class Lfg:
     """Remove yourself from all LFG queues in this server."""
     await ctx.send('Okay, removing you from all queues in this server.')
     await self.remove_from_all_queues(ctx.author, ctx.guild)
+
+  # @_lfg.command(name='list')
+  # @commands.guild_only()
+  # async def lfg_list(self, ctx: commands:Context, queue_name=None):
+  #   if queue_name is not None:
+  #     queue_data = self.get_queue_data(ctx.guild, queue_name)
+  #     if queue_data is None:
+  #       await ctx.send('Sorry, there doesn\'t appear to be an LFG queue for that.')
