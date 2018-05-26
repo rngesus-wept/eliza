@@ -31,8 +31,9 @@ class GuildQueue:
 
   REMOVED = '<removed-member>'
 
-  def __init__(self, name, guild, role, default_time):
-    self.name = name
+  def __init__(self, name, role, default_time):
+    self.name = name.lower()
+    self.dname = name                 # display name
     self.role = role                  # discord.py Role object
     self.default_time = default_time  # time to wait in queue, in minutes
 
@@ -82,18 +83,15 @@ class Lfg:
 
   default_guild_settings = {
     'queues': {},
-    'timeouts': {},  # a dictionary of (user, queue_name): exit_time pairings
-  }
-
-  default_member_settings = {
-    'queues': [],    # a list of queue names
   }
 
   def __init__(self, bot: Red):
     self.bot = bot
     self.config = Config.get_conf(self, 0x45B277A910C8D1E5, force_registration=True)
     self.config.register_guild(**self.default_guild_settings)
-    self.config.register_member(**self.default_member_settings)
+
+    ## TODO: Initialize this queue state on startup
+    self.guild_queues = {}
     self.monitoring = {}
     self.watch_interval = 60  # seconds
 
@@ -159,26 +157,56 @@ class Lfg:
     To actually join or leave queues, see the `lfg` command group."""
     await ctx.send_help()
 
+  @_queue.command(name='load')
+  @commands.guild_only()
+  @checks.admin()
+  async def queue_load(self, ctx: commands.Context):  ## !queue load
+    """Load queue configs for this guild."""
+    queues = []
+    async with self.config.guild(ctx.guild).queues() as queues:
+      for queue_name, queue_config in queues.items():
+        queues.push('`%s`' % queue_name)
+        self.guild_queues[queue_config['name'].lower()] = GuildQueue(
+            name=queue_config['name'],
+            role=discord.utils.get(ctx.guild.roles, id=queue_config['role_id']),
+            default_time=queue_config['default_time'])
+    await ctx.send('Loaded %d queue configurations: %s' % (len(queues),
+                                                           ', '.join(queues)))
+
   @_queue.command(name='create')
   @commands.guild_only()
   @checks.admin()
   async def queue_create(self, ctx: commands.Context, name):  ## !queue create
     """Create a new queue."""
-    queue_data = await self.get_queue_data(ctx.guild, name)
-    if queue_data is not None:
+    if name.lower() in self.guild_queues:
       await ctx.send('Sorry, it looks like there\'s already a queue in place for %s.' % name)
     else:
       new_role = await ctx.guild.create_role(name='LFG %s' % name)
+      self.guild_queues[name.lower()] = GuildQueue(
+          name=name, role=new_role, default_time=60)
       config_datum = {
         'name': name,
         'role_id': new_role.id,
-        'mention': new_role.mention,
         'default_time': 60,  # minutes = 1 hour
       }
-      await self.set_queue_data(ctx.guild, name, config_datum)
+      await self.config.guild(ctx.guild).set_raw(
+          'queues', name.lower(), value=config_datum)
       await new_role.edit(mentionable=True, position=1)
+      await ctx.send('Created new queue `%s` with role %s' % (name.lower(), new_role.mention))
 
-      await ctx.send('Created new queue with role %s' % new_role.mention)
+  @_queue.command(name='settime')
+  @commands.guild_only()
+  @checks.admin()
+  async def queue_settime(self, ctx: commands.Context, name, wait_time):
+    """Set the default wait time for a queue."""
+    if name.lower() not in self.guild_queues:
+      await ctx.send('I don\'t recognize any queue `%s`.' % name.lower())
+    else:
+      self.guild_queues[name.lower()].default_time = wait_time
+      await self.config.guild(ctx.guild).set_raw(
+          'queues', name.lower(), 'default_time', value=wait_time)
+      await ctx.send('Set queue `%s` to have default wait time %d minutes.' % (
+          name.lower(), wait_time)
 
   @_queue.command(name='list')
   @commands.guild_only()
