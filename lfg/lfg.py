@@ -165,6 +165,8 @@ class Lfg:
     queues = []
     async with self.config.guild(ctx.guild).queues() as queues:
       for queue_name, queue_config in queues.items():
+        if queue_config is None:  # queue may have existed before but was deleted
+          continue
         queues.push('`%s`' % queue_name)
         self.guild_queues[queue_config['name'].lower()] = GuildQueue(
             name=queue_config['name'],
@@ -206,37 +208,29 @@ class Lfg:
       await self.config.guild(ctx.guild).set_raw(
           'queues', name.lower(), 'default_time', value=wait_time)
       await ctx.send('Set queue `%s` to have default wait time %d minutes.' % (
-          name.lower(), wait_time)
+          name.lower(), wait_time))
 
   @_queue.command(name='list')
   @commands.guild_only()
   async def queue_list(self, ctx: commands.Context):  ## !queue list
     """List available LFG queues."""
-    all_queues = await self.config.guild(ctx.guild).get_raw('queues', default=None)
-    if all_queues:
-      queue_list = [name for name in all_queues if all_queues[name]]
-    else:
-      queue_list = []
-    if not queue_list:
+    if not self.queues:
       await ctx.send('There don\'t appear to be any LFG queues you can join...')
     else:
       await ctx.send('There %s %d queue%s you can join:\n    `%s`' % (
-        'is' if len(queue_list) == 1 else 'are', len(queue_list),
-        's' if len(queue_list) > 1 else '', '`, `'.join(queue_list)))
+        'is' if len(self.queues) == 1 else 'are', len(self.queues),
+        's' if len(self.queues) > 1 else '', '`, `'.join(self.queues)))
 
   @_queue.command(name='delete')
   @commands.guild_only()
   @checks.admin()
   async def queue_delete(self, ctx: commands.Context, name):  ## !queue delete
     """Remove a queue."""
-    queue_data = await self.get_queue_data(ctx.guild, name)
-    if queue_data is None:
+    if name.lower() not in self.queues:
       await ctx.send('Sorry, there doesn\'t appear to be a queue by that name.')
     else:
-      role = discord.utils.get(ctx.guild.roles, id=queue_data['role_id'])
-      if role is not None:
-        await role.delete()
-      await self.set_queue_data(ctx.guild, name, None)
+      await self.queues[name.lower()].role.delete()
+      await self.config.guild(ctx.guild).set_raw('queues', name.lower(), value=None)
       await ctx.send('OK, removed the queue for %s and its role.' % name)
 
   @_queue.command(name='start')
