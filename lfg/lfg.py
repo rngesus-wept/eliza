@@ -23,6 +23,9 @@ log = logging.getLogger('lfg')
 
 ## TODO: Refactor queue name validation to happen at get-time
 
+## TODO: Refactor queue-not-found errors to return early to improve nesting
+## readability
+
 
 class NoSuchQueueError(Exception):
   pass
@@ -76,12 +79,19 @@ class GuildQueue:
     return member
 
   def ListMembers(self):
-    return [queued_member[2] for queued_member in self.queue]
+    return list(self.finder)
 
   def Overdue(self):
     while self.queue and self.queue[0][2] == GuildQueue.REMOVED:
       heapq.heappop(self.queue)
     return (time.time() > self.queue[0][0]) if self.queue else False
+
+
+def is_person_text(number, verb=True):
+  if number == 1:
+    return 'is 1 person' if verb else '1 person'
+  else:
+    return ('are %d people' if verb else '%d people') % number
 
 
 class Lfg:
@@ -266,7 +276,7 @@ class Lfg:
       if await self.add_to_queue(queue, ctx.author, minutes):
         await ctx.send('%s has joined the %s queue (%d %s waiting)' % (
             ctx.author.mention, queue.role.mention, len(queue),
-            'person' if len(queue) == 1 else 'people'))
+            is_person_text(len(queue), verb=False)))
       else:
         await ctx.send('Okay, updating your time in the %s queue to %d minutes.' % (
             queue.name, minutes))
@@ -282,3 +292,17 @@ class Lfg:
           ', '.join('`%s`' % name for name in queues)))
     else:
       await ctx.send('You weren\'t in any queues.')
+
+  @_lfg.command(name='list')
+  @commands.guild_only()
+  async def lfg_list(self, ctx: commands:Context, queue_name=None):
+    if queue_name is not None:
+      queue = self.guild_queues[ctx.guild.id].get(queue_name.lower(), None)
+      if queue in None:
+        return await ctx.send('Sorry, there doesn\'t appear to be an LFG queue for that.')
+      if len(queue) == 0:
+        return await ctx.send('No one\'s currently waiting in the `%s` queue.' % queue.name)
+      return await ctx.send(
+        'There %s waiting in the `%s` queue:\n%s' % (
+          is_person_text(len(queue), verb=True), queue.name,
+          '; '.join(member.display_name for member in queue.ListMembers()))
