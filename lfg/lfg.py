@@ -354,7 +354,7 @@ class Lfg:
     await self.config.member(ctx.author).alert.set(not alert)
     if alert:  # Remember, this is the original value
       return await ctx.send('Okay, I won\'t send you direct messages for LFG pings.')
-    return await ctx.send('Okay, I\'ll send you a direct message in additon to the'
+    return await ctx.send('Okay, I\'ll send you a direct message in addition to the'
                           ' normal LFG ping.')
 
   @commands.command()
