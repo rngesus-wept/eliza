@@ -6,7 +6,6 @@ import heapq
 import itertools
 import logging
 import random
-import textwrap
 import time
 
 import discord
@@ -34,6 +33,7 @@ class NoSuchQueueError(Exception):
 
 
 class GuildQueue:
+  """Timeout-based priority queue."""
 
   REMOVED = '<removed-member>'
 
@@ -53,11 +53,22 @@ class GuildQueue:
   def __len__(self):
     return len(self.finder)
 
+  def __bool__(self):
+    return bool(self.finder)
+
   def Clear(self):
     self.queue = []
     self.finder = {}
 
   def AddMember(self, member, wait_time=None):
+    """Add a MEMBER to this queue for WAIT_TIME minutes.
+
+    Args:
+      member - A discord.Member.
+      wait_time - The number of minutes the member should remain in queue. (default:
+          self.default_time)
+    Return:
+      True if the member is new to the queue; otherwise False."""
     ## Returns True if the member wasn't in the queue already
     new_member = True
     wait_time = wait_time or self.default_time
@@ -89,28 +100,29 @@ class GuildQueue:
     return (time.time() > self.queue[0][0]) if self.queue else False
 
 
-def is_person_text(number, verb=True):
+def PersonNL(number, verb=True):
+  """Correctly conjugates "$VERB $NUMBER person/people"."""
   if number == 1:
     return 'is 1 person' if verb else '1 person'
-  else:
-    return ('are %d people' if verb else '%d people') % number
+  return ('are %d people' if verb else '%d people') % number
 
 
 class Lfg:
+  """Red cog for managing LFG queues."""
 
   default_guild_settings = {
-    'queues': {},
+      'queues': {},
   }
 
   default_member_settings = {
-    'alert': False,
+      'alert': False,
   }
 
   def __init__(self, bot: Red):
     self.bot = bot
     self.config = Config.get_conf(self, 0x45B277A910C8D1E5, force_registration=True)
     self.config.register_guild(**self.default_guild_settings)
-    self.config.register_member(**self.default_member_seetings)
+    self.config.register_member(**self.default_member_settings)
 
     ## TODO: Initialize this queue state on startup
     self.guild_queues = collections.defaultdict(dict)
@@ -122,21 +134,6 @@ class Lfg:
       self.monitoring[guild_id] = False
 
   ####### Internal accessors
-
-  async def get_queue_data(self, guild, queue_name):
-    """Returns a dictionary containing the config data for the QUEUE_NAME queue in GUILD.
-
-    Currently, this return value has keys 'name', 'role_id', 'mention', and 'default_time'."""
-    queue_data = await self.config.guild(guild).get_raw(
-        'queues', queue_name.lower(), default=None)
-    if queue_data is None:
-      raise NoSuchQueueError
-    return queue_data
-
-  async def set_queue_data(self, guild, queue_name, datum):
-    """Sets the QUEUE_NAME queue in GUILD to have config DATUM."""
-    await self.config.guild(guild).set_raw(
-        'queues', queue_name.lower(), value=datum)
 
   async def add_to_queue(self, queue, person, minutes):
     await person.add_roles(queue.role)
@@ -178,14 +175,14 @@ class Lfg:
       for queue_name, queue_config in queues.items():
         if queue_config is None:  # queue may have existed before but was deleted
           continue
-        guild_queues[queue_config['name'].lower()] = GuildQueue(
+        guild_queues[queue_name] = GuildQueue(
             name=queue_config['name'],
             role=discord.utils.get(ctx.guild.roles, id=queue_config['role_id']),
             default_time=queue_config['default_time'])
     self.guild_queues[ctx.guild.id].update(guild_queues)
     await ctx.send('Loaded %d queue configurations: %s' % (
-      len(guild_queues), ', '.join('`%s`' % queue_name for queue_name in guild_queues)))
-    await self.queue_start.callback(self, ctx, verbose=False)
+        len(guild_queues), ', '.join('`%s`' % queue_name for queue_name in guild_queues)))
+    await self.queue_start.callback(self, ctx, verbose=True)
 
   @_queue.command(name='create')
   @commands.guild_only()
@@ -199,9 +196,9 @@ class Lfg:
       self.guild_queues[ctx.guild.id][name.lower()] = GuildQueue(
           name=name, role=new_role, default_time=60)
       config_datum = {
-        'name': name,
-        'role_id': new_role.id,
-        'default_time': 60,  # minutes = 1 hour
+          'name': name,
+          'role_id': new_role.id,
+          'default_time': 60,  # minutes = 1 hour
       }
       await self.config.guild(ctx.guild).set_raw(
           'queues', name.lower(), value=config_datum)
@@ -231,8 +228,8 @@ class Lfg:
       await ctx.send('There don\'t appear to be any LFG queues you can join...')
     else:
       await ctx.send('There %s %d queue%s you can join:\n    `%s`' % (
-        'is' if len(queues) == 1 else 'are', len(queues),
-        's' if len(queues) > 1 else '', '`, `'.join(queues)))
+          'is' if len(queues) == 1 else 'are', len(queues),
+          's' if len(queues) > 1 else '', '`, `'.join(queues)))
 
   @_queue.command(name='delete')
   @commands.guild_only()
@@ -253,7 +250,7 @@ class Lfg:
   async def queue_start(self, ctx: commands.Context, verbose=True):  ## !queue start
     """Start the background process for queue monitoring in the current guild."""
     if verbose:
-      await ctx.send('Okay, starting queue monitoring.')
+      await ctx.send('Starting queue monitoring.')
     self.monitoring[ctx.guild.id] = True
     while self.monitoring[ctx.guild.id]:
       for queue in self.guild_queues[ctx.guild.id].values():
@@ -297,11 +294,11 @@ class Lfg:
       if await self.add_to_queue(queue, ctx.author, minutes):
         await ctx.send('%s has joined the %s queue (%s waiting)' % (
             ctx.author.mention, queue.role.mention,
-            is_person_text(len(queue), verb=False)))
+            PersonNL(len(queue), verb=False)))
         for member in queue.role.members:
           if member != ctx.author and await self.config.member(member).alert():
             await member.send('%s has joined you in the queue for %s.' % (
-              member.mention, queue.dname))
+                member.mention, queue.dname))
       else:
         await ctx.send('Okay, updating your time in the `%s` queue to %d minutes.' % (
             queue.name, minutes))
@@ -326,28 +323,28 @@ class Lfg:
       queue = self.guild_queues[ctx.guild.id].get(queue_name.lower(), None)
       if queue is None:
         return await ctx.send('Sorry, there doesn\'t appear to be an LFG queue for that.')
-      if len(queue) == 0:
+      if not queue:
         return await ctx.send('No one\'s currently waiting in the `%s` queue.' % queue.name)
       return await ctx.send(
-        'There %s waiting in the `%s` queue:\n%s' % (
-          is_person_text(len(queue), verb=True), queue.name,
-          '; '.join(member.display_name for member in queue.ListMembers())))
+          'There %s waiting in the `%s` queue:\n%s' % (
+              PersonNL(len(queue), verb=True), queue.name,
+              '; '.join(member.display_name for member in queue.ListMembers())))
     else:
       all_members, outputs = set(), []
-      for queue_name, queue in self.guild_queues[ctx.guild.id].items():
-        if len(queue) == 0:
-          outputs.append('`%s` (0 people)' % queue_name)
+      for q_name, queue in self.guild_queues[ctx.guild.id].items():
+        if not queue:
+          outputs.append('`%s` (0 people)' % q_name)
         else:
           all_members.update(queue.ListMembers())
           outputs.append('`%s` (%s): %s' % (
-            queue_name,
-            is_person_text(len(queue), verb=False),
-            '; '.join(member.display_name for member in queue.ListMembers())))
+              q_name,
+              PersonNL(len(queue), verb=False),
+              '; '.join(member.display_name for member in queue.ListMembers())))
       return await ctx.send('There %s waiting in %d queue%s:\n%s' % (
-        is_person_text(len(all_members), verb=True),
-        len(self.guild_queues[ctx.guild.id]),
-        's' if len(self.guild_queues[ctx.guild.id]) != 1 else '',
-        '\n'.join(outputs)))
+          PersonNL(len(all_members), verb=True),
+          len(self.guild_queues[ctx.guild.id]),
+          's' if len(self.guild_queues[ctx.guild.id]) != 1 else '',
+          '\n'.join(outputs)))
 
   @_lfg.command(name='alert')
   @commands.guild_only()
@@ -357,9 +354,8 @@ class Lfg:
     await self.config.member(ctx.author).alert.set(not alert)
     if alert:  # Remember, this is the original value
       return await ctx.send('Okay, I won\'t send you direct messages for LFG pings.')
-    else:
-      return await ctx.send('Okay, I\'ll send you a direct message in additon to the'
-                            ' normal LFG ping.')
+    return await ctx.send('Okay, I\'ll send you a direct message in additon to the'
+                          ' normal LFG ping.')
 
   @commands.command()
   @commands.guild_only()
@@ -389,7 +385,7 @@ class Lfg:
           return await ctx.send(
               'There are only %d opponents available; if you\'re sure you want to play'
               ' with that many, re-run `!play %s %d`.' % (
-                len(possible_opponents), queue.name, len(possible_opponents)))
+                  len(possible_opponents), queue.name, len(possible_opponents)))
         opponents = random.sample(possible_opponents, num_opponents)
       except ValueError:
         return await ctx.send('Sorry, could not parse the rest of your request: `%s`' %
@@ -402,8 +398,8 @@ class Lfg:
       old_queues = await self.remove_from_all_queues(player, ctx.guild)
       if await self.config.member(player).alert():
         await player.send(
-          '%s has challenged you to a game of %s! Removing you from these queues: `%s`' % (
-            ctx.author.mention, queue.dname, '`, `'.join(old_queues)))
+            '%s has challenged you to a game of %s! Removing you from these queues: `%s`' % (
+                ctx.author.mention, queue.dname, '`, `'.join(old_queues)))
     await ctx.send('%s -- %s has challenged you to a game of %s!' % (
-      ', '.join(member.mention for member in opponents),
-      ctx.author.mention, queue.dname))
+        ', '.join(member.mention for member in opponents),
+        ctx.author.mention, queue.dname))
