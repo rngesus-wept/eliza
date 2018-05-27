@@ -298,7 +298,7 @@ class Lfg:
         for member in queue.role.members:
           if member != ctx.author and await self.config.member(member).alert():
             await member.send('%s has joined you in the queue for %s.' % (
-                member.mention, queue.dname))
+                ctx.author.mention, queue.dname))
       else:
         await ctx.send('Okay, updating your time in the `%s` queue to %d minutes.' % (
             queue.name, minutes))
