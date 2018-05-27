@@ -307,8 +307,8 @@ class Lfg:
             ctx.author.mention, queue.role.mention,
             PersonNL(len(queue), verb=False)))
         for member in queue.ListMembers():
-          if member != ctx.author and await self.config.member(member).alert():
-            await member.send('%s has joined you in the queue for %s.' % (
+          if member != ctx.author:
+            await self.ping('%s has joined you in the queue for %s.' % (
                 ctx.author.mention, queue.dname))
       else:
         await ctx.send('Okay, updating your time in the `%s` queue to %d minutes.' % (
@@ -407,10 +407,9 @@ class Lfg:
     await self.remove_from_all_queues(ctx.author, ctx.guild)
     for player in opponents:
       old_queues = await self.remove_from_all_queues(player, ctx.guild)
-      if await self.config.member(player).alert():
-        await player.send(
-            '%s has challenged you to a game of %s! Removing you from these queues: `%s`' % (
-                ctx.author.mention, queue.dname, '`, `'.join(old_queues)))
+      await self.ping(
+          '%s has challenged you to a game of %s! Removing you from these queues: `%s`' % (
+              ctx.author.mention, queue.dname, '`, `'.join(old_queues)))
     await ctx.send('%s -- %s has challenged you to a game of %s!' % (
         ', '.join(member.mention for member in opponents),
         ctx.author.mention, queue.dname))
