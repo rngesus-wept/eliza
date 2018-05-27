@@ -132,6 +132,7 @@ class Lfg:
   def __unload(self):
     for guild_id in self.monitoring:
       self.monitoring[guild_id] = False
+    await self.clear_all_roles()
 
   ####### Internal accessors
 
@@ -155,6 +156,18 @@ class Lfg:
         queues.append(queue.name)
         await self.remove_from_queue(queue, person)
     return queues
+
+  async def ping(self, person, *args, **kwargs):
+    if self.config.member(person).alert():
+      return await person.send(*args, **kwargs)
+
+  async def clear_role(self, queue):
+    for member in queue.role.members:
+      member.remove_roles(queue.role)
+
+  async def clear_all_roles(self, guild):
+    for queue in self.guild_queues[guild.id].values():
+      self.clear_role(queue)
 
   ####### Commands
 
@@ -256,12 +269,10 @@ class Lfg:
       for queue in self.guild_queues[ctx.guild.id].values():
         while queue.Overdue():
           member = await self.pop_from_queue(queue)
-          await ctx.send(
-              '%s has stopped waiting in the `%s` queue due to timeout.' % (
-                  member.mention, queue.name))
-          if await self.config.member(member).alert():
-            await member.send(
-                'You\'ve dropped out of the queue for %s due to timeout.' % queue.dname)
+          self.ping(member, 'You\'ve dropped out of the queue for %s due to timeout.' % queue.dname)
+          await ctx.send('%s has stopped waiting in the `%s` queue due to timeout.' % (
+              member.mention, queue.name))
+
       await asyncio.sleep(self.watch_interval)
 
   @_queue.command(name='stop')
@@ -295,7 +306,7 @@ class Lfg:
         await ctx.send('%s has joined the %s queue (%s waiting)' % (
             ctx.author.mention, queue.role.mention,
             PersonNL(len(queue), verb=False)))
-        for member in queue.role.members:
+        for member in queue.ListMembers():
           if member != ctx.author and await self.config.member(member).alert():
             await member.send('%s has joined you in the queue for %s.' % (
                 ctx.author.mention, queue.dname))
