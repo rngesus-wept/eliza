@@ -102,10 +102,15 @@ class Lfg:
     'queues': {},
   }
 
+  default_member_settings = {
+    'alert': False,
+  }
+
   def __init__(self, bot: Red):
     self.bot = bot
     self.config = Config.get_conf(self, 0x45B277A910C8D1E5, force_registration=True)
     self.config.register_guild(**self.default_guild_settings)
+    self.config.register_member(**self.default_member_seetings)
 
     ## TODO: Initialize this queue state on startup
     self.guild_queues = collections.defaultdict(dict)
@@ -257,6 +262,9 @@ class Lfg:
           await ctx.send(
               '%s has stopped waiting in the `%s` queue due to timeout.' % (
                   member.mention, queue.name))
+          if await self.config.member(member).alert():
+            await member.send(
+                'You\'ve dropped out of the queue for %s due to timeout.' % queue.dname)
       await asyncio.sleep(self.watch_interval)
 
   @_queue.command(name='stop')
@@ -290,6 +298,10 @@ class Lfg:
         await ctx.send('%s has joined the %s queue (%s waiting)' % (
             ctx.author.mention, queue.role.mention,
             is_person_text(len(queue), verb=False)))
+        for member in queue.role.members:
+          if member != ctx.author and await self.config.member(member).alert():
+            await member.send('%s has joined you in the queue for %s.' % (
+              member.mention, queue.dname))
       else:
         await ctx.send('Okay, updating your time in the `%s` queue to %d minutes.' % (
             queue.name, minutes))
@@ -337,6 +349,18 @@ class Lfg:
         's' if len(self.guild_queues[ctx.guild.id]) != 1 else '',
         '\n'.join(outputs)))
 
+  @_lfg.command(name='alert')
+  @commands.guild_only()
+  async def lfg_alert(self, ctx: commands.Context):
+    """Toggle DM alerts for LFG pings. (default: off)"""
+    alert = await self.config.member(ctx.author).alert()
+    await self.config.member(ctx.author).alert.set(not alert)
+    if alert:  # Remember, this is the original value
+      return await ctx.send('Okay, I won\'t send you direct messages for LFG pings.')
+    else:
+      return await ctx.send('Okay, I\'ll send you a direct message in additon to the'
+                            ' normal LFG ping.')
+
   @commands.command()
   @commands.guild_only()
   async def play(self, ctx: commands.Context, *targets):
@@ -373,8 +397,13 @@ class Lfg:
     else:
       opponents = ctx.message.mentions
 
-    for player in opponents + [ctx.author]:
-      await self.remove_from_all_queues(player, ctx.guild)
+    await self.remove_from_all_queues(ctx.author, ctx.guild)
+    for player in opponents:
+      old_queues = await self.remove_from_all_queues(player, ctx.guild)
+      if await self.config.member(player).alert():
+        await player.send(
+          '%s has challenged you to a game of %s! Removing you from these queues: `%s`' % (
+            ctx.author.mention, queue.dname, '`, `'.join(old_queues)))
     await ctx.send('%s -- %s has challenged you to a game of %s!' % (
       ', '.join(member.mention for member in opponents),
       ctx.author.mention, queue.dname))
