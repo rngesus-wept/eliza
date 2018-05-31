@@ -403,6 +403,7 @@ class Lfg:
                               ' '.join(targets[1:]))
     else:
       opponents = ctx.message.mentions
+      queue = None
 
     await self.remove_from_all_queues(ctx.author, ctx.guild)
     for player in opponents:
@@ -410,6 +411,6 @@ class Lfg:
       await self.ping(
           '%s has challenged you to a game of %s! Removing you from these queues: `%s`' % (
               ctx.author.mention, queue.dname, '`, `'.join(old_queues)))
-    await ctx.send('%s -- %s has challenged you to a game of %s!' % (
+    await ctx.send('%s -- %s has challenged you to a game%s!' % (
         ', '.join(member.mention for member in opponents),
-        ctx.author.mention, queue.dname))
+        ctx.author.mention, '' if queue is None else ('of ' + queue.dname)))
