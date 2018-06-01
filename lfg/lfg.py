@@ -413,4 +413,4 @@ class Lfg:
                           ctx.author.mention, queue.dname, '`, `'.join(old_queues)))
     await ctx.send('%s -- %s has challenged you to a game%s!' % (
         ', '.join(member.mention for member in opponents),
-        ctx.author.mention, '' if queue is None else ('of ' + queue.dname)))
+        ctx.author.mention, '' if queue is None else (' of ' + queue.dname)))
