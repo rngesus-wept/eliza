@@ -132,7 +132,7 @@ class Lfg:
   def __unload(self):
     for guild_id in self.monitoring:
       self.monitoring[guild_id] = False
-    await self.clear_all_roles()
+      await self.clear_all_roles(guild_id)
 
   ####### Internal accessors
 
@@ -165,7 +165,7 @@ class Lfg:
     for member in queue.role.members:
       member.remove_roles(queue.role)
 
-  async def clear_all_roles(self, guild):
+  async def clear_all_roles(self, guild: discord.Guild):
     for queue in self.guild_queues[guild.id].values():
       self.clear_role(queue)
 
