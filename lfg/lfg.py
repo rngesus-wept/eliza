@@ -129,7 +129,7 @@ class Lfg:
     self.monitoring = {}
     self.watch_interval = 60  # seconds
 
-  def __unload(self):
+  async def __unload(self):
     for guild_id in self.monitoring:
       self.monitoring[guild_id] = False
       await self.clear_all_roles(guild_id)
