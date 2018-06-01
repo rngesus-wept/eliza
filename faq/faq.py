@@ -1,8 +1,14 @@
 """Cog for managing tagged FAQs within a channel."""
 
+import functools
+import time
+
 import discord
 from discord.ext import commands
 
+from redbot.core import Config
+from redbot.core import checks
+from redbot.core.bot import Red
 from redbot.core.utils.menu import menu, DEFAULT_CONTROLS
 
 
@@ -36,3 +42,80 @@ from redbot.core.utils.menu import menu, DEFAULT_CONTROLS
 ##    again, the former is perhaps not relevant at our current scale).
 
 class Faqlet:
+
+  def __init__(self, id, config, question, answer, creator, created=None,
+               last_editor=None, last_edited=None, tags=None):
+    self.id = id
+    self.question = question
+    self.answer = answer
+    self.creator = creator
+    self.created = created or time.time()
+    self.last_editor = last_editor
+    self.last_edited = last_edited
+    self.tags = tags or []
+
+  def sync(self):
+    """Decorator ensuring that the wrapped function will sync this object to config."""
+    @functools.wraps(func)
+    async def wrapped_fn(*args, **kwargs):
+      return await func(*args, **kwargs)
+    return wrapped
+
+  def edit_impl(self):
+    @functools.wraps(func)
+    async def wrapped_dummy(**kwargs):
+      for attr, value in kwargs.items():
+        self.last_edited = time.time()  # Can be overwritten by manually passed value
+        if attr == 'tags':
+          for tag in value:
+            if tag[0] == '-':
+              self.tags.remove(tag[1:])
+            elif tag[0] == '+':
+              self.tags.append(tag[1:])
+            else:
+              self.tags.append(tag)
+        elif attr == 'editor':
+          self.last_editor = None if value == self.creator else value
+        else:
+          setattr(self, attr, value)
+      return await func(**kwargs)
+    return wrapped_dummy
+
+  @self.sync
+  @self.edit_impl
+  async def edit(self, **kwargs):
+    pass
+
+
+class Faq:
+  """Red cog for managing FAQs."""
+
+  ## As tagged FAQs get added to the FAQ, the guild config will take on new
+  ## pairs mapping each tag to a list of FAQs with that tag, for easy reverse lookup.
+  ## '_deleted' is a special tag for the IDs of formally deleted FAQs.
+  default_guild_settings = {
+      '_next_faq_id': 0,
+      '_faqs': [],
+      '_deleted': [],
+  }
+
+  def __init__(self, bot: Red):
+    self.bot = bot
+    self.config = Config.get_conf(self, 0x92A804678C03D64D, force_registration=True)
+    self.config.register_guild(**self.default_guild_settings)
+
+  @commands.group(name='faq')
+  async def _faq(self, ctx: commands.Context):
+    """Frequently asked questions database."""
+    if ctx.invoked_subcommand is None:
+      await ctx.send_help()
+
+  @_faq.command(name='new')
+  @commands.guild_only()
+  @checks.mod()
+  async def faq_new(self, ctx: commands.Context, question):
+    """Create a new FAQ entry.
+
+    Simply input the question, e.g. `!faq How do clashes work?`. The bot will PM
+    you for the response to the question, with a 5 minute timeout."""
+    pass
