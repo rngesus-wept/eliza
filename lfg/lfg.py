@@ -175,7 +175,7 @@ class Lfg:
   async def _queue(self, ctx: commands.Context):
     """LFG queue management functions.
 
-    To actually join or leave queues, see the `lfg` command group."""
+To actually join or leave queues, see the `lfg` command group."""
     await ctx.send_help()
 
   @_queue.command(name='load')
@@ -288,14 +288,14 @@ class Lfg:
   async def _lfg(self, ctx: commands.Context, queue_name, minutes=0):  ## !lfg
     """Join an LFG queue.
 
-    Adds you to an LFG queue, including a mentionable role, for the indicated
-    number of minutes. If you do not specify the number of minutes, it is
-    whatever default value is configured for the queue (probably 60 minutes).
+Adds you to an LFG queue, including a mentionable role, for the indicated \
+number of minutes. If you do not specify the number of minutes, it is \
+whatever default value is configured for the queue (probably 60 minutes).
 
-    For a list of queues, try `!lfg list`.
+For a list of queues, try `!lfg list`.
 
-    To remove yourself from queuing, you can `!play <opponent>`, `!play
-    <queue_name>`, or simply `!lfg clear`."""
+To remove yourself from queuing, you can `!play <opponent>`, `!play <queue_name>`, \
+or simply `!lfg clear`."""
     queue = self.guild_queues[ctx.guild.id].get(queue_name.lower(), None)
     if queue is None:
       await ctx.send('Sorry, there doesn\'t appear to be an LFG queue for that.')
@@ -373,13 +373,13 @@ class Lfg:
   async def play(self, ctx: commands.Context, *targets):
     """Play a game or an opponent, dropping out of all LFG queues.
 
-    If `target` mentions a specific player or players, you and the named
-    person(s) will be dropped out of your queue, and the named person(s) will be notified.
+If `target` mentions a specific player or players, you and the named \
+person(s) will be dropped out of your queue, and the named person(s) will be notified.
 
-    If `target` is the name of a queue, an opponent will be chosen out of that
-    queue for you at random. You may optionally append a number (e.g. `!play empyreal 3`)
-    to challange that many random opponents (or up to that many, if not enough people are
-    in queue."""
+If `target` is the name of a queue, an opponent will be chosen out of that \
+queue for you at random. You may optionally append a number (e.g. `!play empyreal 3`) \
+to challange that many random opponents (or up to that many, if not enough people are \
+in queue."""
     if targets and targets[0].lower() in self.guild_queues[ctx.guild.id]:
       queue = self.guild_queues[ctx.guild.id][targets[0]]
       try:
