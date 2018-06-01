@@ -4,13 +4,13 @@ import asyncio
 from datetime import datetime
 import functools
 
-import discord
-from discord.ext import commands
-
 from redbot.core import Config
 from redbot.core import checks
 from redbot.core.bot import Red
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
+
+import discord
+from discord.ext import commands
 
 
 ## There are basically three options for data storage here:
@@ -101,7 +101,7 @@ class Faq:
 
   def __init__(self, bot: Red):
     self.bot = bot
-    self.config = Config.get_conf(self, 0x92A804678C03D64D, force_registration=True)
+    self.config = Config.get_conf(self, 0x92A804678C03D64D, force_registration=False)
     self.config.register_guild(**self.default_guild_settings)
 
   @commands.group(name='faq')
@@ -116,8 +116,8 @@ class Faq:
   async def FaqNew(self, ctx: commands.Context, *q):
     """Create a new FAQ entry.
 
-Simply input the question, e.g. `!faq How do clashes work?`. The bot will PM \
-you for the response to the question, with a 5 minute timeout. Note that \
+Simply input the question, e.g. `[p]faq new How do clashes work?`. The bot will \
+PM you for the response to the question, with a 5 minute timeout. Note that \
 Markdown is supported in questions and answers, e.g. \\*\\*bold\\*\\*, \
 \\/italic\\/, \\_underline\\_, \\~strikethrough\\~.
 
@@ -146,8 +146,8 @@ database."""
     async with self.config.guild(ctx.guild)._faqs() as faqs:
       new_faq = {
           'id': len(faqs),
-          'question': ' '.join(question),
-          'answer': answer,
+          'question': question,
+          'answer': answer.content,
           'creator': ctx.author.id,
           'created': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
           'last_editor': None,
@@ -160,12 +160,49 @@ database."""
                  " searchable.") % new_faq['id'],
         embed=self.FaqEmbed(ctx.guild, **new_faq))
 
-  def FaqEmbed(self, guild, * id, question, answer, creator, created,
+  @_Faq.command(name='tag')
+  @commands.guild_only()
+  @checks.mod()
+  async def FaqTag(self, ctx: commands.Context, faq_id, *tags):
+    """Add a tag or tags to the indicated FAQ entry.
+
+Tags are case-insensitive. For multi-word tags, surround the tag in quotes, \
+e.g. `[p]faq 1 "end of beat"`. If an input starts with a hyphen, that tag will \
+instead be removed from the FAQ entry."""
+    faq_id = int(faq_id)
+    if set(['_faqs', '-_faqs']) & set(tags):
+      return await ctx.send('`_faqs` is not a valid tag.')
+    elif set(['_deleted', '-_deleted']) & set(tags):
+      return await ctx.send('`_deleted` is a reserved tag; please use'
+                            ' `!faq delete` or `!faq undelete` instead.')
+
+    async with self.config.guild(ctx.guild)._faqs() as faqs:
+      faq_tags = faqs[faq_id]['tags']
+      for tag in map(str.lower, tags):
+        if tag[0] == '-' and tag[1:] in faq_tags:
+          async with self.config.guild(ctx.guild).getattr(tag[1:])() as tag_backref:
+            tag_backref.remove(faq_id)
+          faq_tags.remove(tags[1:])
+        elif tag not in faq_tags:
+          tag_backref = await self.config.guild(ctx.guild).get_raw(tag, default=None) or []
+          tag_backref.append(faq_id)
+          await self.config.guild(ctx.guild).set_raw(tag, value=tag_backref)
+          faq_tags.append(tag)
+    await ctx.send('Got it. The tags for FAQ entry %d are now `%r`.' % (
+        faq_id, (await self.config.guild(ctx.guild)._faqs())[faq_id]['tags']))
+
+  @_Faq.command(name='show')
+  @commands.guild_only()
+  async def FaqShow(self, ctx: commands.Context, faq_id):
+    faq_entry = (await self.config.guild(ctx.guild)._faqs())[int(faq_id)]
+    await ctx.send(embed=self.FaqEmbed(ctx.guild, **faq_entry))
+
+  def FaqEmbed(self, guild, *, id, question, answer, creator, created,
                last_editor, last_edit, tags):
     embed = discord.Embed(title=question,
                           color=discord.Color(0xff0000 if '_deleted' in tags else 0x22aaff),
                           description=answer,
-                          timestamp=created)
+                          timestamp=datetime.strptime(created, '%Y-%m-%dT%H:%M:%S.%fZ'))
     author = guild.get_member(creator).display_name
     icon = guild.get_member(creator).avatar_url
     if last_editor:
@@ -177,7 +214,7 @@ database."""
 
 
   @_Faq.command(name='test')
-  async def FaqTest(self, ctx: commands.Context):
-    embed = discord.Embed(title='x', description='y')
+  async def FaqTest(self, ctx: commands.Context, x):
+    embed = discord.Embed(title='x', description=x)
     embed.set_author(name=ctx.guild.get_member(ctx.author.id).display_name)
     await ctx.send(content='test', embed=embed)
