@@ -1,7 +1,8 @@
 """Cog for managing tagged FAQs within a channel."""
 
+import asyncio
+from datetime import datetime
 import functools
-import time
 
 import discord
 from discord.ext import commands
@@ -9,7 +10,7 @@ from discord.ext import commands
 from redbot.core import Config
 from redbot.core import checks
 from redbot.core.bot import Red
-from redbot.core.utils.menu import menu, DEFAULT_CONTROLS
+from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
 
 ## There are basically three options for data storage here:
@@ -41,50 +42,50 @@ from redbot.core.utils.menu import menu, DEFAULT_CONTROLS
 ##    efficient and readable in ways that would be hard to replicate (but
 ##    again, the former is perhaps not relevant at our current scale).
 
-class Faqlet:
+# class Faqlet:
 
-  def __init__(self, id, config, question, answer, creator, created=None,
-               last_editor=None, last_edited=None, tags=None):
-    self.id = id
-    self.question = question
-    self.answer = answer
-    self.creator = creator
-    self.created = created or time.time()
-    self.last_editor = last_editor
-    self.last_edited = last_edited
-    self.tags = tags or []
+#   def __init__(self, id, config, question, answer, creator, created=None,
+#                last_editor=None, last_edited=None, tags=None):
+#     self.id = id
+#     self.question = question
+#     self.answer = answer
+#     self.creator = creator
+#     self.created = created or time.time()
+#     self.last_editor = last_editor
+#     self.last_edited = last_edited
+#     self.tags = tags or []
 
-  def sync(self):
-    """Decorator ensuring that the wrapped function will sync this object to config."""
-    @functools.wraps(func)
-    async def wrapped_fn(*args, **kwargs):
-      return await func(*args, **kwargs)
-    return wrapped
+#   def sync(self):
+#     """Decorator ensuring that the wrapped function will sync this object to config."""
+#     @functools.wraps(func)
+#     async def wrapped_fn(*args, **kwargs):
+#       return await func(*args, **kwargs)
+#     return wrapped
 
-  def edit_impl(self):
-    @functools.wraps(func)
-    async def wrapped_dummy(**kwargs):
-      for attr, value in kwargs.items():
-        self.last_edited = time.time()  # Can be overwritten by manually passed value
-        if attr == 'tags':
-          for tag in value:
-            if tag[0] == '-':
-              self.tags.remove(tag[1:])
-            elif tag[0] == '+':
-              self.tags.append(tag[1:])
-            else:
-              self.tags.append(tag)
-        elif attr == 'editor':
-          self.last_editor = None if value == self.creator else value
-        else:
-          setattr(self, attr, value)
-      return await func(**kwargs)
-    return wrapped_dummy
+#   def edit_impl(self):
+#     @functools.wraps(func)
+#     async def wrapped_dummy(**kwargs):
+#       for attr, value in kwargs.items():
+#         self.last_edited = time.time()  # Can be overwritten by manually passed value
+#         if attr == 'tags':
+#           for tag in value:
+#             if tag[0] == '-':
+#               self.tags.remove(tag[1:])
+#             elif tag[0] == '+':
+#               self.tags.append(tag[1:])
+#             else:
+#               self.tags.append(tag)
+#         elif attr == 'editor':
+#           self.last_editor = None if value == self.creator else value
+#         else:
+#           setattr(self, attr, value)
+#       return await func(**kwargs)
+#     return wrapped_dummy
 
-  @self.sync
-  @self.edit_impl
-  async def edit(self, **kwargs):
-    pass
+#   @self.sync
+#   @self.edit_impl
+#   async def edit(self, **kwargs):
+#     pass
 
 
 class Faq:
@@ -94,7 +95,6 @@ class Faq:
   ## pairs mapping each tag to a list of FAQs with that tag, for easy reverse lookup.
   ## '_deleted' is a special tag for the IDs of formally deleted FAQs.
   default_guild_settings = {
-      '_next_faq_id': 0,
       '_faqs': [],
       '_deleted': [],
   }
@@ -105,17 +105,79 @@ class Faq:
     self.config.register_guild(**self.default_guild_settings)
 
   @commands.group(name='faq')
-  async def _faq(self, ctx: commands.Context):
+  async def _Faq(self, ctx: commands.Context):
     """Frequently asked questions database."""
     if ctx.invoked_subcommand is None:
       await ctx.send_help()
 
-  @_faq.command(name='new')
+  @_Faq.command(name='new')
   @commands.guild_only()
   @checks.mod()
-  async def faq_new(self, ctx: commands.Context, question):
+  async def FaqNew(self, ctx: commands.Context, *q):
     """Create a new FAQ entry.
 
-    Simply input the question, e.g. `!faq How do clashes work?`. The bot will PM
-    you for the response to the question, with a 5 minute timeout."""
-    pass
+Simply input the question, e.g. `!faq How do clashes work?`. The bot will PM \
+you for the response to the question, with a 5 minute timeout. Note that \
+Markdown is supported in questions and answers, e.g. \\*\\*bold\\*\\*, \
+\\/italic\\/, \\_underline\\_, \\~strikethrough\\~.
+
+Remember to search around a bit to see if your question is already in the \
+database."""
+    ## Syntax checking
+    question = ' '.join(q)
+    if not question.strip():
+      await ctx.send('I can\'t accept an FAQ entry that doesn\'t have a question.')
+      return
+    elif ctx.message.mentions or ctx.message.mention_everyone:
+      await ctx.send('Please don\'t mention Discord members in your question.')
+      return
+
+    await ctx.author.send("Tell me: `{}`".format(question))
+
+    try:
+      answer = await ctx.bot.wait_for(
+          'message',
+          check=lambda m: m.guild is None and m.author == ctx.author,
+          timeout=300)
+    except asyncio.TimeoutError:
+      await ctx.author.send("Sorry, make your request again when you\'re ready.")
+      return
+
+    async with self.config.guild(ctx.guild)._faqs() as faqs:
+      new_faq = {
+          'id': len(faqs),
+          'question': ' '.join(question),
+          'answer': answer,
+          'creator': ctx.author.id,
+          'created': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+          'last_editor': None,
+          'last_edit': None,
+          'tags': []}
+      faqs.append(new_faq)
+    await ctx.send(
+        content=("Thanks for contributing to the FAQ! Don't forget to use"
+                 " `!faq %d <tag1> [<tag2> <tag3>...]` to make your entry"
+                 " searchable.") % new_faq['id'],
+        embed=self.FaqEmbed(ctx.guild, **new_faq))
+
+  def FaqEmbed(self, guild, * id, question, answer, creator, created,
+               last_editor, last_edit, tags):
+    embed = discord.Embed(title=question,
+                          color=discord.Color(0xff0000 if '_deleted' in tags else 0x22aaff),
+                          description=answer,
+                          timestamp=created)
+    author = guild.get_member(creator).display_name
+    icon = guild.get_member(creator).avatar_url
+    if last_editor:
+      author += ' (last edited by %s)' % guild.get_member(last_editor).display_name
+      icon = guild.get_member(last_editor).avatar_url
+    embed.set_author(name=author, icon_url=icon)
+    embed.set_footer(text=', '.join(tags))
+    return embed
+
+
+  @_Faq.command(name='test')
+  async def FaqTest(self, ctx: commands.Context):
+    embed = discord.Embed(title='x', description='y')
+    embed.set_author(name=ctx.guild.get_member(ctx.author.id).display_name)
+    await ctx.send(content='test', embed=embed)
