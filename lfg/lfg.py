@@ -163,11 +163,11 @@ class Lfg:
 
   async def clear_role(self, queue):
     for member in queue.role.members:
-      member.remove_roles(queue.role)
+      await member.remove_roles(queue.role)
 
   async def clear_all_roles(self, guild: discord.Guild):
     for queue in self.guild_queues[guild.id].values():
-      self.clear_role(queue)
+      await self.clear_role(queue)
 
   ####### Commands
 
