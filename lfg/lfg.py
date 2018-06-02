@@ -112,6 +112,7 @@ class Lfg:
 
   default_guild_settings = {
       'queues': {},
+      'lfg_channel': None,
   }
 
   default_member_settings = {
@@ -169,6 +170,13 @@ class Lfg:
     for queue in self.guild_queues[guild.id].values():
       await self.clear_role(queue)
 
+  async def say_to_guild(self, ctx: commands.Context, *args, **kwargs):
+    if ctx.guild is not None:
+      channel_id = await self.config.guild(ctx.guild).lfg_channel()
+      if channel_id is not None:
+        return await ctx.guild.get_channel(channel_id).send(*args, **kwargs)
+    return await ctx.send(*args, **kwargs)
+
   ####### Commands
 
   @commands.group(name='queue', invoke_without_command=True)
@@ -177,6 +185,14 @@ class Lfg:
 
 To actually join or leave queues, see the `lfg` command group."""
     await ctx.send_help()
+
+  @_queue.command(name='sethome')
+  @commands.guild_only()
+  @checks.admin()
+  async def queue_set_home(self, ctx: commands.Context, channel: discord.TextChannel=None):
+    channel = channel or ctx.channel
+    await self.config.guild(ctx.guild).lfg_channel.set(channel.id)
+    await ctx.send("Okay; from now on I'll send general LFG output to %s." % channel.mention)
 
   @_queue.command(name='load')
   @commands.guild_only()
