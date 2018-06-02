@@ -3,6 +3,7 @@
 import asyncio
 from datetime import datetime
 import functools
+from fuzzywuzzy import process
 
 from redbot.core import Config
 from redbot.core import checks
@@ -149,8 +150,48 @@ instead be removed from the FAQ entry."""
   @_Faq.command(name='show')
   @commands.guild_only()
   async def FaqShow(self, ctx: commands.Context, faq_id):
-    faq_entry = (await self.config.guild(ctx.guild)._faqs())[int(faq_id)]
-    await ctx.send(embed=self.FaqEmbed(ctx.guild, **faq_entry))
+    try:
+      faq_entry = (await self.config.guild(ctx.guild)._faqs())[int(faq_id)]
+      return await ctx.send(embed=self.FaqEmbed(ctx.guild, **faq_entry))
+    except IndexError:
+      return await ctx.send("Sorry, there is no FAQ entry with that ID.")
+
+  @_Faq.command(name='search')
+  @commands.guild_only()
+  async def FaqSearch(self, ctx: commands.Context, *tags):
+    tags = list(map(str.lower, tags))
+    all_tags = list(await self.config.guild(ctx.guild).all())
+    all_tags.remove('_faqs')
+    missing_tags = set(tags) - set(all_tags)
+    if missing_tags:
+      suggestions = []
+      for tag in missing_tags:
+        suggest = [result[0] for result in process.extract(tag, all_tags, limit=5)
+                   if result[1] >= 50]
+        suggestions.append("`%s` -- Instead try `%s`" % (tag, "`, `".join(suggest)))
+
+      return await ctx.send(
+          "I couldn't find any matches for the following tags:\n" + "\n".join(suggestions))
+
+    hits = set(await self.config.guild(ctx.guild).get_raw(tags[0]))
+    for tag in tags[1:]:
+      hits &= set(await self.config.guild(ctx.guild).get_raw(tags[0]))
+    if not hits:
+      return await ctx.send(
+          "I couldn't find any entries matching that tag or combination of tags.")
+    else:
+      faq_entries = []
+      for faq_id in hits:
+        data = (await self.config.guild(ctx.guild)._faqs())[int(faq_id)]
+        if '_deleted' not in data['tags']:
+          faq_entries.append(self.FaqEmbed(ctx.guild, **data))
+      if not faq_entries:
+        return await ctx.send(
+            "I couldn't find any entries matching that tag or combination of tags.")
+      elif len(faq_entries) == 1:
+        return await ctx.send(embed=faq_entries[0])
+      else:
+        await menu(ctx, faq_entries, DEFAULT_CONTROLS, timeout=120)
 
   def FaqEmbed(self, guild, *, id, question, answer, creator, created,
                last_editor, last_edit, tags):
