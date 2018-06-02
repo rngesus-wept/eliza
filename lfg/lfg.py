@@ -179,33 +179,6 @@ class Lfg:
         return await ctx.guild.get_channel(channel_id).send(*args, **kwargs)
     return await ctx.send(*args, **kwargs)
 
-  ####### Commands
-
-  @commands.group(name='queue', invoke_without_command=True)
-  async def _queue(self, ctx: commands.Context):
-    """LFG queue management functions.
-
-To actually join or leave queues, see the `lfg` command group."""
-    await ctx.send_help()
-
-  @_queue.command(name='sethome')
-  @commands.guild_only()
-  @checks.admin()
-  async def queue_set_home(self, ctx: commands.Context, channel: discord.TextChannel=None):
-    channel = channel or ctx.channel
-    await self.config.guild(ctx.guild).lfg_channel.set(channel.id)
-    await ctx.send("Okay; from now on I'll send general LFG output to %s." % channel.mention)
-
-  @_queue.command(name='load')
-  @commands.guild_only()
-  @checks.admin()
-  async def queue_load(self, ctx: commands.Context):  ## !queue load
-    """Load queue configs for this guild."""
-    guild_queues = await self.load_guild_queues(ctx.guild)
-    await ctx.send('Loaded %d queue configurations: %s' % (
-        len(guild_queues), ', '.join('`%s`' % queue_name for queue_name in guild_queues)))
-    await self.queue_start.callback(self, ctx, verbose=True)
-
   async def load_guild_queues(self, guild: discord.Guild):
     guild_queues = {}
     async with self.config.guild(guild).queues() as queues:
@@ -218,6 +191,25 @@ To actually join or leave queues, see the `lfg` command group."""
             default_timed=queue_config['default_time'])
     self.guild_queues[guild.id].update(guild_queues)
     return guild_queues
+
+  ####### Commands
+
+  @commands.group(name='queue', invoke_without_command=True)
+  async def _queue(self, ctx: commands.Context):
+    """LFG queue management functions.
+
+To actually join or leave queues, see the `lfg` command group."""
+    await ctx.send_help()
+
+  @_queue.command(name='load')
+  @commands.guild_only()
+  @checks.admin()
+  async def queue_load(self, ctx: commands.Context):  ## !queue load
+    """Load queue configs for this guild."""
+    guild_queues = await self.load_guild_queues(ctx.guild)
+    await ctx.send('Loaded %d queue configurations: %s' % (
+        len(guild_queues), ', '.join('`%s`' % queue_name for queue_name in guild_queues)))
+    await self.queue_start.callback(self, ctx, verbose=True)
 
   @_queue.command(name='create')
   @commands.guild_only()
@@ -253,6 +245,14 @@ To actually join or leave queues, see the `lfg` command group."""
           'queues', name.lower(), 'default_time', value=wait_time)
       await ctx.send('Set queue `%s` to have default wait time %d minutes.' % (
           name.lower(), wait_time))
+
+  @_queue.command(name='sethome')
+  @commands.guild_only()
+  @checks.admin()
+  async def queue_set_home(self, ctx: commands.Context, channel: discord.TextChannel=None):
+    channel = channel or ctx.channel
+    await self.config.guild(ctx.guild).lfg_channel.set(channel.id)
+    await ctx.send("Okay; from now on I'll send general LFG output to %s." % channel.mention)
 
   @_queue.command(name='list')
   @commands.guild_only()
