@@ -112,7 +112,7 @@ database."""
       faqs.append(new_faq)
     await ctx.send(
         content=("Thanks for contributing to the FAQ! Don't forget to use"
-                 " `!faq %d <tag1> [<tag2> <tag3>...]` to make your entry"
+                 " `!faq tag %d <tag1> [<tag2> <tag3>...]` to make your entry"
                  " searchable.") % new_faq['id'],
         embed=self.FaqEmbed(ctx.guild, **new_faq))
 
