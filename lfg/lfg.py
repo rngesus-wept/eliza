@@ -199,19 +199,23 @@ To actually join or leave queues, see the `lfg` command group."""
   @checks.admin()
   async def queue_load(self, ctx: commands.Context):  ## !queue load
     """Load queue configs for this guild."""
+    guild_queues = await self.load_guild_queues(ctx.guild)
+    await ctx.send('Loaded %d queue configurations: %s' % (
+        len(guild_queues), ', '.join('`%s`' % queue_name for queue_name in guild_queues)))
+    await self.queue_start.callback(self, ctx, verbose=True)
+
+  async def load_guild_queues(self, guild: discord.Guild):
     guild_queues = {}
-    async with self.config.guild(ctx.guild).queues() as queues:
+    async with self.config.guild(guild).queues() as queues:
       for queue_name, queue_config in queues.items():
         if queue_config is None:  # queue may have existed before but was deleted
           continue
         guild_queues[queue_name] = GuildQueue(
             name=queue_config['name'],
-            role=discord.utils.get(ctx.guild.roles, id=queue_config['role_id']),
-            default_time=queue_config['default_time'])
-    self.guild_queues[ctx.guild.id].update(guild_queues)
-    await ctx.send('Loaded %d queue configurations: %s' % (
-        len(guild_queues), ', '.join('`%s`' % queue_name for queue_name in guild_queues)))
-    await self.queue_start.callback(self, ctx, verbose=True)
+            role=discord.utils.get(guild.roles, id=queue_config['role_id']),
+            default_timed=queue_config['default_time'])
+    self.guild_queues[guild.id].update(guild_queues)
+    return guild_queues
 
   @_queue.command(name='create')
   @commands.guild_only()
