@@ -112,6 +112,7 @@ class Lfg:
 
   default_guild_settings = {
       'queues': {},
+      'lfg_channel': None,
   }
 
   default_member_settings = {
@@ -124,15 +125,25 @@ class Lfg:
     self.config.register_guild(**self.default_guild_settings)
     self.config.register_member(**self.default_member_settings)
 
-    ## TODO: Initialize this queue state on startup
     self.guild_queues = collections.defaultdict(dict)
     self.monitoring = {}
     self.watch_interval = 60  # seconds
 
-  async def __unload(self):
+  async def initialize(self):
+    for guild_id in await self.config.all_guilds():
+      guild = self.bot.get_guild(guild_id)
+      await self.load_guild_queues(guild)
+      try:
+        self.bot.loop.create_task(self.monitor_guild(guild))
+      except ValueError:
+        log.error('Failed to automatically start monitoring for %s'
+                  ' due to lack of an LFG channel.' % guild.name)
+
+  def __unload(self):
     for guild_id in self.monitoring:
       self.monitoring[guild_id] = False
-      await self.clear_all_roles(guild_id)
+      self.bot.loop.create_task(
+          self.clear_all_roles(self.bot.get_guild(guild_id)))
 
   ####### Internal accessors
 
@@ -163,11 +174,48 @@ class Lfg:
 
   async def clear_role(self, queue):
     for member in queue.role.members:
-      member.remove_roles(queue.role)
+      await member.remove_roles(queue.role)
 
   async def clear_all_roles(self, guild: discord.Guild):
     for queue in self.guild_queues[guild.id].values():
-      self.clear_role(queue)
+      await self.clear_role(queue)
+
+  async def say_to_guild(self, ctx: commands.Context, *args, **kwargs):
+    if ctx.guild is not None:
+      channel_id = await self.config.guild(ctx.guild).lfg_channel()
+      if channel_id is not None:
+        return await ctx.guild.get_channel(channel_id).send(*args, **kwargs)
+    return await ctx.send(*args, **kwargs)
+
+  async def load_guild_queues(self, guild: discord.Guild):
+    guild_queues = {}
+    async with self.config.guild(guild).queues() as queues:
+      for queue_name, queue_config in queues.items():
+        if queue_config is None:  # queue may have existed before but was deleted
+          continue
+        guild_queues[queue_name] = GuildQueue(
+            name=queue_config['name'],
+            role=discord.utils.get(guild.roles, id=queue_config['role_id']),
+            default_time=queue_config['default_time'])
+    self.guild_queues[guild.id].update(guild_queues)
+    return guild_queues
+
+  async def monitor_guild(self, guild: discord.Guild):
+    channel_id = await self.config.guild(guild).lfg_channel()
+    if channel_id is None:
+      raise ValueError("Cannot monitor a guild that doesn't have a LFG output channel set.")
+    self.monitoring[guild.id] = True
+    while self.monitoring[guild.id]:
+      for queue in self.guild_queues[guild.id].values():
+        ## TODO :: Refactor duplication of say_to_guild logic here; it's being
+        ## used this way for now because there's no Context object around.
+        while queue.Overdue():
+          member = await self.pop_from_queue(queue)
+          self.ping(member, "You've dropped out of the queue for %s due to timeout." % queue.dname)
+          await guild.get_channel(channel_id).send(
+              "%s has stopped waiting in the `%s` queue due to timeout." % (
+                  member.mention, queue.name))
+      await asyncio.sleep(self.watch_interval)
 
   ####### Commands
 
@@ -175,7 +223,7 @@ class Lfg:
   async def _queue(self, ctx: commands.Context):
     """LFG queue management functions.
 
-    To actually join or leave queues, see the `lfg` command group."""
+To actually join or leave queues, see the `lfg` command group."""
     await ctx.send_help()
 
   @_queue.command(name='load')
@@ -183,16 +231,7 @@ class Lfg:
   @checks.admin()
   async def queue_load(self, ctx: commands.Context):  ## !queue load
     """Load queue configs for this guild."""
-    guild_queues = {}
-    async with self.config.guild(ctx.guild).queues() as queues:
-      for queue_name, queue_config in queues.items():
-        if queue_config is None:  # queue may have existed before but was deleted
-          continue
-        guild_queues[queue_name] = GuildQueue(
-            name=queue_config['name'],
-            role=discord.utils.get(ctx.guild.roles, id=queue_config['role_id']),
-            default_time=queue_config['default_time'])
-    self.guild_queues[ctx.guild.id].update(guild_queues)
+    guild_queues = await self.load_guild_queues(ctx.guild)
     await ctx.send('Loaded %d queue configurations: %s' % (
         len(guild_queues), ', '.join('`%s`' % queue_name for queue_name in guild_queues)))
     await self.queue_start.callback(self, ctx, verbose=True)
@@ -232,6 +271,15 @@ class Lfg:
       await ctx.send('Set queue `%s` to have default wait time %d minutes.' % (
           name.lower(), wait_time))
 
+  @_queue.command(name='sethome')
+  @commands.guild_only()
+  @checks.admin()
+  async def queue_set_home(self, ctx: commands.Context, channel: discord.TextChannel=None):
+    """Designate the target for LFG automated messages."""
+    channel = channel or ctx.channel
+    await self.config.guild(ctx.guild).lfg_channel.set(channel.id)
+    await ctx.send("Okay; from now on I'll send general LFG output to %s." % channel.mention)
+
   @_queue.command(name='list')
   @commands.guild_only()
   async def queue_list(self, ctx: commands.Context):  ## !queue list
@@ -264,16 +312,13 @@ class Lfg:
     """Start the background process for queue monitoring in the current guild."""
     if verbose:
       await ctx.send('Starting queue monitoring.')
-    self.monitoring[ctx.guild.id] = True
-    while self.monitoring[ctx.guild.id]:
-      for queue in self.guild_queues[ctx.guild.id].values():
-        while queue.Overdue():
-          member = await self.pop_from_queue(queue)
-          self.ping(member, 'You\'ve dropped out of the queue for %s due to timeout.' % queue.dname)
-          await ctx.send('%s has stopped waiting in the `%s` queue due to timeout.' % (
-              member.mention, queue.name))
-
-      await asyncio.sleep(self.watch_interval)
+    try:
+      await self.monitor_guild(ctx.guild)
+    except ValueError:
+      await ctx.send("Cannot monitor a guild that doesn't have a LFG output channel set."
+                     " Use `!queue sethome <channel>` to set an output channel.")
+    finally:
+      self.monitoring[ctx.guild.id] = False
 
   @_queue.command(name='stop')
   @commands.guild_only()
@@ -288,14 +333,14 @@ class Lfg:
   async def _lfg(self, ctx: commands.Context, queue_name, minutes=0):  ## !lfg
     """Join an LFG queue.
 
-    Adds you to an LFG queue, including a mentionable role, for the indicated
-    number of minutes. If you do not specify the number of minutes, it is
-    whatever default value is configured for the queue (probably 60 minutes).
+Adds you to an LFG queue, including a mentionable role, for the indicated \
+number of minutes. If you do not specify the number of minutes, it is \
+whatever default value is configured for the queue (probably 60 minutes).
 
-    For a list of queues, try `!lfg list`.
+For a list of queues, try `!lfg list`.
 
-    To remove yourself from queuing, you can `!play <opponent>`, `!play
-    <queue_name>`, or simply `!lfg clear`."""
+To remove yourself from queuing, you can `!play <opponent>`, `!play <queue_name>`, \
+or simply `!lfg clear`."""
     queue = self.guild_queues[ctx.guild.id].get(queue_name.lower(), None)
     if queue is None:
       await ctx.send('Sorry, there doesn\'t appear to be an LFG queue for that.')
@@ -303,9 +348,10 @@ class Lfg:
       ## AddMember side-effects to enqueue ctx.author. The if statement is to handle
       ## the behavior afterward depending on whether
       if await self.add_to_queue(queue, ctx.author, minutes):
-        await ctx.send('%s has joined the %s queue (%s waiting)' % (
-            ctx.author.mention, queue.role.mention,
-            PersonNL(len(queue), verb=False)))
+        await self.say_to_guild(
+            ctx, '%s has joined the %s queue (%s waiting)' % (
+                ctx.author.mention, queue.role.mention,
+                PersonNL(len(queue), verb=False)))
         for member in queue.ListMembers():
           if member != ctx.author:
             await self.ping('%s has joined you in the queue for %s.' % (
@@ -373,13 +419,13 @@ class Lfg:
   async def play(self, ctx: commands.Context, *targets):
     """Play a game or an opponent, dropping out of all LFG queues.
 
-    If `target` mentions a specific player or players, you and the named
-    person(s) will be dropped out of your queue, and the named person(s) will be notified.
+If `target` mentions a specific player or players, you and the named \
+person(s) will be dropped out of your queue, and the named person(s) will be notified.
 
-    If `target` is the name of a queue, an opponent will be chosen out of that
-    queue for you at random. You may optionally append a number (e.g. `!play empyreal 3`)
-    to challange that many random opponents (or up to that many, if not enough people are
-    in queue."""
+If `target` is the name of a queue, an opponent will be chosen out of that \
+queue for you at random. You may optionally append a number (e.g. `!play empyreal 3`) \
+to challange that many random opponents (or up to that many, if not enough people are \
+in queue."""
     if targets and targets[0].lower() in self.guild_queues[ctx.guild.id]:
       queue = self.guild_queues[ctx.guild.id][targets[0]]
       try:
@@ -408,9 +454,11 @@ class Lfg:
     await self.remove_from_all_queues(ctx.author, ctx.guild)
     for player in opponents:
       old_queues = await self.remove_from_all_queues(player, ctx.guild)
-      await self.ping(player,
-                      '%s has challenged you to a game of %s! Removing you from these queues: `%s`' % (
-                          ctx.author.mention, queue.dname, '`, `'.join(old_queues)))
-    await ctx.send('%s -- %s has challenged you to a game%s!' % (
-        ', '.join(member.mention for member in opponents),
-        ctx.author.mention, '' if queue is None else (' of ' + queue.dname)))
+      await self.ping(
+          player,
+          '%s has challenged you to a game of %s! Removing you from these queues: `%s`' % (
+              ctx.author.mention, queue.dname, '`, `'.join(old_queues)))
+    await self.say_to_guild(
+        ctx, '%s -- %s has challenged you to a game%s!' % (
+            ', '.join(member.mention for member in opponents),
+            ctx.author.mention, '' if queue is None else (' of ' + queue.dname)))
