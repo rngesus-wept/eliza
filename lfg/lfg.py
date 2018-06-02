@@ -211,7 +211,8 @@ class Lfg:
         ## used this way for now because there's no Context object around.
         while queue.Overdue():
           member = await self.pop_from_queue(queue)
-          self.ping(member, "You've dropped out of the queue for %s due to timeout." % queue.dname)
+          await self.ping(
+              member, "You've dropped out of the queue for %s due to timeout." % queue.dname)
           await guild.get_channel(channel_id).send(
               "%s has stopped waiting in the `%s` queue due to timeout." % (
                   member.mention, queue.name))
