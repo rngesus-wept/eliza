@@ -292,8 +292,9 @@ To actually join or leave queues, see the `lfg` command group."""
         while queue.Overdue():
           member = await self.pop_from_queue(queue)
           self.ping(member, 'You\'ve dropped out of the queue for %s due to timeout.' % queue.dname)
-          await ctx.send('%s has stopped waiting in the `%s` queue due to timeout.' % (
-              member.mention, queue.name))
+          await self.say_to_guild(
+              ctx, '%s has stopped waiting in the `%s` queue due to timeout.' % (
+                  member.mention, queue.name))
 
       await asyncio.sleep(self.watch_interval)
 
@@ -325,9 +326,10 @@ or simply `!lfg clear`."""
       ## AddMember side-effects to enqueue ctx.author. The if statement is to handle
       ## the behavior afterward depending on whether
       if await self.add_to_queue(queue, ctx.author, minutes):
-        await ctx.send('%s has joined the %s queue (%s waiting)' % (
-            ctx.author.mention, queue.role.mention,
-            PersonNL(len(queue), verb=False)))
+        await self.say_to_guild(
+            ctx, '%s has joined the %s queue (%s waiting)' % (
+                ctx.author.mention, queue.role.mention,
+                PersonNL(len(queue), verb=False)))
         for member in queue.ListMembers():
           if member != ctx.author:
             await self.ping('%s has joined you in the queue for %s.' % (
@@ -433,6 +435,7 @@ in queue."""
       await self.ping(
           '%s has challenged you to a game of %s! Removing you from these queues: `%s`' % (
               ctx.author.mention, queue.dname, '`, `'.join(old_queues)))
-    await ctx.send('%s -- %s has challenged you to a game%s!' % (
-        ', '.join(member.mention for member in opponents),
-        ctx.author.mention, '' if queue is None else ('of ' + queue.dname)))
+    await self.say_to_guild(
+        ctx, '%s -- %s has challenged you to a game%s!' % (
+            ', '.join(member.mention for member in opponents),
+            ctx.author.mention, '' if queue is None else ('of ' + queue.dname)))
