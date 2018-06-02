@@ -42,51 +42,6 @@ from discord.ext import commands
 ##    efficient and readable in ways that would be hard to replicate (but
 ##    again, the former is perhaps not relevant at our current scale).
 
-# class Faqlet:
-
-#   def __init__(self, id, config, question, answer, creator, created=None,
-#                last_editor=None, last_edited=None, tags=None):
-#     self.id = id
-#     self.question = question
-#     self.answer = answer
-#     self.creator = creator
-#     self.created = created or time.time()
-#     self.last_editor = last_editor
-#     self.last_edited = last_edited
-#     self.tags = tags or []
-
-#   def sync(self):
-#     """Decorator ensuring that the wrapped function will sync this object to config."""
-#     @functools.wraps(func)
-#     async def wrapped_fn(*args, **kwargs):
-#       return await func(*args, **kwargs)
-#     return wrapped
-
-#   def edit_impl(self):
-#     @functools.wraps(func)
-#     async def wrapped_dummy(**kwargs):
-#       for attr, value in kwargs.items():
-#         self.last_edited = time.time()  # Can be overwritten by manually passed value
-#         if attr == 'tags':
-#           for tag in value:
-#             if tag[0] == '-':
-#               self.tags.remove(tag[1:])
-#             elif tag[0] == '+':
-#               self.tags.append(tag[1:])
-#             else:
-#               self.tags.append(tag)
-#         elif attr == 'editor':
-#           self.last_editor = None if value == self.creator else value
-#         else:
-#           setattr(self, attr, value)
-#       return await func(**kwargs)
-#     return wrapped_dummy
-
-#   @self.sync
-#   @self.edit_impl
-#   async def edit(self, **kwargs):
-#     pass
-
 
 class Faq:
   """Red cog for managing FAQs."""
