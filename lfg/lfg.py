@@ -127,6 +127,8 @@ class Lfg:
 
     ## TODO: Initialize this queue state on startup
     self.guild_queues = collections.defaultdict(dict)
+    for guild_id in self.config.all_guilds():
+      self.load_guild_queues(guild_id)
     self.monitoring = {}
     self.watch_interval = 60  # seconds
 
