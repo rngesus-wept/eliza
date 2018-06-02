@@ -125,17 +125,25 @@ class Lfg:
     self.config.register_guild(**self.default_guild_settings)
     self.config.register_member(**self.default_member_settings)
 
-    ## TODO: Initialize this queue state on startup
     self.guild_queues = collections.defaultdict(dict)
-    for guild_id in self.config.all_guilds():
-      self.load_guild_queues(guild_id)
     self.monitoring = {}
     self.watch_interval = 60  # seconds
 
-  async def __unload(self):
+  async def initialize(self):
+    for guild_id in await self.config.all_guilds():
+      guild = self.bot.get_guild(guild_id)
+      await self.load_guild_queues(guild)
+      try:
+        self.bot.loop.create_task(self.monitor_guild(guild))
+      except ValueError:
+        log.error('Failed to automatically start monitoring for %s'
+                  ' due to lack of an LFG channel.' % guild.name)
+
+  def __unload(self):
     for guild_id in self.monitoring:
       self.monitoring[guild_id] = False
-      await self.clear_all_roles(guild_id)
+      self.bot.loop.create_task(
+          self.clear_all_roles(self.bot.get_guild(guild_id)))
 
   ####### Internal accessors
 
@@ -188,9 +196,26 @@ class Lfg:
         guild_queues[queue_name] = GuildQueue(
             name=queue_config['name'],
             role=discord.utils.get(guild.roles, id=queue_config['role_id']),
-            default_timed=queue_config['default_time'])
+            default_time=queue_config['default_time'])
     self.guild_queues[guild.id].update(guild_queues)
     return guild_queues
+
+  async def monitor_guild(self, guild: discord.Guild):
+    channel_id = await self.config.guild(guild).lfg_channel()
+    if channel_id is None:
+      raise ValueError("Cannot monitor a guild that doesn't have a LFG output channel set.")
+    self.monitoring[guild.id] = True
+    while self.monitoring[guild.id]:
+      for queue in self.guild_queues[guild.id].values():
+        ## TODO :: Refactor duplication of say_to_guild logic here; it's being
+        ## used this way for now because there's no Context object around.
+        while queue.Overdue():
+          member = await self.pop_from_queue(queue)
+          self.ping(member, "You've dropped out of the queue for %s due to timeout." % queue.dname)
+          await guild.get_channel(channel_id).send(
+              "%s has stopped waiting in the `%s` queue due to timeout." % (
+                  member.mention, queue.name))
+      await asyncio.sleep(self.watch_interval)
 
   ####### Commands
 
@@ -250,6 +275,7 @@ To actually join or leave queues, see the `lfg` command group."""
   @commands.guild_only()
   @checks.admin()
   async def queue_set_home(self, ctx: commands.Context, channel: discord.TextChannel=None):
+    """Designate the target for LFG automated messages."""
     channel = channel or ctx.channel
     await self.config.guild(ctx.guild).lfg_channel.set(channel.id)
     await ctx.send("Okay; from now on I'll send general LFG output to %s." % channel.mention)
@@ -286,17 +312,13 @@ To actually join or leave queues, see the `lfg` command group."""
     """Start the background process for queue monitoring in the current guild."""
     if verbose:
       await ctx.send('Starting queue monitoring.')
-    self.monitoring[ctx.guild.id] = True
-    while self.monitoring[ctx.guild.id]:
-      for queue in self.guild_queues[ctx.guild.id].values():
-        while queue.Overdue():
-          member = await self.pop_from_queue(queue)
-          self.ping(member, 'You\'ve dropped out of the queue for %s due to timeout.' % queue.dname)
-          await self.say_to_guild(
-              ctx, '%s has stopped waiting in the `%s` queue due to timeout.' % (
-                  member.mention, queue.name))
-
-      await asyncio.sleep(self.watch_interval)
+    try:
+      await self.monitor_guild(ctx.guild)
+    except ValueError:
+      await ctx.send("Cannot monitor a guild that doesn't have a LFG output channel set."
+                     " Use `!queue sethome <channel>` to set an output channel.")
+    finally:
+      self.monitoring[ctx.guild.id] = False
 
   @_queue.command(name='stop')
   @commands.guild_only()
