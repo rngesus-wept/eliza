@@ -8,6 +8,8 @@ discord-rewrite = "*"
 pytest = "*"
 pylint = "*"
 yarl = "<1.2"
+fuzzywuzzy = "*"
+python-levenshtein = "*"
 
 [dev-packages]
 
