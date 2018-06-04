@@ -240,7 +240,7 @@ instead be removed from the FAQ entry."""
 
     hits = set(await self.config.guild(ctx.guild).get_raw(tags[0]))
     for tag in tags[1:]:
-      hits &= set(await self.config.guild(ctx.guild).get_raw(tags[0]))
+      hits &= set(await self.config.guild(ctx.guild).get_raw(tag))
     if not hits:
       return await ctx.send(
           "I couldn't find any entries matching that tag or combination of tags.")
