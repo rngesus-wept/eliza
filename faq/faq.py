@@ -68,7 +68,7 @@ database."""
           check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
           timeout=300)
     except asyncio.TimeoutError:
-      return await ctx.author.send("Sorry, cancelling FAQ creation due to timeout."
+      return await ctx.send("Sorry, cancelling FAQ creation due to timeout."
                                    " Make your request again when you\'re ready.")
 
     if answer.mentions or answer.mention_everyone:
@@ -124,7 +124,7 @@ database."""
           check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
           timeout=300)
     except asyncio.TimeoutError:
-      return await ctx.author.send("Sorry, cancelling the question edit due to timeout. "
+      return await ctx.send("Sorry, cancelling the question edit due to timeout. "
                                    "Make your request again when you're ready.")
 
     if question.mentions or question.mention_everyone:
@@ -162,7 +162,7 @@ database."""
           check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
           timeout=300)
     except asyncio.TimeoutError:
-      return await ctx.author.send("Sorry, cancelling the answer edit due to timeout. "
+      return await ctx.send("Sorry, cancelling the answer edit due to timeout. "
                                    "Make your request again when you're ready.")
 
     if answer.mentions or answer.mention_everyone:
