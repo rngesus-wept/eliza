@@ -86,7 +86,9 @@ database."""
     elif ctx.message.mentions or ctx.message.mention_everyone:
       return await ctx.send('Please don\'t mention Discord members in your question.')
 
-    await ctx.author.send("Tell me: `{}`".format(question))
+    await ctx.send(
+        "Okay {}, waiting on your response to ```{}``` (or `!cancel`)".format(
+            ctx.author.mention, question))
 
     try:
       answer = await ctx.bot.wait_for(
@@ -99,6 +101,8 @@ database."""
 
     if answer.mentions or answer.mention_everyone:
       return await ctx.send('Please don\'t mention Discord members in your response.')
+    elif answer.content.lower() == '!cancel':
+      return await ctx.send('Okay %s, cancelling FAQ creation.' % ctx.author.mention)
 
     async with self.config.guild(ctx.guild)._faqs() as faqs:
       new_faq = {
@@ -116,6 +120,11 @@ database."""
                  " `!faq tag %d <tag1> [<tag2> <tag3>...]` to make your entry"
                  " searchable.") % new_faq['id'],
         embed=self.FaqEmbed(ctx.guild, **new_faq))
+
+  @_Faq.command(name='edit-q')
+  @commands.guild_only()
+  @checks.mod()
+  async def FaqEditQuestion(self, ctx: commands.Context, faq_id)
 
   @_Faq.command(name='tag')
   @commands.guild_only()
