@@ -2,7 +2,6 @@
 
 import asyncio
 from datetime import datetime
-import functools
 from fuzzywuzzy import process
 
 from redbot.core import Config
@@ -96,8 +95,8 @@ database."""
           check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
           timeout=300)
     except asyncio.TimeoutError:
-      await ctx.author.send("Sorry, make your request again when you\'re ready.")
-      return
+      return await ctx.author.send("Sorry, cancelling FAQ creation due to timeout."
+                                   " Make your request again when you\'re ready.")
 
     if answer.mentions or answer.mention_everyone:
       return await ctx.send('Please don\'t mention Discord members in your response.')
@@ -111,20 +110,102 @@ database."""
           'answer': answer.content,
           'creator': ctx.author.id,
           'created': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
-          'last_editor': None,
+          'last_editor': None,  # an ID
           'last_edit': None,
           'tags': []}
       faqs.append(new_faq)
     await ctx.send(
-        content=("Thanks for contributing to the FAQ! Don't forget to use"
+        content=("Thanks for contributing to the FAQ, %s! Don't forget to use"
                  " `!faq tag %d <tag1> [<tag2> <tag3>...]` to make your entry"
-                 " searchable.") % new_faq['id'],
+                 " searchable.") % (ctx.author.mention, new_faq['id']),
         embed=self.FaqEmbed(ctx.guild, **new_faq))
+
+  async def GetFaqEntry(self, ctx: commands.Context, faq_id, verbose=True):
+    try:
+      return (await self.config.guild(ctx.guild)._faqs())[int(faq_id)]
+    except ValueError:
+      if verbose:
+        await ctx.send("`%s` is not a valid FAQ ID." % faq_id)
+    except IndexError:
+      if verbose:
+        await ctx.send("There's no FAQ entry with ID %s." % faq_id)
+    return None
 
   @_Faq.command(name='edit-q')
   @commands.guild_only()
   @checks.mod()
-  async def FaqEditQuestion(self, ctx: commands.Context, faq_id)
+  async def FaqEditQuestion(self, ctx: commands.Context, faq_id):
+    """Edit the question for a FAQ entry."""
+    faq_entry = await self.GetFaqEntry(ctx, faq_id, verbose=True)
+    if faq_entry is None:
+      return
+
+    await ctx.send(
+        "Okay %s, waiting on your change to the question for FAQ %d (or `!cancel`)."
+        " Here's the raw value, for your convenience: ```%s```" % (
+            ctx.author.mention, faq_id, faq_entry['question']))
+
+    try:
+      question = await ctx.bot.wait_for(
+          'message',
+          check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
+          timeout=300)
+    except asyncio.TimeoutError:
+      return await ctx.author.send("Sorry, cancelling the question edit due to timeout. "
+                                   "Make your request again when you're ready.")
+
+    if question.mentions or question.mention_everyone:
+      return await ctx.send("Please don't mention Discord members in your question.")
+    elif question.content.lower() == '!cancel':
+      return await ctx.send("Okay %s, cancelling edit on FAQ %d." % (ctx.author.mention, faq_id))
+
+    async with self.config.guild(ctx.guild)._faqs() as faqs:
+      faqs[faq_id]['question'] = question
+      faqs[faq_id]['last_editor'] = (None if faq_entry['creator'] == ctx.author.id
+                                     else ctx.author.id)
+      faqs[faq_id]['last_edit'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+      faq_entry = dict(faqs[faq_id])
+      await ctx.send(
+          content="Okay %s, made your edit to FAQ %d:" % (ctx.author.mention, faq_id),
+          embed=self.FaqEmbed(ctx.guild, **faq_entry))
+
+  @_Faq.command(name='edit-a')
+  @commands.guild_only()
+  @checks.mod()
+  async def FaqEditAnswer(self, ctx: commands.Context, faq_id):
+    """Edit the answer for a FAQ entry."""
+    faq_entry = await self.GetFaqEntry(ctx, faq_id, verbose=True)
+    if faq_entry is None:
+      return
+
+    await ctx.send(
+        "Okay %s, waiting on your change to the answer for FAQ %d (or `!cancel`)."
+        " Here's the raw value, for your convenience: ```%s```" % (
+            ctx.author.mention, faq_id, faq_entry['answer']))
+
+    try:
+      answer = await ctx.bot.wait_for(
+          'message',
+          check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
+          timeout=300)
+    except asyncio.TimeoutError:
+      return await ctx.author.send("Sorry, cancelling the answer edit due to timeout. "
+                                   "Make your request again when you're ready.")
+
+    if answer.mentions or answer.mention_everyone:
+      return await ctx.send("Please don't mention Discord members in your answer.")
+    elif answer.content.lower() == '!cancel':
+      return await ctx.send("Okay %s, cancelling edit on FAQ %d." % (ctx.author.mention, faq_id))
+
+    async with self.config.guild(ctx.guild)._faqs() as faqs:
+      faqs[faq_id]['answer'] = answer
+      faqs[faq_id]['last_editor'] = (None if faq_entry['creator'] == ctx.author.id
+                                     else ctx.author.id)
+      faqs[faq_id]['last_edit'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+      faq_entry = dict(faqs[faq_id])
+      await ctx.send(
+          content="Okay %s, made your edit to FAQ %d:" % (ctx.author.mention, faq_id),
+          embed=self.FaqEmbed(ctx.guild, **faq_entry))
 
   @_Faq.command(name='tag')
   @commands.guild_only()
@@ -160,11 +241,9 @@ instead be removed from the FAQ entry."""
   @_Faq.command(name='show')
   @commands.guild_only()
   async def FaqShow(self, ctx: commands.Context, faq_id):
-    try:
-      faq_entry = (await self.config.guild(ctx.guild)._faqs())[int(faq_id)]
-      return await ctx.send(embed=self.FaqEmbed(ctx.guild, **faq_entry))
-    except IndexError:
-      return await ctx.send("Sorry, there is no FAQ entry with that ID.")
+    faq_entry = await self.GetFaqEntry(ctx, faq_id, verbose=True)
+    if faq_entry is not None:
+      await ctx.send(embed=self.FaqEmbed(ctx.guild, **faq_entry))
 
   @_Faq.command(name='search')
   @commands.guild_only()
@@ -205,10 +284,11 @@ instead be removed from the FAQ entry."""
 
   def FaqEmbed(self, guild, *, id, question, answer, creator, created,
                last_editor, last_edit, tags):
-    embed = discord.Embed(title=question,
+    embed = discord.Embed(title='(#%d) %s' % (id, question),
                           color=discord.Color(0xff0000 if '_deleted' in tags else 0x22aaff),
                           description=answer,
-                          timestamp=datetime.strptime(created, '%Y-%m-%dT%H:%M:%S.%fZ'))
+                          timestamp=datetime.strptime(last_edit or created,
+                                                      '%Y-%m-%dT%H:%M:%S.%fZ'))
     author = guild.get_member(creator).display_name
     icon = guild.get_member(creator).avatar_url
     if last_editor:
