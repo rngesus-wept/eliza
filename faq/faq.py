@@ -134,7 +134,7 @@ database."""
   @_Faq.command(name='edit-q')
   @commands.guild_only()
   @checks.mod()
-  async def FaqEditQuestion(self, ctx: commands.Context, faq_id):
+  async def FaqEditQuestion(self, ctx: commands.Context, faq_id: int):
     """Edit the question for a FAQ entry."""
     faq_entry = await self.GetFaqEntry(ctx, faq_id, verbose=True)
     if faq_entry is None:
@@ -160,7 +160,7 @@ database."""
       return await ctx.send("Okay %s, cancelling edit on FAQ %d." % (ctx.author.mention, faq_id))
 
     async with self.config.guild(ctx.guild)._faqs() as faqs:
-      faqs[faq_id]['question'] = question
+      faqs[faq_id]['question'] = question.content
       faqs[faq_id]['last_editor'] = (None if faq_entry['creator'] == ctx.author.id
                                      else ctx.author.id)
       faqs[faq_id]['last_edit'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
@@ -172,7 +172,7 @@ database."""
   @_Faq.command(name='edit-a')
   @commands.guild_only()
   @checks.mod()
-  async def FaqEditAnswer(self, ctx: commands.Context, faq_id):
+  async def FaqEditAnswer(self, ctx: commands.Context, faq_id: int):
     """Edit the answer for a FAQ entry."""
     faq_entry = await self.GetFaqEntry(ctx, faq_id, verbose=True)
     if faq_entry is None:
@@ -198,7 +198,7 @@ database."""
       return await ctx.send("Okay %s, cancelling edit on FAQ %d." % (ctx.author.mention, faq_id))
 
     async with self.config.guild(ctx.guild)._faqs() as faqs:
-      faqs[faq_id]['answer'] = answer
+      faqs[faq_id]['answer'] = answer.content
       faqs[faq_id]['last_editor'] = (None if faq_entry['creator'] == ctx.author.id
                                      else ctx.author.id)
       faqs[faq_id]['last_edit'] = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%fZ')
@@ -272,7 +272,8 @@ instead be removed from the FAQ entry."""
       faq_entries = []
       for faq_id in hits:
         data = (await self.config.guild(ctx.guild)._faqs())[int(faq_id)]
-        if '_deleted' not in data['tags']:
+        if '_deleted' in tags or '_deleted' not in data['tags']:
+          ## Only include _deleted hits if it was explicitly requested
           faq_entries.append(self.FaqEmbed(ctx.guild, **data))
       if not faq_entries:
         return await ctx.send(
