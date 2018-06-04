@@ -73,31 +73,32 @@ class Faq:
     """Create a new FAQ entry.
 
 Simply input the question, e.g. `[p]faq new How do clashes work?`. The bot will \
-PM you for the response to the question, with a 5 minute timeout. Note that \
-Markdown is supported in questions and answers, e.g. \\*\\*bold\\*\\*, \
-\\/italic\\/, \\_underline\\_, \\~strikethrough\\~.
+take your next message in the same channel as the response to the question, with \
+a 5 minute timeout. Note that Markdown is supported in questions and answers, \
+e.g. \\*\\*bold\\*\\*, \\/italic\\/, \\_underline\\_, \\~strikethrough\\~.
 
 Remember to search around a bit to see if your question is already in the \
 database."""
     ## Syntax checking
     question = ' '.join(q)
     if not question.strip():
-      await ctx.send('I can\'t accept an FAQ entry that doesn\'t have a question.')
-      return
+      return await ctx.send('I can\'t accept an FAQ entry that doesn\'t have a question.')
     elif ctx.message.mentions or ctx.message.mention_everyone:
-      await ctx.send('Please don\'t mention Discord members in your question.')
-      return
+      return await ctx.send('Please don\'t mention Discord members in your question.')
 
     await ctx.author.send("Tell me: `{}`".format(question))
 
     try:
       answer = await ctx.bot.wait_for(
           'message',
-          check=lambda m: m.guild is None and m.author == ctx.author,
+          check=lambda m: m.channel == ctx.channel and m.author == ctx.author,
           timeout=300)
     except asyncio.TimeoutError:
       await ctx.author.send("Sorry, make your request again when you\'re ready.")
       return
+
+    if answer.mentions or answer.mention_everyone:
+      return await ctx.send('Please don\'t mention Discord members in your response.')
 
     async with self.config.guild(ctx.guild)._faqs() as faqs:
       new_faq = {
