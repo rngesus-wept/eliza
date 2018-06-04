@@ -228,8 +228,11 @@ instead be removed from the FAQ entry."""
     if missing_tags:
       suggestions = []
       for tag in missing_tags:
-        suggest = [result[0] for result in process.extract(tag, all_tags, limit=5)
-                   if result[1] >= 50]
+        suggest = []
+        for fuzzed_tag, rating in process.extract(tag, all_tags, limit=5):
+          if rating < 50:
+            break
+          suggest.append('"%s"' % fuzzed_tag if ' ' in fuzzed_tag else fuzzed_tag)
         suggestions.append("`%s` -- Instead try `%s`" % (tag, "`, `".join(suggest)))
 
       return await ctx.send(
