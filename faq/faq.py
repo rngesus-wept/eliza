@@ -229,6 +229,9 @@ Separate tags with spaces. For multi-word tags, use quotes. Deleted FAQ entries 
 not show up unless you specify `_deleted` as a tag. If any tags listed do not exist, \
 the search will instead suggest close matches for the missed tags."""
     tags = list(map(str.lower, tags))
+    get_deleted = '_deleted' in tags
+    if get_deleted:
+      tags.remove('_deleted')
     all_tags = list(await self.config.guild(ctx.guild).all())
     all_tags.remove('_faqs')
     missing_tags = set(tags) - set(all_tags)
@@ -255,7 +258,7 @@ the search will instead suggest close matches for the missed tags."""
       faq_entries = []
       for faq_id in hits:
         data = (await self.config.guild(ctx.guild)._faqs())[int(faq_id)]
-        if '_deleted' in tags or '_deleted' not in data['tags']:
+        if get_deleted or '_deleted' not in data['tags']:
           ## Only include _deleted hits if it was explicitly requested
           faq_entries.append(self.FaqEmbed(ctx.guild, **data))
       if not faq_entries:
