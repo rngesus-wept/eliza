@@ -7,7 +7,7 @@ from fuzzywuzzy import process
 from redbot.core import Config
 from redbot.core import checks
 from redbot.core.bot import Red
-from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
+from redbot.core.utils.menus import menu, prev_page, next_page
 
 import discord
 from discord.ext import commands
@@ -15,6 +15,18 @@ from discord.ext import commands
 
 ## TODO: Q/A refactoring
 
+async def close_menu(ctx: commands.Context, pages: list, controls: dict,
+                     message: discord.Message, page: int, timeout: float, emoji: str):
+  ## This overrides the normal "close" behavior in redbot.core.utils.menus in
+  ## that it clears reactions instead of deleting the search results.
+  try:
+    await message.clear_reactions()
+  except discord.Forbidden:
+    for key in controls.keys():
+      await message.remove_reaction(key, ctx.bot.user)
+  return None
+
+DEFAULT_CONTROLS = {"⬅": prev_page, "❌": close_menu, "➡": next_page}
 
 class Faq:
   """Red cog for managing FAQs."""
