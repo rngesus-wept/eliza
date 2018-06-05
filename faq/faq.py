@@ -7,7 +7,7 @@ from fuzzywuzzy import process
 from redbot.core import Config
 from redbot.core import checks
 from redbot.core.bot import Red
-from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
+from redbot.core.utils.menus import menu, prev_page, next_page
 
 import discord
 from discord.ext import commands
@@ -15,6 +15,18 @@ from discord.ext import commands
 
 ## TODO: Q/A refactoring
 
+async def close_menu(ctx: commands.Context, pages: list, controls: dict,
+                     message: discord.Message, page: int, timeout: float, emoji: str):
+  ## This overrides the normal "close" behavior in redbot.core.utils.menus in
+  ## that it clears reactions instead of deleting the search results.
+  try:
+    await message.clear_reactions()
+  except discord.Forbidden:
+    for key in controls.keys():
+      await message.remove_reaction(key, ctx.bot.user)
+  return None
+
+DEFAULT_CONTROLS = {"⬅": prev_page, "❌": close_menu, "➡": next_page}
 
 class Faq:
   """Red cog for managing FAQs."""
@@ -69,7 +81,7 @@ database."""
           timeout=300)
     except asyncio.TimeoutError:
       return await ctx.send("Sorry, cancelling FAQ creation due to timeout."
-                                   " Make your request again when you\'re ready.")
+                            " Make your request again when you\'re ready.")
 
     if answer.mentions or answer.mention_everyone:
       return await ctx.send('Please don\'t mention Discord members in your response.')
@@ -94,6 +106,7 @@ database."""
         embed=self.FaqEmbed(ctx.guild, **new_faq))
 
   async def GetFaqEntry(self, ctx: commands.Context, faq_id, verbose=True):
+    """Get the FAQ dictionary item corresponding to faq_id."""
     try:
       return (await self.config.guild(ctx.guild)._faqs())[int(faq_id)]
     except ValueError:
@@ -125,7 +138,7 @@ database."""
           timeout=300)
     except asyncio.TimeoutError:
       return await ctx.send("Sorry, cancelling the question edit due to timeout. "
-                                   "Make your request again when you're ready.")
+                            "Make your request again when you're ready.")
 
     if question.mentions or question.mention_everyone:
       return await ctx.send("Please don't mention Discord members in your question.")
@@ -163,7 +176,7 @@ database."""
           timeout=300)
     except asyncio.TimeoutError:
       return await ctx.send("Sorry, cancelling the answer edit due to timeout. "
-                                   "Make your request again when you're ready.")
+                            "Make your request again when you're ready.")
 
     if answer.mentions or answer.mention_everyone:
       return await ctx.send("Please don't mention Discord members in your answer.")
@@ -214,6 +227,7 @@ instead be removed from the FAQ entry."""
   @_Faq.command(name='show')
   @commands.guild_only()
   async def FaqShow(self, ctx: commands.Context, faq_id):
+    """Show the FAQ entry with the given ID."""
     faq_entry = await self.GetFaqEntry(ctx, faq_id, verbose=True)
     if faq_entry is not None:
       await ctx.send(embed=self.FaqEmbed(ctx.guild, **faq_entry))
@@ -221,7 +235,15 @@ instead be removed from the FAQ entry."""
   @_Faq.command(name='search')
   @commands.guild_only()
   async def FaqSearch(self, ctx: commands.Context, *tags):
+    """Search for FAQ entries that have all the listed tags.
+
+Separate tags with spaces. For multi-word tags, use quotes. Deleted FAQ entries will \
+not show up unless you specify `_deleted` as a tag. If any tags listed do not exist, \
+the search will instead suggest close matches for the missed tags."""
     tags = list(map(str.lower, tags))
+    get_deleted = '_deleted' in tags
+    if get_deleted:
+      tags.remove('_deleted')
     all_tags = list(await self.config.guild(ctx.guild).all())
     all_tags.remove('_faqs')
     missing_tags = set(tags) - set(all_tags)
@@ -248,7 +270,7 @@ instead be removed from the FAQ entry."""
       faq_entries = []
       for faq_id in hits:
         data = (await self.config.guild(ctx.guild)._faqs())[int(faq_id)]
-        if '_deleted' in tags or '_deleted' not in data['tags']:
+        if get_deleted or '_deleted' not in data['tags']:
           ## Only include _deleted hits if it was explicitly requested
           faq_entries.append(self.FaqEmbed(ctx.guild, **data))
       if not faq_entries:
