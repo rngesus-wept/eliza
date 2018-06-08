@@ -213,7 +213,7 @@ instead be removed from the FAQ entry."""
       faq_tags = faqs[faq_id]['tags']
       for tag in map(str.lower, tags):
         if tag[0] == '-' and tag[1:] in faq_tags:
-          async with self.config.guild(ctx.guild).getattr(tag[1:])() as tag_backref:
+          async with self.config.guild(ctx.guild).getattr(tag[1:]) as tag_backref:
             tag_backref.remove(faq_id)
           faq_tags.remove(tags[1:])
         elif tag not in faq_tags:
