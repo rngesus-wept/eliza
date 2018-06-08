@@ -212,9 +212,11 @@ instead be removed from the FAQ entry."""
     async with self.config.guild(ctx.guild)._faqs() as faqs:
       faq_tags = faqs[faq_id]['tags']
       for tag in map(str.lower, tags):
+        ## TODO: Probably refactor this
         if tag[0] == '-' and tag[1:] in faq_tags:
-          async with self.config.guild(ctx.guild).getattr(tag[1:]) as tag_backref:
-            tag_backref.remove(faq_id)
+          tag_backref = await self.config.guild(ctx.guild).get_raw(tag[1:], default=None) or []
+          tag_backref.remove(faq_id)
+          await self.config.guild(ctx.guild).set_raw(tag[1:], value=tag_backref)
           faq_tags.remove(tags[1:])
         elif tag not in faq_tags:
           tag_backref = await self.config.guild(ctx.guild).get_raw(tag, default=None) or []
