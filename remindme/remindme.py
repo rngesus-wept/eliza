@@ -1,6 +1,9 @@
-"""Cog for issuing timed reminders."""
+"""Cog for issuing timed reminders.
+
+Based on Twentysix's implementation for Red v2."""
 
 import asyncio
+import logging
 import time
 
 from redbot.core import Config
@@ -8,6 +11,10 @@ from redbot.core.bot import Red
 
 import discord
 from discord.ext import commands
+
+
+log = logging.getLogger("remindme")
+log.setLevel(logging.INFO)
 
 
 class RemindMe:
@@ -21,8 +28,8 @@ class RemindMe:
     self.bot = bot
     self.config = Config.get_conf(self, 0xEDFB993DF88A894D, force_registration=True)
     self.config.register_user(**self.default_user_settings)
-    self.reminder_task = self.bot.loop.create_task(self.CheckReminders())
     self.monitoring_interval = 10  # seconds
+    self.reminder_task = self.bot.loop.create_task(self.CheckReminders())
     self.units = {
         'second': 1,
         'minute': 60,
@@ -38,8 +45,10 @@ class RemindMe:
 
   async def _AddReminder(self, user: discord.User, duration_s: float, message: str):
     """Save USER's MESSAGE for retransmission in DURATION_S seconds."""
+    log.info('Recording reminder %r for %s in %f seconds.' % (
+        message, user.name, duration_s))
     async with self.config.user(user).reminders() as reminders:
-      reminders[time.time() + duration_s] = message
+      reminders[str(time.time() + duration_s)] = message
 
   async def _ShortReminder(self, user: discord.User, duration_s: float, message: str):
     """Remind USER of MESSAGE in DURATION_S seconds."""
@@ -58,18 +67,18 @@ class RemindMe:
         user = self.bot.get_user(user_id)
         async with self.config.user(user).reminders() as reminders:
           to_remove = []
-          for timestamp, message in reminders:
+          for timestamp, message in reminders.items():
             now = time.time()
-            if now <= timestamp:
+            if now >= float(timestamp):
               await user.send('Reminder: `%s`' % message)
               to_remove.append(timestamp)
-            elif timestamp - now <= 2 * self.monitoring_interval:
+            elif float(timestamp) - now <= 2 * self.monitoring_interval:
               self.bot.loop.create_task(
-                  self._ShortReminder(user, timestamp - now, message))
+                  self._ShortReminder(user, float(timestamp) - now, message))
               to_remove.append(timestamp)
           for timestamp in to_remove:
             del reminders[timestamp]
-      asyncio.sleep(self.monitoring_interval)
+      await asyncio.sleep(self.monitoring_interval)
 
   @commands.command(name='remindme')
   async def CreateReminder(self, ctx: commands.Context,
