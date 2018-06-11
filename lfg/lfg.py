@@ -448,18 +448,18 @@ in queue."""
       except ValueError:
         return await ctx.send('Sorry, could not parse the rest of your request: `%s`' %
                               ' '.join(targets[1:]))
+      of_game = ' of ' + queue.dname
     else:
       opponents = ctx.message.mentions
-      queue = None
+      of_game = ''
 
     await self.remove_from_all_queues(ctx.author, ctx.guild)
     for player in opponents:
       old_queues = await self.remove_from_all_queues(player, ctx.guild)
       await self.ping(
           player,
-          '%s has challenged you to a game of %s! Removing you from these queues: `%s`' % (
-              ctx.author.mention, queue.dname, '`, `'.join(old_queues)))
+          '%s has challenged you to a game%s! Removing you from these queues: `%s`' % (
+              ctx.author.mention, of_game, '`, `'.join(old_queues)))
     await self.say_to_guild(
         ctx, '%s -- %s has challenged you to a game%s!' % (
-            ', '.join(member.mention for member in opponents),
-            ctx.author.mention, '' if queue is None else (' of ' + queue.dname)))
+            ', '.join(member.mention for member in opponents), ctx.author.mention, of_game))
