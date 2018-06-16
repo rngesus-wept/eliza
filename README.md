@@ -26,8 +26,8 @@ as the answer to the question, confirming entry creation in an embed with the en
 Existing entries can be further modified by a moderator, using `[p]faq edit-q <id>` and
 `[p]faq edit-a <id>` to change the entry's question and answer respectively, and
 `[p]faq tag <id> <tag1> [<tag2>...]` to add tags to the entry. Multi-word tags should be contained
-in quotes. <del>Tags beginning with a hyphen `-` are instead removed from the entry's tag list, e.g.
- `[p]faq tag 10 -wrong`.</del> *This feature isn't working correctly for now; see issue #5.*
+in quotes. Tags beginning with a hyphen `-` are instead removed from the entry's tag list, e.g.
+`[p]faq tag 10 -wrong`.
 
 Users can request that Eliza show a FAQ entry by using `[p]faq search <tag1> [<tag2>...]` to list all
 entries that have *all* the listed tags; or by using `[p]faq show <id>` to show specific entry.
