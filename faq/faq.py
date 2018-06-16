@@ -44,7 +44,7 @@ class Faq:
     self.config = Config.get_conf(self, 0x92A804678C03D64D, force_registration=False)
     self.config.register_guild(**self.default_guild_settings)
 
-  @commands.group(name='faq')
+  @commands.group(name='faq', autohelp=False)
   async def _Faq(self, ctx: commands.Context):
     """Frequently asked questions database."""
     if ctx.invoked_subcommand is None:

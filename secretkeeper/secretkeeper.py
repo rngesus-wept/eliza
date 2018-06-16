@@ -65,7 +65,7 @@ Go on, tell it where the bodies are buried!"""
     salt = rng_salt(salt_chars, salt_length)
     return digest(hash_type, content, salt), salt
 
-  @commands.group(name='secret')
+  @commands.group(name='secret', autohelp=False)
   async def _secret(self, ctx: commands.Context):
     """Secrets-manipulating operations.
 
