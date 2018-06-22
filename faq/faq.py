@@ -210,19 +210,21 @@ instead be removed from the FAQ entry."""
                             ' `!faq delete` or `!faq undelete` instead.')
 
     async with self.config.guild(ctx.guild)._faqs() as faqs:
-      faq_tags = faqs[faq_id]['tags']
-      for tag in map(str.lower, tags):
-        ## TODO: Probably refactor this
-        if tag[0] == '-' and tag[1:] in faq_tags:
-          tag_backref = await self.config.guild(ctx.guild).get_raw(tag[1:], default=None) or []
-          tag_backref.remove(faq_id)
-          await self.config.guild(ctx.guild).set_raw(tag[1:], value=tag_backref)
-          faq_tags.remove(tags[1:])
-        elif tag not in faq_tags:
-          tag_backref = await self.config.guild(ctx.guild).get_raw(tag, default=None) or []
+      faq_tags = set(faqs[faq_id]['tags'])
+      to_add = {tag.lower() for tag in tags if tag[0] != '-'}
+      to_rem = {tag[1:].lower() for tag in tags if tag[0] == '-'}
+      faq_tags = (faq_tags | to_add) - to_rem
+
+      for tag in to_add | to_rem:
+        tag_backref = await self.config.guild(ctx.guild).get_raw(tag, default=None) or []
+        if tag in to_add and faq_id not in tag_backref:
           tag_backref.append(faq_id)
-          await self.config.guild(ctx.guild).set_raw(tag, value=tag_backref)
-          faq_tags.append(tag)
+        elif tag in to_rem and faq_id in tag_backref:
+          tag_backref.remove(faq_id)
+        await self.config.guild(ctx.guild).set_raw(tag, value=tag_backref)
+
+      faqs[faq_id]['tags'] = list(faq_tags)
+
     await ctx.send('Got it. The tags for FAQ entry %d are now `%r`.' % (
         faq_id, (await self.config.guild(ctx.guild)._faqs())[faq_id]['tags']))
 
