@@ -209,12 +209,10 @@ instead be removed from the FAQ entry."""
       return await ctx.send('`_deleted` is a reserved tag; please use'
                             ' `!faq delete` or `!faq undelete` instead.')
 
-    tags = list(map(str.lower, tags)) # why I have to coerce this iterator
-                                      # before looping it, I don't know
     async with self.config.guild(ctx.guild)._faqs() as faqs:
       faq_tags = set(faqs[faq_id]['tags'])
-      to_add = {tag for tag in tags if tag[0] != '-'}
-      to_rem = {tag[1:] for tag in tags if tag[0] == '-'}
+      to_add = {tag.lower() for tag in tags if tag[0] != '-'}
+      to_rem = {tag[1:].lower() for tag in tags if tag[0] == '-'}
       faq_tags = (faq_tags | to_add) - to_rem
 
       for tag in to_add | to_rem:
