@@ -9,9 +9,8 @@ these cogs available for your own Red instance, use
 [p]cog install eliza $COG_NAME
 #+END_SRC
 
-Throughout this documentation, when Eliza is said to listen for a message, she
-is listening only in the same channel that the relevant command was issued, with
-a timeout of 5 minutes.
+Throughout this documentation, when Eliza is said to listen for a message, she is listening only in
+the same channel that the relevant command was issued, with a timeout of 5 minutes.
 
 * *faq*
 
@@ -34,3 +33,34 @@ in quotes. Tags beginning with a hyphen =-= are instead removed from the entry's
 
 Users can request that Eliza show a FAQ entry by using =[p]faq search <tag1> [<tag2>...]= to list all
 entries that have /all/ the listed tags; or by using =[p]faq show <id>= to show specific entry.
+
+* *lfg*
+
+Maintain per-guild queues of people looking to playing particular games. LFG queues (henceforth
+simply "queues") are created and managed by admins. Guild members can join and leave particular
+queues, query the contents of queues, and challenge other members who are waiting in queue.
+
+An admin can begin the creation of an LFG queue using =[p]queue create <name>=. This initializes the
+queue using the given name, which should be case-insensitive-unique among all queue names. In
+particular, an @-able role is created in the guild as "LFG <name>" using the capitalization provided
+by the admin, but future references to the queue through commands (including administrative
+commands) will be case-insensitive. Queues can be deleted by admins using =[p]queue delete <name>=.
+All extant queues can be listed by =[p]queue list=.
+
+By default, whenever Eliza responds to LFG-related commands, she will respond in the channel that
+the command was issued in. To change this behavior, an admin should use =[p]queue sethome <channel>=
+to route all the appropriate output to that channel instead.
+
+Members can join an LFG queue by using =[p]lfg <name>=, which accepts an additional optional argument
+=time= indicating the amount of time that member will remain in that queue, in minutes. If this
+argument is not provided, it is presumed to be a guild-specific default, which is normally 60 but
+may be configured by an admin using =[p]queue settime <minutes>=. Eliza maintains an invariant that as
+long as a member is in an LFG queue that member will also possess the corresponding role for that
+queue. It is then easy to communicate with people in that queue by @-ing the role; for example, for
+negotiation of game parameters.
+
+* *remindme*
+
+* *secretkeeper*
+
+* *todo*
