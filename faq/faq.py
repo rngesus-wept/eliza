@@ -4,13 +4,13 @@ import asyncio
 from datetime import datetime
 from fuzzywuzzy import process
 
+import discord
+from redbot.core import commands
+
 from redbot.core import Config
 from redbot.core import checks
 from redbot.core.bot import Red
 from redbot.core.utils.menus import menu, prev_page, next_page
-
-import discord
-from discord.ext import commands
 
 
 ## TODO: Q/A refactoring
@@ -28,7 +28,7 @@ async def close_menu(ctx: commands.Context, pages: list, controls: dict,
 
 DEFAULT_CONTROLS = {"⬅": prev_page, "❌": close_menu, "➡": next_page}
 
-class Faq:
+class Faq(commands.Cog):
   """Red cog for managing FAQs."""
 
   ## As tagged FAQs get added to the FAQ, the guild config will take on new

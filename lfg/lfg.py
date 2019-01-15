@@ -9,7 +9,7 @@ import random
 import time
 
 import discord
-from discord.ext import commands
+from redbot.core import commands
 
 from redbot.core import Config
 from redbot.core import checks
@@ -107,7 +107,7 @@ def PersonNL(number, verb=True):
   return ('are %d people' if verb else '%d people') % number
 
 
-class Lfg:
+class Lfg(commands.Cog):
   """Red cog for managing LFG queues."""
 
   default_guild_settings = {

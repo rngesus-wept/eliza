@@ -6,18 +6,18 @@ import asyncio
 import logging
 import time
 
+import discord
+from redbot.core import commands
+
 from redbot.core import Config
 from redbot.core.bot import Red
-
-import discord
-from discord.ext import commands
 
 
 log = logging.getLogger("remindme")
 log.setLevel(logging.INFO)
 
 
-class RemindMe:
+class RemindMe(commands.Cog):
   """Cog for issuing timed reminders."""
 
   default_user_settings = {

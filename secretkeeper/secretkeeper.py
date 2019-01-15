@@ -21,9 +21,9 @@ import random
 import time
 
 import discord
-from discord.ext import commands
-from redbot.core import Config
+from redbot.core import commands
 
+from redbot.core import Config
 from redbot.core.bot import Red
 
 from . import utils
