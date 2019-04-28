@@ -355,8 +355,9 @@ or simply `!lfg clear`."""
                 PersonNL(len(queue), verb=False)))
         for member in queue.ListMembers():
           if member != ctx.author:
-            await self.ping('%s has joined you in the queue for %s.' % (
-                ctx.author.mention, queue.dname))
+            await self.ping(member,
+                            '%s has joined you in the queue for %s.' % (
+                              ctx.author.mention, queue.dname))
       else:
         await ctx.send('Okay, updating your time in the `%s` queue to %d minutes.' % (
             queue.name, minutes))
