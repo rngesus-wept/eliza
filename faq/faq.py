@@ -1,4 +1,6 @@
-"""Cog for managing tagged FAQs within a channel."""
+"""Cog for managing tagged FAQs within a guild.
+
+Each guild gets its own FAQ database."""
 
 import asyncio
 from datetime import datetime
