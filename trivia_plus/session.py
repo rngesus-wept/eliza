@@ -2,6 +2,7 @@
 import asyncio
 import time
 import random
+import re
 from collections import Counter
 import discord
 from redbot.core import bank
@@ -218,7 +219,7 @@ class TriviaSession:
             The message predicate.
 
         """
-        answers = tuple(s.lower() for s in answers)
+        answers = tuple(re.compile(f'\\b{s}\\b', re.I) for s in answers)
 
         def _pred(message: discord.Message):
             early_exit = message.channel != self.ctx.channel or message.author == self.ctx.guild.me
@@ -229,10 +230,7 @@ class TriviaSession:
             guess = message.content.lower()
             guess = normalize_smartquotes(guess)
             for answer in answers:
-                if " " in answer and answer in guess:
-                    # Exact matching, issue #331
-                    return True
-                elif any(word == answer for word in guess.split(" ")):
+                if answer.search(guess):
                     return True
             return False
 
