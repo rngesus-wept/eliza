@@ -20,6 +20,7 @@ _REVEAL_MESSAGES = (
     _("I know this one! {answer}!"),
     _("Easy: {answer}."),
     _("Oh really? It's {answer} of course."),
+    _("Ah, sorry, I was looking for {answer}."),
 )
 _FAIL_MESSAGES = (
     _("To the next one I guess..."),
@@ -27,7 +28,7 @@ _FAIL_MESSAGES = (
     _("I'm sure you'll know the answer of the next one."),
     _("\N{PENSIVE FACE} Next one."),
 )
-_ = T_
+# _ = T_
 
 
 class TriviaSession:
