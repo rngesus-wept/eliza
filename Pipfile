@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-discord-rewrite = "*"
 pytest = "*"
 pylint = "*"
 yarl = "<1.2"
