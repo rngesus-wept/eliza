@@ -1,11 +1,98 @@
 AUTHOR: rngesus.wept
 # Missing games: Star Wars Rebellion, 7th Continent, Mage Knight
 # Could use more: Twilight Struggle, Tzolk'in, Root, Eclipse
-"**What miniatures-campaign-in-a-box** weighs in at 22 pounds and features playable races like Vermling, Inox, and Orchid?":
-- Gloomhaven
+
+##### Genres
 "**What genre of games** is defined by the permanent alteration of otherwise reusable game components over multiple plays?":
 - Legacy
 - Legacy Games?
+"**What genre of game**, named for what are seen as its most central player activities, includes _Twilight Imperium_, _Eclipse_, and _Dominant Species_?":
+- 4X
+"**What genre of game** includes _Pandemic_, _Spirit Island_, _The Mind_, and _Hanabi_?":
+- Cooperative Games
+- Cooperative
+"**What game genre** includes _Automobiles_, _Hyperborea_, and _War Chest_, but not _Dominion_, _Ascension_, or _Star Realms_?":
+- Bag building
+- Bag-building
+
+##### SET
+"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/TeaQN9N.jpg":
+- QSZ, ASD, or XCV
+- (QSZ|QZS|SQZ|SZQ|ZSQ|ZQS)
+- (ASD|ADS|SAD|SDA|DAS|DSA)
+- (XCV|XVC|CXV|CVX|VXC|VCX)
+"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/fp2f4aQ.jpg":
+- CRX, AZV, or QDX
+- (QDX|QXD|DQX|DXQ|XDQ|XQD)
+- (AZV|AVZ|ZAV|ZVA|VAZ|VZA)
+- (XCR|XRC|CXR|CRX|RXC|RCX)
+"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/teMdqX2.jpg":
+- ACR, RFV, QAX, or WAF
+- (QAX|QXA|AQX|AXQ|XAQ|XQA)
+- (AFW|AWF|FAW|FWA|WAF|WFA)
+- (ACR|ARC|CAR|CRA|RAC|RCA)
+- (VFR|VRF|FVR|FRV|RVF|RFV)
+"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/PFvnDEp.jpg":
+- SDR or QWF
+- (QWF|QFW|WQF|WFQ|FWQ|FQW)
+- (DSR|DRS|SDR|SRD|RDS|RSD)
+"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/2lpkBh3.jpg":
+- WRC, ADE, or WAX
+- (WCR|WRC|CWR|CRW|RWC|RCW)
+- (WAX|WXA|AWX|AXW|XAW|XWA)
+- (AED|ADE|EAD|EDA|DAE|DEA)
+"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/1CB8fnv.jpg":
+- AFV, QXF, or WSC
+- (WCS|WSC|CWS|CSW|SWC|SCW)
+- (QFX|QXF|FQX|FXQ|XFQ|XQF)
+- (AFV|AVF|FAV|FVA|VAF|VFA)
+"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/Aj8wffB.jpg":
+- ZDF, ZXR, SCV, QFV, or AXC
+- (VCS|VSC|CVS|CSV|SVC|SCV)
+- (ZFD|ZDF|FZD|FDZ|DFZ|DZF)
+- (QFV|QVF|FQV|FVQ|VQF|VFQ)
+- (ZXR|ZRX|XZR|XRZ|RZX|RXZ)
+- (AXC|ACX|XAC|XCA|CAX|CXA)
+"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/TkzEm00.jpg":
+- SEV or ZSD
+- (VES|VSE|EVS|ESV|SVE|SEV)
+- (ZSD|ZDS|SZD|SDZ|DSZ|DZS)
+
+##### Zero SumZ
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/FumD0a6.jpg":
+- QEAS
+- (Q(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|S(Q(EA|AE)|E(QA|AQ)|A(QE|EQ)))
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/D80MSaY.jpg":
+- QRD
+- (QRD|QDR|RQD|RDQ|DRQ|DQR)
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/4OjfB4Q.jpg":
+- QEA, WAD, or QWED
+- (QEA|QAE|EQA|EAQ|AEQ|AQE)
+- (WAD|WDA|AWD|ADW|DAW|DWA)
+- Q(WED|WDE|EWD|EDW|DWE|DEW)|E(QWD|QDW|WQD|WDQ|DQW|DWQ)|W(QED|QDE|EQD|EDQ|DQE|DEQ)|D(QEW|QWE|EQW|EWQ|WQE|WEQ)
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/QoRZBj6.jpg":
+- QWAR, ERSD, or QWEASD
+- (Q(W(AR|RA)|A(WR|RW)|R(WA|AW))|W(Q(AR|RA)|A(QR|RQ)|R(QA|AQ))|A(Q(WR|RW)|W(QR|RQ)|R(QW|WQ))|R(Q(WA|AW)|W(QA|AQ)|A(QW|WQ)))
+- (E(R(SD|DS)|S(RD|DR)|D(RS|SR))|R(E(SD|DS)|S(ED|DE)|D(ES|SE))|S(E(RD|DR)|R(ED|DE)|D(ER|RE))|D(E(RS|SR)|R(ES|SE)|S(ER|RE)))
+- (Q(W(E(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(E(SD|DS)|S(ED|DE)|D(ES|SE))|S(E(AD|DA)|A(ED|DE)|D(EA|AE))|D(E(AS|SA)|A(ES|SE)|S(EA|AE)))|E(W(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(W(SD|DS)|S(WD|DW)|D(WS|SW))|S(W(AD|DA)|A(WD|DW)|D(WA|AW))|D(W(AS|SA)|A(WS|SW)|S(WA|AW)))|A(W(E(SD|DS)|S(ED|DE)|D(ES|SE))|E(W(SD|DS)|S(WD|DW)|D(WS|SW))|S(W(ED|DE)|E(WD|DW)|D(WE|EW))|D(W(ES|SE)|E(WS|SW)|S(WE|EW)))|S(W(E(AD|DA)|A(ED|DE)|D(EA|AE))|E(W(AD|DA)|A(WD|DW)|D(WA|AW))|A(W(ED|DE)|E(WD|DW)|D(WE|EW))|D(W(EA|AE)|E(WA|AW)|A(WE|EW)))|D(W(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(W(AS|SA)|A(WS|SW)|S(WA|AW))|A(W(ES|SE)|E(WS|SW)|S(WE|EW))|S(W(EA|AE)|E(WA|AW)|A(WE|EW))))|W(Q(E(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(E(SD|DS)|S(ED|DE)|D(ES|SE))|S(E(AD|DA)|A(ED|DE)|D(EA|AE))|D(E(AS|SA)|A(ES|SE)|S(EA|AE)))|E(Q(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|D(Q(AS|SA)|A(QS|SQ)|S(QA|AQ)))|A(Q(E(SD|DS)|S(ED|DE)|D(ES|SE))|E(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(ES|SE)|E(QS|SQ)|S(QE|EQ)))|S(Q(E(AD|DA)|A(ED|DE)|D(EA|AE))|E(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(EA|AE)|E(QA|AQ)|A(QE|EQ)))|D(Q(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|S(Q(EA|AE)|E(QA|AQ)|A(QE|EQ))))|E(Q(W(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(W(SD|DS)|S(WD|DW)|D(WS|SW))|S(W(AD|DA)|A(WD|DW)|D(WA|AW))|D(W(AS|SA)|A(WS|SW)|S(WA|AW)))|W(Q(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|D(Q(AS|SA)|A(QS|SQ)|S(QA|AQ)))|A(Q(W(SD|DS)|S(WD|DW)|D(WS|SW))|W(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WS|SW)|W(QS|SQ)|S(QW|WQ)))|S(Q(W(AD|DA)|A(WD|DW)|D(WA|AW))|W(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WA|AW)|W(QA|AQ)|A(QW|WQ)))|D(Q(W(AS|SA)|A(WS|SW)|S(WA|AW))|W(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(WS|SW)|W(QS|SQ)|S(QW|WQ))|S(Q(WA|AW)|W(QA|AQ)|A(QW|WQ))))|A(Q(W(E(SD|DS)|S(ED|DE)|D(ES|SE))|E(W(SD|DS)|S(WD|DW)|D(WS|SW))|S(W(ED|DE)|E(WD|DW)|D(WE|EW))|D(W(ES|SE)|E(WS|SW)|S(WE|EW)))|W(Q(E(SD|DS)|S(ED|DE)|D(ES|SE))|E(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(ES|SE)|E(QS|SQ)|S(QE|EQ)))|E(Q(W(SD|DS)|S(WD|DW)|D(WS|SW))|W(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WS|SW)|W(QS|SQ)|S(QW|WQ)))|S(Q(W(ED|DE)|E(WD|DW)|D(WE|EW))|W(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|E(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WE|EW)|W(QE|EQ)|E(QW|WQ)))|D(Q(W(ES|SE)|E(WS|SW)|S(WE|EW))|W(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|E(Q(WS|SW)|W(QS|SQ)|S(QW|WQ))|S(Q(WE|EW)|W(QE|EQ)|E(QW|WQ))))|S(Q(W(E(AD|DA)|A(ED|DE)|D(EA|AE))|E(W(AD|DA)|A(WD|DW)|D(WA|AW))|A(W(ED|DE)|E(WD|DW)|D(WE|EW))|D(W(EA|AE)|E(WA|AW)|A(WE|EW)))|W(Q(E(AD|DA)|A(ED|DE)|D(EA|AE))|E(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(EA|AE)|E(QA|AQ)|A(QE|EQ)))|E(Q(W(AD|DA)|A(WD|DW)|D(WA|AW))|W(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WA|AW)|W(QA|AQ)|A(QW|WQ)))|A(Q(W(ED|DE)|E(WD|DW)|D(WE|EW))|W(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|E(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WE|EW)|W(QE|EQ)|E(QW|WQ)))|D(Q(W(EA|AE)|E(WA|AW)|A(WE|EW))|W(Q(EA|AE)|E(QA|AQ)|A(QE|EQ))|E(Q(WA|AW)|W(QA|AQ)|A(QW|WQ))|A(Q(WE|EW)|W(QE|EQ)|E(QW|WQ))))|D(Q(W(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(W(AS|SA)|A(WS|SW)|S(WA|AW))|A(W(ES|SE)|E(WS|SW)|S(WE|EW))|S(W(EA|AE)|E(WA|AW)|A(WE|EW)))|W(Q(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|S(Q(EA|AE)|E(QA|AQ)|A(QE|EQ)))|E(Q(W(AS|SA)|A(WS|SW)|S(WA|AW))|W(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(WS|SW)|W(QS|SQ)|S(QW|WQ))|S(Q(WA|AW)|W(QA|AQ)|A(QW|WQ)))|A(Q(W(ES|SE)|E(WS|SW)|S(WE|EW))|W(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|E(Q(WS|SW)|W(QS|SQ)|S(QW|WQ))|S(Q(WE|EW)|W(QE|EQ)|E(QW|WQ)))|S(Q(W(EA|AE)|E(WA|AW)|A(WE|EW))|W(Q(EA|AE)|E(QA|AQ)|A(QE|EQ))|E(Q(WA|AW)|W(QA|AQ)|A(QW|WQ))|A(Q(WE|EW)|W(QE|EQ)|E(QW|WQ)))))
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/h0VTlB4.jpg":
+- RAD
+- (RAD|RDA|ARD|ADR|DRA|DAR)
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/tAg2etk.jpg":
+- RES, QRAD, or QEASD
+- (ERS|ESR|RES|RSE|SER|SRE)
+- (Q(R(AD|DA)|A(RD|DR)|D(RA|AR))|R(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(RD|DR)|R(QD|DQ)|D(QR|RQ))|D(Q(RA|AR)|R(QA|AQ)|A(QR|RQ)))
+- (Q(E(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(E(SD|DS)|S(ED|DE)|D(ES|SE))|S(E(AD|DA)|A(ED|DE)|D(EA|AE))|D(E(AS|SA)|A(ES|SE)|S(EA|AE)))|E(Q(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|D(Q(AS|SA)|A(QS|SQ)|S(QA|AQ)))|A(Q(E(SD|DS)|S(ED|DE)|D(ES|SE))|E(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(ES|SE)|E(QS|SQ)|S(QE|EQ)))|S(Q(E(AD|DA)|A(ED|DE)|D(EA|AE))|E(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(EA|AE)|E(QA|AQ)|A(QE|EQ)))|D(Q(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|S(Q(EA|AE)|E(QA|AQ)|A(QE|EQ))))
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/xnKDn8L.jpg":
+- RED
+- (E(RD|DR)|R(ED|DE)|D(ER|RE))
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/ruVMVDX.jpg":
+- QRE
+- (Q(ER|RE)|E(QR|RQ)|R(QE|EQ))
+
+##### BGG Top 100
+"**What miniatures-campaign-in-a-box** weighs in at 22 pounds and features playable races like Vermling, Inox, and Orchid?":
+- Gloomhaven
 "**What game** features these cards? https://i.imgur.com/Vwjswiz.png":
 - Gloomhaven
 "**What game** series, with two \"Season\" releases as of the end of 2019, has players taking the roles of medical professionals combating several widespread diseases?":
@@ -65,8 +152,6 @@ AUTHOR: rngesus.wept
 "_Twilight Imperium_'s Hacan race most resemble **what terrestial creature**?":
 - Lion
 - Lions
-"**What genre of game**, named for what are seen as its most central player activities, includes _Twilight Imperium_, _Eclipse_, and _Dominant Species_?":
-- 4X
 "**What game** is shown near its end in this picture? https://i.imgur.com/usAA9rS.jpg":
 - Twilight Imperium
 "_Twilight Imperium_'s gargantuan War Suns are an homage to what famous fictional spacecraft?":
@@ -116,9 +201,6 @@ AUTHOR: rngesus.wept
 - Spirit Island
 "In _Spirit Island_, players get access to cards like those depicted by accruing enough of **what resource**, represented by the symbols around the tally marks? https://i.imgur.com/Ubx9Blc.jpg":
 - Fear
-"**What genre of game** includes _Pandemic_, _Spirit Island_, _The Mind_, and _Hanabi_?":
-- Cooperative Games
-- Cooperative
 "**What two-word phrase** describes games like _Macao_ or _Oracle of Delphi_, wherein players tend to generate victory points for every action they take?":
 - Point Salad
 "**What numbered series of games**, whose name comes from Latin for a common game component, includes _Ra_, _Puerto Rico_, and _In the Year of the Dragon_?":
@@ -165,31 +247,6 @@ AUTHOR: rngesus.wept
 - Tuscany
 "**What word,** redacted from this _Viticulture_ card, refers to someone who studies fermentation? https://i.imgur.com/OByYYfp.jpg":
 - Zymologist
-"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/TeaQN9N.jpg":
-- QSZ, ASD, or XCV
-- (QSZ|QZS|SQZ|SZQ|ZSQ|ZQS)
-- (ASD|ADS|SAD|SDA|DAS|DSA)
-- (XCV|XVC|CXV|CVX|VXC|VCX)
-"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/fp2f4aQ.jpg":
-- CRX, AZV, or QDX
-- (QDX|QXD|DQX|DXQ|XDQ|XQD)
-- (AZV|AVZ|ZAV|ZVA|VAZ|VZA)
-- (XCR|XRC|CXR|CRX|RXC|RCX)
-"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/teMdqX2.jpg":
-- ACR, RFV, QAX, or WAF
-- (QAX|QXA|AQX|AXQ|XAQ|XQA)
-- (AFW|AWF|FAW|FWA|WAF|WFA)
-- (ACR|ARC|CAR|CRA|RAC|RCA)
-- (VFR|VRF|FVR|FRV|RVF|RFV)
-"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/PFvnDEp.jpg":
-- SDR or QWF
-- (QWF|QFW|WQF|WFQ|FWQ|FQW)
-- (DSR|DRS|SDR|SRD|RDS|RSD)
-"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/2lpkBh3.jpg":
-- WRC, ADE, or WAX
-- (WCR|WRC|CWR|CRW|RWC|RCW)
-- (WAX|WXA|AWX|AXW|XAW|XWA)
-- (AED|ADE|EAD|EDA|DAE|DEA)
 "**What word** from the title of this card's game refers to damage done to the resource represented by the blue brain? https://i.imgur.com/YAanoXk.png":
 - Horror
 "**What three-word phrase,** trademarked by Fantasy Flight Games, refers to collectible card games whose regular releases come in non-random packs?":
@@ -222,9 +279,6 @@ AUTHOR: rngesus.wept
 "**What game** is shown in this picture? https://i.imgur.com/AS7SCpT.jpg":
 - Caverna: The Cave Farmers
 - Caverna
-"**What game genre** includes _Automobiles_, _Hyperborea_, and _War Chest_, but not _Dominion_, _Ascension_, or _Star Realms_?":
-- Bag building
-- Bag-building
 "**What game** is shown in this picture? https://i.imgur.com/J4V5XRy.jpg":
 - Orléans
 - Orleans
@@ -244,22 +298,6 @@ AUTHOR: rngesus.wept
 - Food Chain Magnate
 "**What Dutch board game publisher** is known for deep, complicated games that look a little too much like prototypes for how they're priced?":
 - Splotter Spellen
-"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/1CB8fnv.jpg":
-- AFV, QXF, or WSC
-- (WCS|WSC|CWS|CSW|SWC|SCW)
-- (QFX|QXF|FQX|FXQ|XFQ|XQF)
-- (AFV|AVF|FAV|FVA|VAF|VFA)
-"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/Aj8wffB.jpg":
-- ZDF, ZXR, SCV, QFV, or AXC
-- (VCS|VSC|CVS|CSV|SVC|SCV)
-- (ZFD|ZDF|FZD|FDZ|DFZ|DZF)
-- (QFV|QVF|FQV|FVQ|VQF|VFQ)
-- (ZXR|ZRX|XZR|XRZ|RZX|RXZ)
-- (AXC|ACX|XAC|XCA|CAX|CXA)
-"Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/TkzEm00.jpg":
-- SEV or ZSD
-- (VES|VSE|EVS|ESV|SVE|SEV)
-- (ZSD|ZDS|SZD|SDZ|DSZ|DZS)
 "In _Food Chain Magnate_, what feature of a house indicates that its residents can desire 5 items (up from 3) and pay double the normal unit price for them?":
 - having a garden
 - Garden
@@ -286,36 +324,6 @@ AUTHOR: rngesus.wept
 - Predat(ion|or)
 - Hunt
 - Eat (other )? birds
-"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/FumD0a6.jpg":
-- QEAS
-- (Q(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|S(Q(EA|AE)|E(QA|AQ)|A(QE|EQ)))
-"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/D80MSaY.jpg":
-- QRD
-- (QRD|QDR|RQD|RDQ|DRQ|DQR)
-"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/4OjfB4Q.jpg":
-- QEA, WAD, or QWED
-- (QEA|QAE|EQA|EAQ|AEQ|AQE)
-- (WAD|WDA|AWD|ADW|DAW|DWA)
-- Q(WED|WDE|EWD|EDW|DWE|DEW)|E(QWD|QDW|WQD|WDQ|DQW|DWQ)|W(QED|QDE|EQD|EDQ|DQE|DEQ)|D(QEW|QWE|EQW|EWQ|WQE|WEQ)
-"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/QoRZBj6.jpg":
-- QWAR, ERSD, or QWEASD
-- (Q(W(AR|RA)|A(WR|RW)|R(WA|AW))|W(Q(AR|RA)|A(QR|RQ)|R(QA|AQ))|A(Q(WR|RW)|W(QR|RQ)|R(QW|WQ))|R(Q(WA|AW)|W(QA|AQ)|A(QW|WQ)))
-- (E(R(SD|DS)|S(RD|DR)|D(RS|SR))|R(E(SD|DS)|S(ED|DE)|D(ES|SE))|S(E(RD|DR)|R(ED|DE)|D(ER|RE))|D(E(RS|SR)|R(ES|SE)|S(ER|RE)))
-- (Q(W(E(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(E(SD|DS)|S(ED|DE)|D(ES|SE))|S(E(AD|DA)|A(ED|DE)|D(EA|AE))|D(E(AS|SA)|A(ES|SE)|S(EA|AE)))|E(W(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(W(SD|DS)|S(WD|DW)|D(WS|SW))|S(W(AD|DA)|A(WD|DW)|D(WA|AW))|D(W(AS|SA)|A(WS|SW)|S(WA|AW)))|A(W(E(SD|DS)|S(ED|DE)|D(ES|SE))|E(W(SD|DS)|S(WD|DW)|D(WS|SW))|S(W(ED|DE)|E(WD|DW)|D(WE|EW))|D(W(ES|SE)|E(WS|SW)|S(WE|EW)))|S(W(E(AD|DA)|A(ED|DE)|D(EA|AE))|E(W(AD|DA)|A(WD|DW)|D(WA|AW))|A(W(ED|DE)|E(WD|DW)|D(WE|EW))|D(W(EA|AE)|E(WA|AW)|A(WE|EW)))|D(W(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(W(AS|SA)|A(WS|SW)|S(WA|AW))|A(W(ES|SE)|E(WS|SW)|S(WE|EW))|S(W(EA|AE)|E(WA|AW)|A(WE|EW))))|W(Q(E(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(E(SD|DS)|S(ED|DE)|D(ES|SE))|S(E(AD|DA)|A(ED|DE)|D(EA|AE))|D(E(AS|SA)|A(ES|SE)|S(EA|AE)))|E(Q(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|D(Q(AS|SA)|A(QS|SQ)|S(QA|AQ)))|A(Q(E(SD|DS)|S(ED|DE)|D(ES|SE))|E(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(ES|SE)|E(QS|SQ)|S(QE|EQ)))|S(Q(E(AD|DA)|A(ED|DE)|D(EA|AE))|E(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(EA|AE)|E(QA|AQ)|A(QE|EQ)))|D(Q(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|S(Q(EA|AE)|E(QA|AQ)|A(QE|EQ))))|E(Q(W(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(W(SD|DS)|S(WD|DW)|D(WS|SW))|S(W(AD|DA)|A(WD|DW)|D(WA|AW))|D(W(AS|SA)|A(WS|SW)|S(WA|AW)))|W(Q(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|D(Q(AS|SA)|A(QS|SQ)|S(QA|AQ)))|A(Q(W(SD|DS)|S(WD|DW)|D(WS|SW))|W(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WS|SW)|W(QS|SQ)|S(QW|WQ)))|S(Q(W(AD|DA)|A(WD|DW)|D(WA|AW))|W(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WA|AW)|W(QA|AQ)|A(QW|WQ)))|D(Q(W(AS|SA)|A(WS|SW)|S(WA|AW))|W(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(WS|SW)|W(QS|SQ)|S(QW|WQ))|S(Q(WA|AW)|W(QA|AQ)|A(QW|WQ))))|A(Q(W(E(SD|DS)|S(ED|DE)|D(ES|SE))|E(W(SD|DS)|S(WD|DW)|D(WS|SW))|S(W(ED|DE)|E(WD|DW)|D(WE|EW))|D(W(ES|SE)|E(WS|SW)|S(WE|EW)))|W(Q(E(SD|DS)|S(ED|DE)|D(ES|SE))|E(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(ES|SE)|E(QS|SQ)|S(QE|EQ)))|E(Q(W(SD|DS)|S(WD|DW)|D(WS|SW))|W(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WS|SW)|W(QS|SQ)|S(QW|WQ)))|S(Q(W(ED|DE)|E(WD|DW)|D(WE|EW))|W(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|E(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WE|EW)|W(QE|EQ)|E(QW|WQ)))|D(Q(W(ES|SE)|E(WS|SW)|S(WE|EW))|W(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|E(Q(WS|SW)|W(QS|SQ)|S(QW|WQ))|S(Q(WE|EW)|W(QE|EQ)|E(QW|WQ))))|S(Q(W(E(AD|DA)|A(ED|DE)|D(EA|AE))|E(W(AD|DA)|A(WD|DW)|D(WA|AW))|A(W(ED|DE)|E(WD|DW)|D(WE|EW))|D(W(EA|AE)|E(WA|AW)|A(WE|EW)))|W(Q(E(AD|DA)|A(ED|DE)|D(EA|AE))|E(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(EA|AE)|E(QA|AQ)|A(QE|EQ)))|E(Q(W(AD|DA)|A(WD|DW)|D(WA|AW))|W(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WA|AW)|W(QA|AQ)|A(QW|WQ)))|A(Q(W(ED|DE)|E(WD|DW)|D(WE|EW))|W(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|E(Q(WD|DW)|W(QD|DQ)|D(QW|WQ))|D(Q(WE|EW)|W(QE|EQ)|E(QW|WQ)))|D(Q(W(EA|AE)|E(WA|AW)|A(WE|EW))|W(Q(EA|AE)|E(QA|AQ)|A(QE|EQ))|E(Q(WA|AW)|W(QA|AQ)|A(QW|WQ))|A(Q(WE|EW)|W(QE|EQ)|E(QW|WQ))))|D(Q(W(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(W(AS|SA)|A(WS|SW)|S(WA|AW))|A(W(ES|SE)|E(WS|SW)|S(WE|EW))|S(W(EA|AE)|E(WA|AW)|A(WE|EW)))|W(Q(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|S(Q(EA|AE)|E(QA|AQ)|A(QE|EQ)))|E(Q(W(AS|SA)|A(WS|SW)|S(WA|AW))|W(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(WS|SW)|W(QS|SQ)|S(QW|WQ))|S(Q(WA|AW)|W(QA|AQ)|A(QW|WQ)))|A(Q(W(ES|SE)|E(WS|SW)|S(WE|EW))|W(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|E(Q(WS|SW)|W(QS|SQ)|S(QW|WQ))|S(Q(WE|EW)|W(QE|EQ)|E(QW|WQ)))|S(Q(W(EA|AE)|E(WA|AW)|A(WE|EW))|W(Q(EA|AE)|E(QA|AQ)|A(QE|EQ))|E(Q(WA|AW)|W(QA|AQ)|A(QW|WQ))|A(Q(WE|EW)|W(QE|EQ)|E(QW|WQ)))))
-"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/h0VTlB4.jpg":
-- RAD
-- (RAD|RDA|ARD|ADR|DRA|DAR)
-"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/tAg2etk.jpg":
-- RES, QRAD, or QEASD
-- (ERS|ESR|RES|RSE|SER|SRE)
-- (Q(R(AD|DA)|A(RD|DR)|D(RA|AR))|R(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(RD|DR)|R(QD|DQ)|D(QR|RQ))|D(Q(RA|AR)|R(QA|AQ)|A(QR|RQ)))
-- (Q(E(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(E(SD|DS)|S(ED|DE)|D(ES|SE))|S(E(AD|DA)|A(ED|DE)|D(EA|AE))|D(E(AS|SA)|A(ES|SE)|S(EA|AE)))|E(Q(A(SD|DS)|S(AD|DA)|D(AS|SA))|A(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|D(Q(AS|SA)|A(QS|SQ)|S(QA|AQ)))|A(Q(E(SD|DS)|S(ED|DE)|D(ES|SE))|E(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(ES|SE)|E(QS|SQ)|S(QE|EQ)))|S(Q(E(AD|DA)|A(ED|DE)|D(EA|AE))|E(Q(AD|DA)|A(QD|DQ)|D(QA|AQ))|A(Q(ED|DE)|E(QD|DQ)|D(QE|EQ))|D(Q(EA|AE)|E(QA|AQ)|A(QE|EQ)))|D(Q(E(AS|SA)|A(ES|SE)|S(EA|AE))|E(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(ES|SE)|E(QS|SQ)|S(QE|EQ))|S(Q(EA|AE)|E(QA|AQ)|A(QE|EQ))))
-"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/xnKDn8L.jpg":
-- RED
-- (E(RD|DR)|R(ED|DE)|D(ER|RE))
-"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/ruVMVDX.jpg":
-- QRE
-- (Q(ER|RE)|E(QR|RQ)|R(QE|EQ))
 "**What game** is shown in progress in this picture? https://i.imgur.com/9qMQEQy.jpg":
 - Wingspan
 "**What mythical entity** is at the center of _Blood Rage_'s world map?":
