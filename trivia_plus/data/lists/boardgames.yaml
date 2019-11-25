@@ -386,3 +386,58 @@ AUTHOR: rngesus.wept
 - Azulejo
 "**What game**'s components are shown in this picture? https://i.imgur.com/KCOIiKd.png":
 - Azul
+
+##### Top 100 Owned/Popular
+"**What popular German game**, which has spinoff versions such as _Game of Thrones_ and _Star Trek_, celebrates its 25th birthday in 2020?":
+- Catan
+- Settlers of Catan
+"In _Catan_, victory points can shift from one player to another due to a change in who has the largest army and **what other objective**?":
+- Longest road
+"In 2016, the publishing rights for _Catan_ changed hands in a bid by its then-publisher to stay afloat. **Name the company** that currently publishes _Catan_, **or the company** that shut down just two years after it sold the right to do so.":
+- Mayfair Games (previous publisher) or Asmodee (current publisher)
+- Mayfair( Games)?
+- Asmodee
+"**What animal** is a resource in _Catan_?":
+- Sheep
+"Assuming the use of fair dice, **what are the chances** of any single die roll causing the Robber to move in _Catan_? (Simplified fraction, please)":
+- "1/6"
+"**What game** is the origin of the word \"meeple\", which has come to replace \"pawn\" in describing any non-unique wooden piece representing a human and having human features?":
+- Carcassonne
+"**What country** is the city Carcassonne in?":
+- France
+"**What game** is shown at its end in this picture? https://i.imgur.com/6r58ZJh.jpg":
+- Carcassonne
+"**What item** was featured an ill-received _Carcassonne_ expansion that attempt to add an action/dexterity mechanic to the game?":
+- Catapult
+"In the base game of _Carcassonne_, **what is the only tile feature** that cannot be extended by placing like tiles next to it?":
+- Monastery
+"In _Pandemic_, players lose when they are unable to place new cubes, they are unable to draw new cards, or **what event** happens too many times?":
+- Outbreak
+- Outbreaks
+"The base game of _Pandemic_ also includes a semi-cooperative mode. **What adversarial role** does one player assume in this mode?":
+- Bioterrorist
+"_Pandemic_ designer Matt Leacock has released three other cooperative titles whose names all start with **what word**?":
+- Forbidden
+"In the base game of _Pandemic_, **what South American capital** is the only city on the board that connected to only one other city?":
+- Santiago
+"In _Pandemic_, a disease goes from being \"cured\" to being \"eradicated\" when players do **what**?":
+- Remove all its cubes from the board
+- (remove|clear) .*\\b(all|entire(ly)?|complete(ly)?)\\b
+"**Name a city** represented among the player boards in _7 Wonders_ base game.":
+- Alexandria, Babylon, Ephesus, Giza, Halicarnassus, Olympia, and Rhodes
+- (Alexandria|Babylon|Ephes[ou]s|Giza|Halicarnass[ou]s|Olympia|Rhod[eo]s)
+"**What dedicated room** for writing and illumination in medieval times also enables a _7 Wonders_ player to build the Library and the Courthouse without having the appropriate resources?":
+- Scriptorium
+"_7 Wonders_ designer Antoine Bauza also designed what cooperative game where players can't see their own cards?":
+- Hanabi
+"_7 Blunders_ is a _7 Wonders_ variant in which players vie for the lowest score instead of the highest. **What French word** describes this style of rules inversion?":
+- Misère
+- Misere
+
+##### Charles' Top 100
+"In the game _Keyflower_, **what kind of thing** is the titular Keyflower?":
+- a ship
+- ship
+- boat
+"**What game** is shown in progress in this picture? https://i.imgur.com/H3T2rr0.jpg":
+- Keyflower
