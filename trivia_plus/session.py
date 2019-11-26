@@ -228,6 +228,8 @@ class TriviaSession:
         positions = random.shuffle([idx for idx, char in enumerate(current_reveal) if char == '?'])
         
         await self.ctx.send(f"I'm going to reveal one letter from the answer every {interval} seconds!")
+        await self.ctx.send(repr(current_reveal))
+        await self.ctx.send(repr(positions))
         
         while current_reveal != full_answer:
             await asyncio.sleep(interval)
