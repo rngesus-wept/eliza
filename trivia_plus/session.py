@@ -225,7 +225,8 @@ class TriviaSession:
         """Slowly reveal random letters from a trivia answer."""
         full_answer = list(answer.upper())
         current_reveal = ['?' if char.isalnum() else char for char in full_answer]
-        positions = random.shuffle([idx for idx, char in enumerate(current_reveal) if char == '?'])
+        positions = [idx for idx, char in enumerate(current_reveal) if char == '?']
+        random.shuffle(positions)
         
         await self.ctx.send(f"I'm going to reveal one letter from the answer every {interval} seconds!")
         await self.ctx.send(repr(current_reveal))
