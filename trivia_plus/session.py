@@ -119,6 +119,7 @@ class TriviaSession:
             
             # Allow for subentries of questions to also specify certain settings
             delay_factor, reveal_s = 1.0, 0.0
+            await self.ctx.send(repr(answers))
             for entry in answers:
                 if isinstance(entry, dict):
                     # delay_factor: Multiply the amount of time given for this question by this amount
