@@ -40,6 +40,7 @@ class Trivia(commands.Cog):
             timeout=120.0,
             delay=15.0,
             bot_plays=False,
+            slow_reveal=0.0,
             reveal_answer=True,
             payout_multiplier=0.0,
             allow_override=True,
@@ -63,6 +64,7 @@ class Trivia(commands.Cog):
                     "Lack of response timeout: {timeout} seconds\n"
                     "Points to win: {max_score}\n"
                     "Reveal answer on timeout: {reveal_answer}\n"
+                    "Slow reveal interval: {slow_reveal}\n"
                     "Payout multiplier: {payout_multiplier}\n"
                     "Allow lists to override settings: {allow_override}"
                 ).format(**settings_dict),
@@ -89,6 +91,13 @@ class Trivia(commands.Cog):
         settings = self.conf.guild(ctx.guild)
         await settings.delay.set(seconds)
         await ctx.send(_("Done. Maximum seconds to answer set to {num}.").format(num=seconds))
+        
+    @triviaset.command(name="slowreveal")
+    asynd def triviaset_slowreveal(self, ctx: commands.Context, seconds: float):
+        """Set the interval at which answers will be slowly revealed."""
+        settles = self.conf.guild(ctx.guild)
+        await settles.slow_reveal.set(seconds)
+        await ctx.send(_("Done. Slow reveal interval seconds set to {num}.").format(num=seconds))
 
     @triviaset.command(name="stopafter")
     async def triviaset_stopafter(self, ctx: commands.Context, seconds: float):
