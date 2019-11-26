@@ -349,6 +349,7 @@ def _parse_answers(answers):
 
     """
     ret = []
+    dicts = []
     for answer in answers:
         if isinstance(answer, bool):
             if answer is True:
@@ -356,9 +357,9 @@ def _parse_answers(answers):
             else:
                 ret.extend(["False", "No", "Off"])
         elif isinstance(answer, dict):
-            ret.append(answer)
+            dicts.append(answer)
         else:
             ret.append(str(answer))
     # Uniquify list
     seen = set()
-    return tuple(x for x in ret if not (x in seen or seen.add(x)))
+    return tuple(dicts) + tuple(x for x in ret if not (x in seen or seen.add(x)))
