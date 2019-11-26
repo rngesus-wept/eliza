@@ -118,7 +118,8 @@ class TriviaSession:
             async with self.ctx.typing():
                 await asyncio.sleep(3)
             self.count += 1
-            if time_mult := TIMEOUT.RE.match(question):
+            time_mult = TIMEOUT.RE.match(question)
+            if time_mult:
               question = TIMEOUT.sub(question, '')
               time_mult = float(time_mult.group(1))
             else:
