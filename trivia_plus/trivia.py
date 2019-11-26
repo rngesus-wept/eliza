@@ -193,7 +193,6 @@ class Trivia(commands.Cog):
             # priority over the others.
             try:
                 dict_ = self.get_trivia_list(category)
-                await ctx.send(repr(dict_))
             except FileNotFoundError:
                 await ctx.send(
                     _(
