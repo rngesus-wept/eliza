@@ -422,7 +422,7 @@ AUTHOR: rngesus.wept
 - Santiago
 "In _Pandemic_, a disease goes from being \"cured\" to being \"eradicated\" when players do **what**?":
 - Remove all its cubes from the board
-- (remove|clear) .*\\b(all|entire(ly)?|complete(ly)?)\\b
+- (remove|clear) .*\b(all|entire(ly)?|complete(ly)?)\b
 "**Name a city** represented among the player boards in _7 Wonders_ base game.":
 - Alexandria, Babylon, Ephesus, Giza, Halicarnassus, Olympia, and Rhodes
 - (Alexandria|Babylon|Ephes[ou]s|Giza|Halicarnass[ou]s|Olympia|Rhod[eo]s)
