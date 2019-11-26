@@ -31,6 +31,8 @@ _FAIL_MESSAGES = (
 )
 # _ = T_
 
+TIMEOUT_RE = re.compile(r'/T(\d\.\d)/\s*')
+
 
 class TriviaSession:
     """Class to run a session of trivia with the user.
@@ -116,9 +118,15 @@ class TriviaSession:
             async with self.ctx.typing():
                 await asyncio.sleep(3)
             self.count += 1
+            if time_mult := TIMEOUT.RE.match(question):
+              question = TIMEOUT.sub(question, '')
+              time_mult = float(time_mult.group(1))
+            else:
+              time_mult = 1.0
+
             msg = bold(_("Question number {num}!").format(num=self.count)) + "\n\n" + question
             await self.ctx.send(msg)
-            continue_ = await self.wait_for_answer(answers, delay, timeout)
+            continue_ = await self.wait_for_answer(answers, delay * time_mult, timeout)
             if continue_ is False:
                 break
             if any(score >= max_score for score in self.scores.values()):
