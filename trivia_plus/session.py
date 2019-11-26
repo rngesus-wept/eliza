@@ -229,7 +229,7 @@ class TriviaSession:
             await asyncio.sleep(interval)
             next_reveal = positions.pop()
             current_reveal[next_reveal] = full_answer[next_reveal]
-            await self.ctx.send(f'`{''.join(current_reveal)}`')
+            await self.ctx.send(f'`{"".join(current_reveal)}`')
 
     def check_answer(self, answers):
         """Get a predicate to check for correct answers.
