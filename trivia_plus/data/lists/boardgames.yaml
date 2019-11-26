@@ -160,8 +160,8 @@ AUTHOR: rngesus.wept
 - Terra Mystica
 "In _Gaia Project_, **what property** sets the eponymous Gaia planets apart from all other planet types?":
 - they're colonizable by any race
-- (any|every|all)\b(.+\b)?(inhabit(ed)?|(habit|coloniz)able|colonized?)
-- (inhabit(ed)?|(habit|coloniz)able|colonized?)\b(.+\b)?(any|every|all)
+- (any(one)?|every(one)?|all)\b(.+\b)?(inhabit(ed)?|(habit|coloniz)able|colonized?)
+- (inhabit(ed)?|(habit|coloniz)able|colonized?)\b(.+\b)?(any(one)?|every(one)?|all)
 "**What well-hyped 2016 game** has players acting as fake Eastern European factions vying for control of the lands around a mysterious factory?":
 - Scythe
 "**Who designed** _Viticulture_, _Charterstone_, and _Tapestry_?":
