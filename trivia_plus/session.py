@@ -226,6 +226,8 @@ class TriviaSession:
         current_reveal = ['?' if char.isalnum() else char for char in full_answer]
         positions = random.shuffle([idx for idx, char in enumerate(current_reveal) if char == '?'])
         
+        self.ctx.send(f"I'm going to reveal one letter from the answer every {interval} seconds!")
+        
         while current_reveal != full_answer:
             await asyncio.sleep(interval)
             next_reveal = positions.pop()
