@@ -355,6 +355,8 @@ def _parse_answers(answers):
                 ret.extend(["True", "Yes", "On"])
             else:
                 ret.extend(["False", "No", "Off"])
+        elif isinstance(answer, dict):
+            ret.append(answer)
         else:
             ret.append(str(answer))
     # Uniquify list
