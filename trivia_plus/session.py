@@ -120,7 +120,7 @@ class TriviaSession:
             self.count += 1
             time_mult = TIMEOUT_RE.match(question)
             if time_mult:
-              question = TIMEOUT_RE.sub(question, '')
+              question = TIMEOUT_RE.sub('', question)
               time_mult = float(time_mult.group(1))
             else:
               time_mult = 1.0
