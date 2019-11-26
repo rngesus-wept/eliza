@@ -126,7 +126,7 @@ class TriviaSession:
                     delay_factor = entry.get('delay_factor', delay_factor)
                     # reveal_s: Reveal a random letter of the answer every {this many} seconds
                     reveal_s = entry.get('reveal_s', reveal_s)
-                    self.ctx.send(f'reveal_s = {reveal_s}')
+                    await self.ctx.send(f'reveal_s = {reveal_s}')
             answers = list(filter(lambda x: isinstance(x, str), answers))
 
             msg = bold(_("Question number {num}!").format(num=self.count)) + "\n\n" + question
@@ -227,7 +227,7 @@ class TriviaSession:
         current_reveal = ['?' if char.isalnum() else char for char in full_answer]
         positions = random.shuffle([idx for idx, char in enumerate(current_reveal) if char == '?'])
         
-        self.ctx.send(f"I'm going to reveal one letter from the answer every {interval} seconds!")
+        await self.ctx.send(f"I'm going to reveal one letter from the answer every {interval} seconds!")
         
         while current_reveal != full_answer:
             await asyncio.sleep(interval)
