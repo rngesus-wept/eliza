@@ -236,7 +236,7 @@ class TriviaSession:
                 return False
 
             self._last_response = time.time()
-            guess = message.content.lower()
+            guess = re.sub(r'\s+', ' ', message.content.strip().lower())
             guess = normalize_smartquotes(guess)
             for answer in answers:
                 if answer.search(guess):
