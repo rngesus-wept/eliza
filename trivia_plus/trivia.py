@@ -252,6 +252,7 @@ class Trivia(commands.Cog):
     async def trivia_list(self, ctx: commands.Context):
         """List available trivia categories."""
         lists = set(p.stem for p in self._all_lists())
+        await self.ctx.send(repr(cog_data_path(self)))
         if await ctx.embed_requested():
             await ctx.send(
                 embed=discord.Embed(
@@ -518,7 +519,6 @@ class Trivia(commands.Cog):
         )
 
     def _all_lists(self) -> List[pathlib.Path]:
-        await self.ctx.send(repr(cog_data_path(self)))
         personal_lists = [p.resolve() for p in cog_data_path(self).glob("*.yaml")]
 
         return personal_lists + get_core_lists()
