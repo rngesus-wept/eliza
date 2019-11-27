@@ -57,7 +57,7 @@ class Trivia(commands.Cog):
             settings_dict = await settings.all()
             msg = box(
                 _(
-                    "Current settings\n"
+                   "Current settings\n"
                     "Bot gains points: {bot_plays}\n"
                     "Answer time limit: {delay} seconds\n"
                     "Lack of response timeout: {timeout} seconds\n"
@@ -122,7 +122,7 @@ class Trivia(commands.Cog):
             )
 
     @triviaset.command(name="botplays", usage="<true_or_false>")
-    async def trivaset_bot_plays(self, ctx: commands.Context, enabled: bool):
+    async def triviaset_bot_plays(self, ctx: commands.Context, enabled: bool):
         """Set whether or not the bot gains points.
 
         If enabled, the bot will gain a point if no one guesses correctly.
@@ -135,7 +135,7 @@ class Trivia(commands.Cog):
             await ctx.send(_("Alright, I won't embarass you at trivia anymore."))
 
     @triviaset.command(name="revealanswer", usage="<true_or_false>")
-    async def trivaset_reveal_answer(self, ctx: commands.Context, enabled: bool):
+    async def triviaset_reveal_answer(self, ctx: commands.Context, enabled: bool):
         """Set whether or not the answer is revealed.
 
         If enabled, the bot will reveal the answer if no one guesses correctly
@@ -251,6 +251,7 @@ class Trivia(commands.Cog):
     @trivia.command(name="list")
     async def trivia_list(self, ctx: commands.Context):
         """List available trivia categories."""
+        await ctx.send(repr(self._all_lists()))
         lists = set(p.stem for p in self._all_lists())
         if await ctx.embed_requested():
             await ctx.send(
