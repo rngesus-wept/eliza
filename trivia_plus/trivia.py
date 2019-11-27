@@ -1,5 +1,4 @@
 """Module for Trivia cog."""
-import asyncio
 import pathlib
 from collections import Counter
 from typing import List
@@ -252,9 +251,6 @@ class Trivia(commands.Cog):
     @trivia.command(name="list")
     async def trivia_list(self, ctx: commands.Context):
         """List available trivia categories."""
-        for foo in self._all_lists():
-          await ctx.send(str(foo))
-          await asyncio.sleep(.25)
         lists = set(p.stem for p in self._all_lists())
         if await ctx.embed_requested():
             await ctx.send(
@@ -522,6 +518,7 @@ class Trivia(commands.Cog):
         )
 
     def _all_lists(self) -> List[pathlib.Path]:
+        await self.ctx.send(repr(cog_data_path(self)))
         personal_lists = [p.resolve() for p in cog_data_path(self).glob("*.yaml")]
 
         return personal_lists + get_core_lists()
