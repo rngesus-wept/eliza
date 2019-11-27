@@ -41,6 +41,7 @@ class Trivia(commands.Cog):
             delay=15.0,
             bot_plays=False,
             slow_reveal=0.0,
+            half_reveal=0.0,
             reveal_answer=True,
             payout_multiplier=0.0,
             allow_override=True,
@@ -65,6 +66,7 @@ class Trivia(commands.Cog):
                     "Points to win: {max_score}\n"
                     "Reveal answer on timeout: {reveal_answer}\n"
                     "Slow reveal interval: {slow_reveal}\n"
+                    "Half reveal interval: {half_reveal}\n"
                     "Payout multiplier: {payout_multiplier}\n"
                     "Allow lists to override settings: {allow_override}"
                 ).format(**settings_dict),
@@ -95,9 +97,20 @@ class Trivia(commands.Cog):
     @triviaset.command(name="slowreveal")
     async def triviaset_slowreveal(self, ctx: commands.Context, seconds: float):
         """Set the interval at which answers will be slowly revealed."""
-        settles = self.conf.guild(ctx.guild)
-        await settles.slow_reveal.set(seconds)
+        settings = self.conf.guild(ctx.guild)
+        await settings.slow_reveal.set(seconds)
         await ctx.send(_("Done. Slow reveal interval seconds set to {num}.").format(num=seconds))
+        
+    @triviaset.command(name="halfreveal")
+    async def triviaset_halfreveal(self, ctx: commands.Context, seconds: float):
+        """Set the interval at which half of an answer will be slowly revealed.
+        
+        When this setting is nonzero, half of the answer's letters will be revealed in this
+        amount of time in seconds, one letter at a time (but never faster than the `slowreveal`
+        setting). Revelation will continue even after half the letters are shown."""
+        settings = self.conf.guild(ctx.guild)
+        await settings.half_reveal.set(seconds)
+        await ctx.send(_("Done. Half reveal interval seconds set to {num}.").format(num=seconds))
 
     @triviaset.command(name="stopafter")
     async def triviaset_stopafter(self, ctx: commands.Context, seconds: float):
