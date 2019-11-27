@@ -116,7 +116,7 @@ class TriviaSession:
             async with self.ctx.typing():
                 await asyncio.sleep(3)
             self.count += 1
-            
+
             # Allow for subentries of questions to also specify certain settings
             delay_factor, reveal_s = 1.0, 0.0
             for entry in answers:
@@ -218,14 +218,14 @@ class TriviaSession:
             if reveal:
                 revealer.cancel()
         return True
-    
+
     async def reveal_answer(self, answer, interval):
         """Slowly reveal random letters from a trivia answer."""
         full_answer = list(answer.upper())
-        current_reveal = ['?' if char.isalnum() else char for char in full_answer]
-        positions = [idx for idx, char in enumerate(current_reveal) if char == '?']
+        current_reveal = ['·' if char.isalnum() else char for char in full_answer]
+        positions = [idx for idx, char in enumerate(current_reveal) if char == '·']
         random.shuffle(positions)
-        
+
         while current_reveal != full_answer:
             await asyncio.sleep(interval)
             next_reveal = positions.pop()

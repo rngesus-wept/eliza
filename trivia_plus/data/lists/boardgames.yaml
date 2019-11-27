@@ -100,6 +100,8 @@ AUTHOR: rngesus.wept
 - (Q(ER|RE)|E(QR|RQ)|R(QE|EQ))
 
 ##### BGG Top 100
+# -------------------------------------------------------
+# --- Gloomhaven, Pandemic Legacy, Terraforming Mars, Through the Ages, Twilight Struggle
 "**What miniatures-campaign-in-a-box** weighs in at 22 pounds and features playable races like Vermling, Inox, and Orchid?":
 - Gloomhaven
 "**What game** features these cards? https://i.imgur.com/Vwjswiz.png":
@@ -141,6 +143,8 @@ AUTHOR: rngesus.wept
 - DEFCON
 "**What country**'s name has been redacted from this _Twilight Struggle_ card? https://i.imgur.com/Sel4hiB.jpg":
 - Libya
+# ----------------------------------------------
+# --- Brass, Twilight Imperium, Gaia Project, Scythe, Great Western Trial
 "The board game _Brass_ takes its name from Yorkshire slang for **what**? (As in \"Where there's muck, there's brass.\")":
 - Money
 "Upon publication of its sequel, _Brass_ gained the name of an industrial city both for its original incarnation and for its sequel. Name **either city**.":
@@ -198,6 +202,8 @@ AUTHOR: rngesus.wept
 "In _Great Western Trail_, after successfully getting your livestock from Texas to Kansas City, **what is the farthest city** they can be sent to from there?":
 - San Francisco
 - sf
+# ----------------------------------------------
+# --- War of the Ring, Spirit Island, Castles of Burgundy, 7 Wonders Duel, Concordia
 "In **what game** does one player control the armies of the Free People (along with a group of Companions with a non-military objective) and the other the Shadow Armies?":
 - War of the Ring
 "**What fictional location** is represented by this custom-made component? https://i.imgur.com/fDiILlw.jpg":
@@ -251,6 +257,8 @@ AUTHOR: rngesus.wept
 "_Mare Nostrum_ takes its name from the Latin for **what**?":
 - Mediterranean Sea
 - Mediterranean
+# ------------------------------------------------------
+# --- Brass: L, Viticulture, Arkham Horror LCG, Puerto Rico, Feast for Odin
 "_Brass: Lancashire_ concerns the industrialization of Britain and the production of **what material for consumer goods**?":
 - Cotton
 "**What port city**'s name has been redacted from this image? https://i.imgur.com/BggrRtI.jpg":
@@ -286,6 +294,8 @@ AUTHOR: rngesus.wept
 "**What is the name** of the blue-sailed ships in _A Feast for Odin_, used for overseas trading and emigration in the game, and cargo in real life?":
 - Knarr
 - Knarrs
+# ------------------------------------------------------------
+# --- Caverna, Orleans, Agricola, Food Chain Magnate, Mansions of Madness
 "**What game** is the predecessor of _Caverna: The Cave Farmers_, but with fewer dwarves and more starving?":
 - Agricola
 "In _Caverna: The Cave Farmers_, **what resource** does the Cuddle Room provide additional space for?":
@@ -328,6 +338,8 @@ AUTHOR: rngesus.wept
 - Speaking
 - Talk(ing)?
 - Speak
+# ----------------------------------------------------------
+# --- Wingspan, Blood Rage, KD:M, Power Grid, Mechs vs Minions
 "**What engine-building game** sees players paying for cards with invertebrates, seeds, fish, fruit, and rodents?":
 - Wingspan
 "In _Wingspan_, birds like the American Robin, Sandhill Crane, and Tree Swallow get cards tucked under them when activated. **What real-life behavior** does this represent?":
@@ -372,6 +384,8 @@ AUTHOR: rngesus.wept
 "**What game** is shown in progress in this picture? https://i.imgur.com/HteOdbW.jpg":
 - Mechs vs. Minions
 - Mechs vs?\.? Minions
+# -----------------------------------------------------------------
+# --- SW Imperial Assault, Tzolkin, Root, Eclipse, Azul
 "**What creature**, which first appeared in _Attack of the Clones_, is depicted by these figurines? (singular okay) https://i.imgur.com/GQ7F6vh.jpg":
 - Nexu
 - Nex(us|i|es|a)
@@ -400,6 +414,88 @@ AUTHOR: rngesus.wept
 - Azulejo
 "**What game**'s components are shown in this picture? https://i.imgur.com/KCOIiKd.png":
 - Azul
+# -----------------------------------------------------------------------
+# --- Le Havre, Voyages of Marco Polo, Robinson Crusoe, Clans of Caledonia
+"The game _Le Havre_ takes place in a French city of the same name. **What region of France** is that city in?":
+- Normandy
+"The word _havre_, recognized as \"harbor\" or \"port\" in French, is imported from **what language**?":
+- Dutch
+"**What game** is shown in this picture? https://i.imgur.com/mGdWbw5.jpg":
+- Le Havre
+"In _Le Havre_, **what is the upgraded version** of the basic resource Coal?":
+- Coke
+"**What game** is shown in this picture? https://i.imgur.com/M2zAU6W.jpg":
+- The Voyages of Marco Polo
+- Voyages of Marco Polo
+"**What city,** worth 10 points to the first player to reach it, is in the top right corner of the _Voyages of Marco Polo_ board?":
+- Beijing
+- Peking
+"**What playable character** in _Voyages of Marco Polo_ starts on the wrong end of the board and \"in Xanadu... a stately pleasure dome decree[d]\"?":
+- Kubilai Khan
+- Kublai Khan
+"One playable character in _Voyages of Marco Polo_ is not identified by a proper name. Instead he is called the \"Mercator ex\" **what Iranian city**, whose Historic Bazaar Complex is a UNESCO World Heritage Site?":
+- Tabriz
+"Robinson Crusoe appears in **what solo deck-building game,** named after a native of the island Crusoe is stranded on?":
+- Friday
+"**What game** is show in this picture? https://i.imgur.com/QydbHr8.jpg":
+- "Robinson Crusoe: Adventures on the Cursed Island"
+- Robinson Crusoe
+"In _Robinson Crusoe_, **what property** do orange food cubes have that yellow food cubes do not?":
+- they don't rot
+- non-?perishable
+- (don't|do not) .*\b(rot(ten)?|spoil(ed)?)
+"In _Robinson Crusoe_, **what item** improves the effects of taking the Rest action?":
+- Bed
+"**What modern-day country** roughly corresponds to the region the Romans named \"Caledonia\"?":
+- Scotland
+"**What game** is shown in this picture? https://i.imgur.com/Af6UDxV.jpg":
+- Clans of Caledonia
+"In _Clans of Caledonia_, **name a good** that can only be obtained by import.":
+- Cotton, Tobacco, or Sugarcane
+- (cotton|tobacco|sugar ?cane)
+# -------------------------------------------------------------------------
+# --- Android: Netrunner, Anachrony, Race for the Galaxy
+"**Who designed** _Netrunner_, the forerunner of the reskin _Android: Netrunner_?":
+- Richard Garfield
+"In _Android: Netrunner_, the Weyland Consortium faction is named after a megacorporation in **what movie franchise**?":
+- Alien
+"**What loan word** meaning \"second generation\" is used to name the fan resurrection of _Android: Netrunner_ as well as particular Jinteki clones like Caprice?":
+- Nisei
+"_Android: Netrunner_'s Mumbad cycle saw the release of Aghora, Sadyojeta, and Vamadeva. **What shared subtype** describes the theme of these icebreakers?":
+- Deva
+"In _Android: Netrunner_, the breaker suite associated with Omar Keung: Conspiracy Theorist contains Paperclip, Black Orchestra, and **what commonly referenced CIA project**?":
+- MKUltra
+
+# Fields of Arle, Dominant Species, Caylus, Lords of Waterdeep, Nemesis
+# Five Tribes, The Gallerist, Clank!, El Grande
+# Rising Sun, Eldritch Horror, Mombasa
+# Battlestar Galactica, Patchwork, Troyes, Lisboa, SHCD
+# Russian Railroads, Roll for the Galaxy, Crokinole, Aeon's End, Tigris & Euphrates
+# Trajan, Teotihuacan, Too Many Bones
+# Architects of the West Kingdom, Star Wars XWing, Raiders of the North Sea, TIME Stories
+# Kemet, Pandemic: Iberia, Dead of Winter, Yokohama, Stone Age
+# Forbidden Stars, Everdell, Descent, Grand Austria Hotel, Alchemists
+# Champions of Midgard, Star Realms, Underwater Cities, Lorenzo il Magnifico, Legendary: Alien
+# Istanbul, Inis, Game of Thrones BG, Castles of Mad King Ludwig
+# Resistance: Avalon, Chaos in the Old World, Railways of the World, Ora et Labora
+# Chronicles of Crime, Commands & Colors: Ancients, Clank! Space, Santorini, Decrypto
+# Suburbia, Dinosaur Island, LotR LCG, Hansa Teutonica, Nations
+# Quacks of Quedlinburg, Endeavor: Age of Sail, Jaipur, Vinhos, Memoir '44
+# Paths of Glory, Arcadia Quest, Captain Sonar, Cosmic Encounter
+# Combat Commander: Europe, Age of Steam, Near and Far, Village, Trickerion
+# TtR Nordic, Welcome To..., Sagrada, Targi, This War of Mine
+# Sekigahara, Splendor, Goa, Xia, Tichu
+# La Granja, Go, Legendary Marvel, Zombicide Black Plague, Steam
+# Princes of Florence, Detective, That's Pretty Clever, MtG
+# LotR Journeys, Viticulture, Star Realms Colony Wars, Ra, Cyclades
+# Shogun, Galaxy Trucker, Kanban, YINSH
+# Rajas of the Ganges, Sushi Go Party, 1830: R&RB, Imperial Settlers
+# Deception: Hong Kong, Lewis & Clark, Coimbra, Isle of Skye, Imperial
+# Glory to Rome, Hero Realms, Secret Hitler, Bora Bora, 1960: Making
+# Dungeon Petz, AoE III, Seasons, Exit: The Game, Space Alert
+# Summoner Wars, Dead of Winter, Hannibal: Rome vs Carthage, Dixit, Runewars
+# BattleLore, Navegador, Indonesia, Alien Frontiers, Samurai
+# Fury of Dracula, Mage Wars Arena, Flamme Rouge, Antiquity
 
 ##### Top 100 Owned/Popular
 "**What popular German game**, which has spinoff versions such as _Game of Thrones_ and _Star Trek_, celebrates its 25th birthday in 2020?":
@@ -485,6 +581,21 @@ AUTHOR: rngesus.wept
 "In _Codenames_, **what role** is given to the single word in the grid that, if selected, causes the selecting team to lose immediately?":
 - Assassin
 # +2 Codenames questions
+# King of Tokyo, Love Letter, Citadels, Munchkin, Forbidden Island, Arkham Horror
+# Bohnanza, Hanabi, Lost Cities, Betrayal at the House on the Hill, Coup
+# Takenoko, Sushi Go, Risk, Hive, Alhambra, Mysterium, Sheriff of Nottingham
+# Chess, Monopoly, Bang, Shadows over Camelot, Scrabble, Kingdomino, Machi Koro
+# Saboteur, Forbidden Desert, RoboRally, Smash Up, San Juan, Tsuro, For Sale
+# Blokus, Colt Express, Cards Against Humanity, Elder Sign, Camel Up
+# Flash Point, Guillotine, ONUW, Survive: Atlantis, Hey That's My Fish, Ghost Stories
+# UNO, Kingsburg, Kingdom Builder, Acquire, Tokaido, Bang! Dice, Thurn and Taxis
+# 6 nimmt!, Tikal, Apples to Apples, Coloretto, Spyfall, Exploding Kittens
+# Clue, Formula D, Pillars of the Earth, Diamant, Mice and Mystics, Modern Art
+# Zombicide, Zombie Dice, Ingenious, Fluxx, Battle Line, Century: Spice Road
+# Jamaica, Escape: Curse Temple, Qwirkle, Friday, Mr. Jack
+# Zombies!!!, Sentinels of the Multiverse, Saint Petersburg, Sid Meier's Civilization
+# Biblios, Innovation, Lord of the Rings (2000), Zooloretto, Last Night on Earth
+# Castle Panic, Concept, Scotland Yard, Tiny Epic Galaxies, Quarriors
 
 
 ##### Charles' Top 100
@@ -512,3 +623,16 @@ AUTHOR: rngesus.wept
 - Great Zimbabwe
 "**What game** is shown in progress in this picture? https://i.imgur.com/BLju6pH.jpg":
 - War Chest
+# Key Market, Ginkgopolis, Thunderstone Quest, Dinosaur Island, Calimala
+# Continental Divide, Gugong, Goa, Sorcerer City, Evolution(: Climate)
+# Dynasties: Heirate, Symphony No 9, Irish Gauge, Riverboat, First Class
+# Broom Service, Millennium Blades, Minerva, Deus, Mottainai, Crusaders: Thy Will Be Done
+# Bridge, Fields of Green, Rococo, TOKYO METRO, Heaven & Ale, IKI
+# Vindication, Gentes, Letter Jam, Signorie, Carson City, Tyrants of the Underdark
+# Mini Rail, Pulsar 2849, Macao, Lowlands, Staufer Dynasty, Medina, New York Slice
+# Ponzi Scheme, Council of 4, Wendake
+# ------------------------------------------------------
+# --- Other
+"**Name one of the three disasters** that precipitated the events of _Lisboa_.":
+- Earthquake, tsunami, fire
+- (earthquake|tsunami|fire)
