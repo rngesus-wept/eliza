@@ -52,6 +52,7 @@ class TriviaSession:
          - ``max_score`` (`int`)
          - ``delay`` (`float`)
          - ``timeout`` (`float`)
+         - ``slow_reveal`` (`float`)
          - ``reveal_answer`` (`bool`)
          - ``bot_plays`` (`bool`)
          - ``allow_override`` (`bool`)
@@ -112,19 +113,20 @@ class TriviaSession:
         max_score = self.settings["max_score"]
         delay = self.settings["delay"]
         timeout = self.settings["timeout"]
+        slow_reveal = self.settings["slow_reveal"]
         for question, answers in self._iter_questions():
             async with self.ctx.typing():
                 await asyncio.sleep(3)
             self.count += 1
 
             # Allow for subentries of questions to also specify certain settings
-            delay_factor, reveal_s = 1.0, 0.0
+            delay_factor, reveal_s = 1.0, slow_reveal
             for entry in answers:
                 if isinstance(entry, dict):
                     # delay_factor: Multiply the amount of time given for this question by this amount
                     delay_factor = entry.get('delay_factor', delay_factor)
                     # reveal_s: Reveal a random letter of the answer every {this many} seconds
-                    reveal_s = entry.get('reveal_s', reveal_s)
+                    reveal_s = entry.get('slow_reveal', reveal_s)
             answers = list(filter(lambda x: isinstance(x, str), answers))
 
             msg = bold(_("Question number {num}!").format(num=self.count)) + "\n\n" + question
