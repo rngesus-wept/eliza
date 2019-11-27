@@ -93,7 +93,7 @@ class Trivia(commands.Cog):
         await ctx.send(_("Done. Maximum seconds to answer set to {num}.").format(num=seconds))
         
     @triviaset.command(name="slowreveal")
-    asynd def triviaset_slowreveal(self, ctx: commands.Context, seconds: float):
+    async def triviaset_slowreveal(self, ctx: commands.Context, seconds: float):
         """Set the interval at which answers will be slowly revealed."""
         settles = self.conf.guild(ctx.guild)
         await settles.slow_reveal.set(seconds)
