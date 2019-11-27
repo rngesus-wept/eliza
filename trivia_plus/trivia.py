@@ -251,7 +251,9 @@ class Trivia(commands.Cog):
     @trivia.command(name="list")
     async def trivia_list(self, ctx: commands.Context):
         """List available trivia categories."""
-        await ctx.send(repr(self._all_lists()))
+        for foo in self._all_lists():
+          await ctx.send(str(foo))
+          await asyncio.sleep(.25)
         lists = set(p.stem for p in self._all_lists())
         if await ctx.embed_requested():
             await ctx.send(
