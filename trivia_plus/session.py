@@ -53,6 +53,7 @@ class TriviaSession:
          - ``delay`` (`float`)
          - ``timeout`` (`float`)
          - ``slow_reveal`` (`float`)
+         - ``half_reveal`` (`float`)
          - ``reveal_answer`` (`bool`)
          - ``bot_plays`` (`bool`)
          - ``allow_override`` (`bool`)
@@ -114,24 +115,28 @@ class TriviaSession:
         delay = self.settings["delay"]
         timeout = self.settings["timeout"]
         slow_reveal = self.settings["slow_reveal"]
+        half_reveal = self.settings["half_reveal"]
         for question, answers in self._iter_questions():
             async with self.ctx.typing():
                 await asyncio.sleep(3)
             self.count += 1
 
             # Allow for subentries of questions to also specify certain settings
-            delay_factor, reveal_s = 1.0, slow_reveal
+            delay_factor, reveal_s, reveal_h = 1.0, slow_reveal, half_reveal
             for entry in answers:
                 if isinstance(entry, dict):
                     # delay_factor: Multiply the amount of time given for this question by this amount
                     delay_factor = entry.get('delay_factor', delay_factor)
-                    # reveal_s: Reveal a random letter of the answer every {this many} seconds
+                    # slow_reveal: Reveal a random letter of the answer every {this many} seconds
                     reveal_s = entry.get('slow_reveal', reveal_s)
+                    # half_reveal: Reveal half the letters in this many seconds, capped by slow_reveal
+                    reveal_h = entry.get('half_reveal', reveal_h)
             answers = list(filter(lambda x: isinstance(x, str), answers))
 
             msg = bold(_("Question number {num}!").format(num=self.count)) + "\n\n" + question
             await self.ctx.send(msg)
-            continue_ = await self.wait_for_answer(answers, delay * delay_factor, timeout, reveal=reveal_s)
+            continue_ = await self.wait_for_answer(answers, delay * delay_factor, timeout,
+                                                   slow_reveal=reveal_s, half_reveal=reveal_h)
             if continue_ is False:
                 break
             if any(score >= max_score for score in self.scores.values()):
@@ -168,7 +173,8 @@ class TriviaSession:
             answers = _parse_answers(answers)
             yield question, answers
 
-    async def wait_for_answer(self, answers, delay: float, timeout: float, reveal: float = 0.0):
+    async def wait_for_answer(self, answers, delay: float, timeout: float,
+                              slow_reveal: float = 0.0, half_reveal: float = 0.0):
         """Wait for a correct answer, and then respond.
 
         Scores are also updated in this method.
@@ -184,8 +190,11 @@ class TriviaSession:
             How long users have to respond (in seconds).
         timeout : float
             How long before the session ends due to no responses (in seconds).
-        reveal : float
+        slow_reveal : float
             Every [this many] seconds, reveal a random letter from the answer. (default = 0.0 for no reveals)
+        half_reveal : float
+            Over [this many] seconds, half of the letters of the answer will be revealed one
+            letter at a time (but never any faster than one every `slow_reveal` seconds).
 
         Returns
         -------
@@ -194,8 +203,11 @@ class TriviaSession:
 
         """
         try:
-            if reveal:
-                revealer = self.ctx.bot.loop.create_task(self.reveal_answer(answers[0], reveal))
+            if half_reveal:
+                letter_count = len(re.findall(r'\w', answers[0]))
+                slow_reveal = max(slow_reveal, 2.0 * half_reveal / letter_count)
+            if slow_reveal:
+                reveal_task = self.ctx.bot.loop.create_task(self.reveal_answer(answers[0], slow_reveal))
             message = await self.ctx.bot.wait_for(
                 "message", check=self.check_answer(answers), timeout=delay
             )
@@ -217,8 +229,8 @@ class TriviaSession:
             reply = _("You got it {user}! **+1** to you!").format(user=message.author.display_name)
             await self.ctx.send(reply)
         finally:
-            if reveal:
-                revealer.cancel()
+            if slow_reveal:
+                reveal_task.cancel()
         return True
 
     async def reveal_answer(self, answer, interval):
