@@ -31,8 +31,6 @@ _FAIL_MESSAGES = (
 )
 # _ = T_
 
-TIMEOUT_RE = re.compile(r'/T(\d\.\d)/\s*')
-
 
 class TriviaSession:
     """Class to run a session of trivia with the user.
@@ -118,16 +116,20 @@ class TriviaSession:
             async with self.ctx.typing():
                 await asyncio.sleep(3)
             self.count += 1
-            time_mult = TIMEOUT_RE.match(question)
-            if time_mult:
-              question = TIMEOUT_RE.sub('', question)
-              time_mult = float(time_mult.group(1))
-            else:
-              time_mult = 1.0
+            
+            # Allow for subentries of questions to also specify certain settings
+            delay_factor, reveal_s = 1.0, 0.0
+            for entry in answers:
+                if isinstance(entry, dict):
+                    # delay_factor: Multiply the amount of time given for this question by this amount
+                    delay_factor = entry.get('delay_factor', delay_factor)
+                    # reveal_s: Reveal a random letter of the answer every {this many} seconds
+                    reveal_s = entry.get('reveal_s', reveal_s)
+            answers = list(filter(lambda x: isinstance(x, str), answers))
 
             msg = bold(_("Question number {num}!").format(num=self.count)) + "\n\n" + question
             await self.ctx.send(msg)
-            continue_ = await self.wait_for_answer(answers, delay * time_mult, timeout)
+            continue_ = await self.wait_for_answer(answers, delay * delay_factor, timeout, reveal=reveal_s)
             if continue_ is False:
                 break
             if any(score >= max_score for score in self.scores.values()):
@@ -164,7 +166,7 @@ class TriviaSession:
             answers = _parse_answers(answers)
             yield question, answers
 
-    async def wait_for_answer(self, answers, delay: float, timeout: float):
+    async def wait_for_answer(self, answers, delay: float, timeout: float, reveal: float = 0.0):
         """Wait for a correct answer, and then respond.
 
         Scores are also updated in this method.
@@ -180,6 +182,8 @@ class TriviaSession:
             How long users have to respond (in seconds).
         timeout : float
             How long before the session ends due to no responses (in seconds).
+        reveal : float
+            Every [this many] seconds, reveal a random letter from the answer. (default = 0.0 for no reveals)
 
         Returns
         -------
@@ -188,6 +192,8 @@ class TriviaSession:
 
         """
         try:
+            if reveal:
+                revealer = self.ctx.bot.loop.create_task(self.reveal_answer(answers[0], reveal))
             message = await self.ctx.bot.wait_for(
                 "message", check=self.check_answer(answers), timeout=delay
             )
@@ -208,7 +214,23 @@ class TriviaSession:
             self.scores[message.author] += 1
             reply = _("You got it {user}! **+1** to you!").format(user=message.author.display_name)
             await self.ctx.send(reply)
+        finally:
+            if reveal:
+                revealer.cancel()
         return True
+    
+    async def reveal_answer(self, answer, interval):
+        """Slowly reveal random letters from a trivia answer."""
+        full_answer = list(answer.upper())
+        current_reveal = ['?' if char.isalnum() else char for char in full_answer]
+        positions = [idx for idx, char in enumerate(current_reveal) if char == '?']
+        random.shuffle(positions)
+        
+        while current_reveal != full_answer:
+            await asyncio.sleep(interval)
+            next_reveal = positions.pop()
+            current_reveal[next_reveal] = full_answer[next_reveal]
+            await self.ctx.send(f'`{"".join(current_reveal)}`')
 
     def check_answer(self, answers):
         """Get a predicate to check for correct answers.
@@ -327,14 +349,17 @@ def _parse_answers(answers):
 
     """
     ret = []
+    dicts = []
     for answer in answers:
         if isinstance(answer, bool):
             if answer is True:
                 ret.extend(["True", "Yes", "On"])
             else:
                 ret.extend(["False", "No", "Off"])
+        elif isinstance(answer, dict):
+            dicts.append(answer)
         else:
             ret.append(str(answer))
     # Uniquify list
     seen = set()
-    return tuple(x for x in ret if not (x in seen or seen.add(x)))
+    return tuple(dicts) + tuple(x for x in ret if not (x in seen or seen.add(x)))

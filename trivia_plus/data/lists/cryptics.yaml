@@ -1,0 +1,5 @@
+"This is just a test of the slow answer-revealing functionality.":
+- delay_factor: 2.0
+- reveal_s: 5
+- CALLIPYGIAN
+- this answer is also acceptable
