@@ -1,4 +1,4 @@
-CONFIG: {delay_factor: 2.0, slow_reveal: 6.0}
+CONFIG: {delay: 40.0, slow_reveal: 7.0}
 "Hand calculators, starting as backups, add critical information (5)":
 - ABACI
 "You can count on it, a taxi returning us (6)":
