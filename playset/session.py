@@ -25,7 +25,7 @@ _LETTERS = "WSZEDXRFCTGVYHBUJNIKM"
 
 class SetSession:
     def __init__(self, ctx):
-        self.dataDir = str(pathlib.Path(__file__).parent.resolve() / "cards")
+        self.dataDir = pathlib.Path(__file__).parent.resolve() / 'cards'
         self.ctx = ctx
         self.output_image_path = self.dataDir / f'board-{ctx.channel.id}.png'
         self.scores = Counter()
@@ -51,7 +51,7 @@ class SetSession:
         await self._send_startup_msg()
         while True:
             await asyncio.sleep(2)
-            f = discord.File(self.output_image_path)
+            f = discord.File(str(self.output_image_path))
             await self.ctx.send(file=f)
             foundSet = await self.wait_for_set()
             await self._update_board(foundSet)
@@ -164,15 +164,15 @@ class SetSession:
             for j in range(self.board.shape[1]):
                 v = _card_num_to_vec(self.board[i][j])
                 imfile = f'{"".join(map(str, v))}.png'
-                card = pp.imread(str(self.dataDir/imfile))
+                card = pp.imread(str(self.dataDir / imfile))
                 image[i*_CARD_SIZE[1]:(i+1)*_CARD_SIZE[1],j*_CARD_SIZE[0]:(j+1)*_CARD_SIZE[0]]=card
-        overlay = pp.imread(str(self.dataDir/'overlay.png'))
+        overlay = pp.imread(str(self.dataDir / 'overlay.png'))
         for i in range(image.shape[0]):
             for j in range(image.shape[1]):
                 image[i][j][0] *= overlay[i][j][0]
                 image[i][j][1] *= overlay[i][j][1]
                 image[i][j][2] *= overlay[i][j][2]
-        pp.imsave(self.output_image_path, image)
+        pp.imsave(str(self.output_image_path), image)
 
 def _is_set(cardList):
     vecs = [_card_num_to_vec(card) for card in cardList]
