@@ -86,10 +86,9 @@ class SetSession:
     async def _wrong_handler(self):
         while ((not self.foundSet) or self.wrongAnswers):
             if self.wrongAnswers:
-                m = self.wrongAnswers[0]
+                m = self.wrongAnswers.pop(0)
                 self.scores[m.author] -= 1
                 await self.ctx.send(f"{m.author.display_name}: not a set. -1 point")
-                self.wrongAnswers = self.wrongAnswers[1:]
             else:
                 await asyncio.sleep(.25)
 
@@ -98,15 +97,12 @@ class SetSession:
         if early_exit:
             return False
         guess = message.content.upper()
-        if len(set(guess)) != 3:
+        if len(guess) != 3:
             return False
         validLetters = _LETTERS[:3*self.board.shape[1]]
-        for letter in guess:
-            if letter not in validLetters:
-                return False
-        cards = []
-        for i in range(3):
-            cards.append(self.board[_LETTER_MAP[guess[i]]])
+        if set(guess) - set(validLetters):
+            return False
+        cards = [self.board[_LETTER_MAP[letter]] for letter in guess]
         if not _is_set(cards):
             self.wrongAnswers.append(message)
             return False
