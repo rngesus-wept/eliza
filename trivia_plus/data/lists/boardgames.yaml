@@ -1,6 +1,6 @@
 AUTHOR: rngesus.wept
 # Missing games: Star Wars Rebellion, 7th Continent, Mage Knight
-# Could use more: Twilight Struggle, Tzolk'in, Root, Eclipse
+# Could use more: Twilight Struggle, Tzolk'in, Root, Eclipse, Citadels
 
 ##### Genres
 "**What genre of games** is defined by the permanent alteration of otherwise reusable game components over multiple plays?":
@@ -21,6 +21,8 @@ AUTHOR: rngesus.wept
 - Player elimination
 "**What theme** is present in _Anachrony_, _Tragedy Looper_, and _Chrononauts_ (and actually informs the game mechanics instead of being slapped on)?":
 - Time travel
+"**What phrase** is used to describe game mechanics where a player calls out or attacks a specific other player?":
+- Take That
 
 ##### SET
 "Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/TeaQN9N.jpg":
@@ -634,6 +636,15 @@ AUTHOR: rngesus.wept
 - Lost Legacy
 "**What game**'s cards are shown in this picture? https://i.imgur.com/UZjT3qk.jpg":
 - Love Letter
+"**What game**'s components are shown in this picture? https://i.imgur.com/UhlfqGH.jpg":
+- Citadels
+"**What card game** started as a send-up of D&D tropes and has since expanded to cover many more facets of nerd culture?":
+- Munchkin
+"**What company** published _Munchkin_, _Illuminati_, and _Car Wars_?":
+- Steve Jackson Games
+- Steve Jackson
+"**What behavior** was cheekily permitted in original printings of _Munchkin_ rules, but retracted (in 2010) when its player base turned out to be full of sweaty tryhards?":
+- Cheating
 # Bohnanza, Hanabi, Lost Cities, Betrayal at the House on the Hill, Coup
 # Takenoko, Sushi Go, Risk, Hive, Alhambra, Mysterium, Sheriff of Nottingham
 # Chess, Monopoly, Bang, Shadows over Camelot, Scrabble, Kingdomino, Machi Koro
@@ -678,7 +689,12 @@ AUTHOR: rngesus.wept
 # Key Market, Ginkgopolis, Thunderstone Quest, Dinosaur Island, Calimala
 # Continental Divide, Gugong, Goa, Sorcerer City, Evolution(: Climate)
 # Dynasties: Heirate, Symphony No 9, Irish Gauge, Riverboat, First Class
-# Broom Service, Millennium Blades, Minerva, Deus, Mottainai, Crusaders: Thy Will Be Done
+----------------------------------------------------------------------------
+# --- Broom Service, Millennium Blades, Minerva, Deus, Mottainai, Crusaders: Thy Will Be Done
+"**What two other games** are referenced by this _Millennium Blades_ card? https://i.imgur.com/V1derUH.png":
+- Race for the Galaxy and Settlers of Catan
+- (Race for the Galaxy|RftG)( and |, ?| ?/ ?| )(Settlers|Catan|Settlers of Catan)
+- (Settlers|Catan|Settlers of Catan)( and |, ?| ?/ ?| )(Race for the Galaxy|RftG)
 # Bridge, Fields of Green, Rococo, TOKYO METRO, Heaven & Ale, IKI
 # Vindication, Gentes, Letter Jam, Signorie, Carson City, Tyrants of the Underdark
 # Mini Rail, Pulsar 2849, Macao, Lowlands, Staufer Dynasty, Medina, New York Slice
