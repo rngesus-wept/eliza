@@ -131,7 +131,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ACADEMIC
 "One in Canada, peut-être? (7)":
 - ACADIAN
-"Watch lead pencil spin crazily as misfortunes may occur. (9,4,6)":
+"Watch lead pencil spin crazily as misfortunes may occur. (9 4 6)":
 - ACCIDENTSWILLHAPPEN
 - accidents will happen
 "Awards monkey with a cold case (9)":
@@ -2072,8 +2072,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CALIBERS
 "Peeled scallions for visit (4)":
 - CALL
-"Lawyers' licence to get drinks? (4,2,3,3)":
+"Lawyers' licence to get drinks? (4 2 3 3)":
 - CALLTOTHEBAR
+- call to the bar
 "Ring operates in tough areas (8)":
 - CALLUSES
 "Ricola melting to carbon, driven by heat (7)":
@@ -2090,8 +2091,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CAMEO
 "Photographers showed up with noodle soup (9)":
 - CAMERAMEN
-"Around me and you, mountaintop rose (4,2)":
+"Around me and you, mountaintop rose (4 2)":
 - CAMEUP
+- came up
 "Paine's speech cut short came before political drive (8)":
 - CAMPAIGN
 "A manciple destroyed bell-tower (9)":
@@ -2178,8 +2180,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CARPENTRY
 "Old woman perhaps left blanket in satchel (9)":
 - CARPETBAG
-"Continue to rant (5,2)":
+"Continue to rant (5 2)":
 - CARRYON
+- carry on
 "Jailbird keeps painting box (6)":
 - CARTON
 "Drawing of Dickens' Sydney, with guillotines at the center (7)":
@@ -2237,8 +2240,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CATECHISMS
 "Providing pride of lions, for example, with introduction to ergonomics (8)":
 - CATERING
-"Cool customer comes upon formerly archaic donut supplies (6,2)":
+"Cool customer comes upon formerly archaic donut supplies (6 2)":
 - CATERSTO
+- caters to
 "Harsh cry from Cru: \"Late. Aw nuts!\" (9)":
 - CATERWAUL
 "Souped-up car halted at Winchester church. (9)":
@@ -2293,8 +2297,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CESIUM
 "Bird is short distance behind husks of wheat (9)":
 - CHAFFINCH
-"Foolish talk involves swimming Nile in a fund-raising scam (5,6)":
+"Foolish talk involves swimming Nile in a fund-raising scam (5 6)":
 - CHAINLETTER
+- chain letter
 "Revolutionary spy breaks into Connecticut cottage (6)":
 - CHALET
 "Defiant call for change holds up addition to building (9)":
@@ -2331,8 +2336,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CHARISMA
 "Endless charades (one variety) I parade before the newlyweds (9)":
 - CHARIVARI
-"Well-known rifleman leaves first after barbecue; then he's surrounded by heavyweights (8,6)":
+"Well-known rifleman leaves first after barbecue; then he's surrounded by heavyweights (8 6)":
 - CHARLTONHESTON
+- charlton heston
 "Influence church member (5)":
 - CHARM
 "Slightly burn piece of meat (rabbit's foot, maybe) (5)":
@@ -2345,6 +2351,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CHARWOMAN
 "Shoos stray housecats (6 3)":
 - CHASESOUT
+- chases out
 "Gap in music has meaning (5)":
 - CHASM
 "Talk of being hunted is restrained (6)":
@@ -2359,8 +2366,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CHEATER
 "Arrests boisterous Bohemians (6)":
 - CHECKS
-"Shredded chad, he decrees, is one ingredient (7,6)":
+"Shredded chad, he decrees, is one ingredient (7 6)":
 - CHEDDARCHEESE
+- cheddar cheese
 "After church, scream at sight of mouse's boldness (5)":
 - CHEEK
 "Support data transfer in acknowledgement of departure overseas (7)":
@@ -2375,6 +2383,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CHEMISTRY
 "Lingerie with fringe left behind in assignation - there could be many reactions from this (9 3)":
 - CHEMISTRYSET
+- chemistry set
 "Artistic, her O'Keeffe depicts Indian (8)":
 - CHEROKEE
 "Innocent woman is kidnapped by Chicago player (6)":
@@ -2403,14 +2412,16 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CHIEF
 "Simple, endlessly cool beauty (8)":
 - CHILDISH
-"Touch inappropriately while embracing. Sick! Just keep your blood pressure down (5,3)":
+"Touch inappropriately while embracing. Sick! Just keep your blood pressure down (5 3)":
 - CHILLOUT
+- chill out
 "A notable Jay Leno feature, \"Sensible Dishes\" (9)":
 - CHINAWARE
 "Material beginning to conceal hint at start of the alphabet?  Just the opposite! (6)":
 - CHINTZ
-"Makes a comment about trendy vice (5, 2)":
+"Makes a comment about trendy vice (5 2)":
 - CHIPSIN
+- chips in
 "Chip is describing rare bird call (5)":
 - CHIRP
 "With clear and sharp features, mostly dry in chilled container (9, r. spelling)":
@@ -2578,8 +2589,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - COMET
 "Order man held by company doctor (7)":
 - COMMAND
-"Judges made this committee cut lawn around Monday (6,3)":
+"Judges made this committee cut lawn around Monday (6 3)":
 - COMMONLAW
+- common law
 "Succinct contract (7)":
 - COMPACT
 "Regards counterparts in audition (11)":
@@ -2691,10 +2703,12 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - COSINE
 "A space station resident violated US Moon Act (9)":
 - COSMONAUT
-"One of two leading actors edges away from vicar in a small country (5,4)":
+"One of two leading actors edges away from vicar in a small country (5 4)":
 - COSTARICA
-"Central American person sharing the limelight on 1 May (5,5)":
+- costa rican
+"Central American person sharing the limelight on 1 May (5 5)":
 - COSTARICAN
+- costa rican
 "Cobra, for example, that is softly slipping out of fraternity (7)":
 - COTERIE
 "Little house, little bed, broken gate (7)":
@@ -2703,8 +2717,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - COTTAGE
 "Puma, for one, to run back and forth in empty canyon (6)":
 - COTTON
-"Put hot cocoa out for someone glued to the TV (5,6)":
+"Put hot cocoa out for someone glued to the TV (5 6)":
 - COUCHPOTATO
+- couch potato
 "Assembly said Dracula's sick (7)":
 - COUNCIL
 "Advice on clues to be anagrammed (7)":
@@ -2802,8 +2817,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CREPT
 "Found missing article in Greek island (5)":
 - CRETE
-"Big problem for police: one kitten's crying in hunger (5,4)":
+"Big problem for police: one kitten's crying in hunger (5 4)":
 - CRIMEWAVE
+- crime wave
 "Hollers about small emergencies (6)":
 - CRISES
 "Emergency credit is doubled (6)":
@@ -7846,8 +7862,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - NET
 "Capture ten heading north (3)":
 - NET
-"Final outcome: nut trees destroyed (3,6)":
+"Final outcome: nut trees destroyed (3 6)":
 - NETRESULT
+- net result
 "Strange, unreal network type (6)":
 - NEURAL
 "Retune frolicking for no sex (6)":
@@ -7858,24 +7875,26 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - NEVER
 "When Eve rued core?  Not once! (5)":
 - NEVER
-"Mystical trend is born full of wit (3,3)":
+"Mystical trend is born full of wit (3 3)":
 - NEWAGE
+- new age
 "Settle in comfortably around Watts, California, a port city (9)":
 - NEWCASTLE
-"(With 42A) Insane losers wanted overhauled professional football team (3,7)":
-- NEWORLEANS
 "CNN piece lassoers went over top to bottom (4 6)":
 - NEWSREPORT
+- news report
 "In short, ropers went back: CNN piece (4 6)":
 - NEWSREPORT
+- news report
 "Get your paper here! Amphibious creature seizes steamship; a number dead (9)":
 - NEWSSTAND
 "Gingrich went mad (4)":
 - NEWT
 "Force went crazy working (6)":
 - NEWTON
-"Some '80's music is making a comeback, even around western Washington (3,4)":
+"Some '80's music is making a comeback, even around western Washington (3 4)":
 - NEWWAVE
+- new wave
 "Accidentally unsex group with ties (5)":
 - NEXUS
 "Awful vile! (4)":

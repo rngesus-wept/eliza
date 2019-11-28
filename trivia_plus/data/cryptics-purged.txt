@@ -248,3 +248,6 @@ PSEEDEERHE	"Talk about a small space rabbit":
 UNARM	Ox herd
 SWEETNESS	Dotty sees newts with quality of 29A (9)
 GGGOL	Manic bishop joins attack (5)
+"Insane losers wanted overhauled professional football team (3 7)":
+- NEWORLEANS
+- new orleans
