@@ -27,7 +27,7 @@ class SetSession:
     def __init__(self, ctx):
         self.dataDir = str(pathlib.Path(__file__).parent.resolve() / "cards")
         self.ctx = ctx
-        self.output_image_path = self.dataDir / f'board-{ctx.message.channel.id}.png'
+        self.output_image_path = self.dataDir / f'board-{ctx.channel.id}.png'
         self.scores = Counter()
         self.deck = random.sample(range(81), 81)
         self.board = np.zeros((3,4),dtype=int)
@@ -63,20 +63,23 @@ class SetSession:
         await self.end_game()
 
     async def _send_startup_msg(self):
-        await self.ctx.send("Starting Set. Type in the three card letters to call a set. Incorrect calls are -1 point. Good luck!")
+        await self.ctx.send("Starting Set. Type in the three card letters to call a set."
+                            " Incorrect calls are -1 point. Good luck!")
         await asyncio.sleep(3)
 
     async def wait_for_set(self):
         self.foundSet = False
         self.wrongAnswers = []
 
-        message = await asyncio.gather(self.ctx.bot.wait_for("message", check=self.check_set),self._wrong_handler())
+        message = await asyncio.gather(
+            self.ctx.bot.wait_for("message", check=self.check_set),
+            self._wrong_handler())
         guess = message[0].content.upper()
         cards = []
         for i in range(3):
             cards.append(self.board[_LETTER_MAP[guess[i]]])
         self.scores[message[0].author] += 1
-        await self.ctx.send(str(message[0].author.display_name)+": Set! +1 point")
+        await self.ctx.send(f"{message[0].author.display_name}: Set! +1 point")
 
         return cards
 
@@ -85,7 +88,7 @@ class SetSession:
             if self.wrongAnswers:
                 m = self.wrongAnswers[0]
                 self.scores[m.author] -= 1
-                await self.ctx.send(str(m.author.display_name)+": not a set. -1 point")
+                await self.ctx.send(f"{m.author.display_name}: not a set. -1 point")
                 self.wrongAnswers = self.wrongAnswers[1:]
             else:
                 await asyncio.sleep(.25)
@@ -144,7 +147,7 @@ class SetSession:
         """Send a table of scores to the session's channel."""
         table = "+ Results: \n\n"
         for user, score in self.scores.most_common():
-            table += "+ {}\t{}\n".format(user, score)
+            table += f"+ {user}\t{score}\n"
         await self.ctx.send(box(table, lang="diff"))
 
     def stop(self):
@@ -155,7 +158,7 @@ class SetSession:
         """Cancel whichever tasks this session is running."""
         self._task.cancel()
         channel = self.ctx.channel
-        print("Force stopping Set session; "+str(channel)+" in "+str(channel.guild.id))
+        print(f"Force stopping Set session; {channel} in {channel.guild.id}")
 
     def _gen_board_image(self):
         image = np.zeros((self.board.shape[0]*_CARD_SIZE[1],
@@ -164,7 +167,7 @@ class SetSession:
         for i in range(self.board.shape[0]):
             for j in range(self.board.shape[1]):
                 v = _card_num_to_vec(self.board[i][j])
-                imfile = str(v[0])+str(v[1])+str(v[2])+str(v[3])+'.png'
+                imfile = f'{"".join(map(str, v))}.png'
                 card = pp.imread(str(self.dataDir/imfile))
                 image[i*_CARD_SIZE[1]:(i+1)*_CARD_SIZE[1],j*_CARD_SIZE[0]:(j+1)*_CARD_SIZE[0]]=card
         overlay = pp.imread(str(self.dataDir/'overlay.png'))
