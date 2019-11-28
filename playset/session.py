@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as pp
 import pathlib
 import os
+import random
 from zipfile import ZipFile
 
 __all__ = ["SetSession"]
@@ -27,14 +28,15 @@ class SetSession:
         self.dataDir = str(pathlib.Path(__file__).parent.resolve() / "cards")
         self.ctx = ctx
         self.scores = Counter()
-        self.deck = np.random.permutation(81)
+        self.deck = random.sample(range(81), 81)
         self.board = np.zeros((3,4),dtype=int)
         for i in range(self.board.size):
-            self.board[i%3,i//3] = self.deck[0]
-            self.deck = self.deck[1:]
+            self.board[i%3, i//3] = self.deck.pop(0)
         while not _board_contains_set(self.board):
-            self.board = np.append(self.board,[[self.deck[0]],[self.deck[1]],[self.deck[2]]],axis=1)
-            self.deck = self.deck[3:]
+            self.board = np.append(
+                self.board,
+                [[self.deck.pop(0)], [self.deck.pop(0)], [self.deck.pop(0)]],
+                axis=1)
         self._gen_board_image()
 
     @classmethod
@@ -110,7 +112,7 @@ class SetSession:
 
     #Given the cards to be removed from the board, generate the next board
     async def _update_board(self,cards):
-        if (self.board.shape[1]>4) or (len(self.deck) == 0):
+        if (self.board.shape[1]>4) or (not self.deck):
             #try reducing
             oldBoard = self.board
             self.board = np.zeros((3,oldBoard.shape[1]-1),dtype=int)
@@ -123,13 +125,14 @@ class SetSession:
             #replace missing cards
             for i in range(self.board.size):
                 if self.board[i%3,i//3] in cards:
-                    self.board[i%3,i//3] = self.deck[0]
-                    self.deck = self.deck[1:]
+                    self.board[i%3,i//3] = self.deck.pop(0)
 
-        while (not _board_contains_set(self.board)) and (len(self.deck) != 0):
+        while self.deck and not _board_contains_set(self.board):
             #repair boards while possible
-            self.board = np.append(self.board,[[self.deck[0]],[self.deck[1]],[self.deck[2]]],axis=1)
-            self.deck = self.deck[3:]
+            self.board = np.append(
+                self.board,
+                [[self.deck.pop(0)], [self.deck.pop(0)],[self.deck.pop(0)]],
+                axis=1)
 
     async def end_game(self):
         """End the Set game and display scrores."""
