@@ -14,39 +14,36 @@ __all__ = ["SetSession"]
 
 _CARD_SIZE = (84,61)
 _VALID_TRIPLES = [(0,0,0),(1,1,1),(2,2,2),(0,1,2),(0,2,1),(1,0,2),(1,2,0),(2,0,1),(2,1,0)]
-_LETTER_MAP = {"A":(0,0),"B":(0,1),"C":(0,2),"D":(0,3),"E":(0,4),"F":(0,5),"G":(0,6),
-               "H":(1,0),"I":(1,1),"J":(1,2),"K":(1,3),"L":(1,4),"M":(1,5),"N":(1,6),
-               "O":(2,0),"P":(2,1),"R":(2,2),"S":(2,3),"T":(2,4),"U":(2,5),"V":(2,6)}
+_LETTER_MAP = {"W":(0,0),"E":(0,1),"R":(0,2),"T":(0,3),"Y":(0,4),"U":(0,5),"I":(0,6),
+               "S":(1,0),"D":(1,1),"F":(1,2),"G":(1,3),"H":(1,4),"J":(1,5),"K":(1,6),
+               "Z":(2,0),"X":(2,1),"C":(2,2),"V":(2,3),"B":(2,4),"N":(2,5),"M":(2,6)}
+#possible letters top-to-bottom, left-to-right for valid letter chacking
+_LETTERS = "WSZEDXRFCTGVYHBUJNIKM"
                
 
 
 class SetSession:
     def __init__(self, ctx):
-        self.dataDir = str(cog_data_path(self))
-        if not 'cards' in self.dataDir:
+        self.dataDir = cog_data_path(self)
+        if not 'cards' in os.listdir(self.dataDir):
+            print("Card images not found. Downloading.")
             url = 'https://frky-storage.s3-us-west-1.amazonaws.com/cards.zip'
-            wget.download(url, self.dataDir+'/cards.zip')
-            zip = ZipFile(self.dataDir+'/cards.zip')
+            wget.download(url, str(self.dataDir/'cards.zip'))
+            print(' ')
+            zip = ZipFile(self.dataDir/'cards.zip')
             zip.extractall(self.dataDir)
             zip.close()
-        self.dataDir = self.dataDir+'/cards'
+        self.dataDir = self.dataDir/'cards'
         self.ctx = ctx
         self.scores = Counter()
         self.deck = np.random.permutation(81)
-        self.boardW = 4
-        self.board = np.zeros((3,self.boardW),dtype=int)
+        self.board = np.zeros((3,4),dtype=int)
         for i in range(self.board.size):
             self.board[i%3,i//3] = self.deck[0]
             self.deck = self.deck[1:]
         while not _board_contains_set(self.board):
-            self.boardW += 1
-            oldBoard = self.board
-            self.board = np.zeros((3,self.boardW),dtype=int)
-            for i in range(oldBoard.size):
-                self.board[i%3][i//3] = oldBoard[i%3][i//3]
-            for i in range(3):
-                self.board[i][self.boardW-1] = self.deck[0]
-                self.deck = self.deck[1:]
+            self.board = np.append(self.board,[[self.deck[0]],[self.deck[1]],[self.deck[2]]],axis=1)
+            self.deck = self.deck[3:]
         self._gen_board_image()
         
     @classmethod
@@ -61,7 +58,7 @@ class SetSession:
         self.game_running = True
         while self.game_running:
             await asyncio.sleep(2)
-            f = discord.File(self.dataDir+'/board.png')
+            f = discord.File(self.dataDir/'board.png')
             await self.ctx.send(file=f)
             foundSet = await self.wait_for_set()
             await self._update_board(foundSet)
@@ -73,7 +70,7 @@ class SetSession:
         await self.end_game()
         
     async def _send_startup_msg(self):
-        await self.ctx.send("Starting Set. Type in the three card letters to call a set. Incorrect calls are -1 point. Good luck")
+        await self.ctx.send("Starting Set. Type in the three card letters to call a set. Incorrect calls are -1 point. Good luck!")
         await asyncio.sleep(3)
 
     async def wait_for_set(self):
@@ -86,16 +83,16 @@ class SetSession:
         for i in range(3):
             cards.append(self.board[_LETTER_MAP[guess[i]]])
         self.scores[message[0].author] += 1
-        await self.ctx.send(str(message[0].author)+": Set! +1 point")
+        await self.ctx.send(str(message[0].author.display_name)+": Set! +1 point")
    
         return cards
         
     async def _wrong_handler(self):
-        while ((not self.foundSet) or len(self.wrongAnswers)>0):
-            if(len(self.wrongAnswers)>0):
+        while ((not self.foundSet) or self.wrongAnswers):
+            if self.wrongAnswers:
                 m = self.wrongAnswers[0]
                 self.scores[m.author] -= 1
-                await self.ctx.send(str(m.author)+": not a set. -1 point")
+                await self.ctx.send(str(m.author.display_name)+": not a set. -1 point")
                 self.wrongAnswers = self.wrongAnswers[1:]
             else: 
                 await asyncio.sleep(.25)
@@ -105,16 +102,11 @@ class SetSession:
         if early_exit:
             return False
         guess = message.content.upper()
-        if len(guess) != 3:
+        if len(set(guess)) != 3:
             return False
-        if guess[0]==guess[1] or guess[0]==guess[2] or guess[1]==guess[2]:
-            return False
-        validLetters = []
-        for l in _LETTER_MAP:
-            if _LETTER_MAP[l][1]<self.boardW:
-                validLetters.append(l)
-        for i in range(3):
-            if not guess[i] in validLetters:
+        validLetters = _LETTERS[:3*self.board.shape[1]]
+        for letter in guess:
+            if letter not in validLetters:
                 return False
         cards = []
         for i in range(3):
@@ -124,13 +116,13 @@ class SetSession:
             return False
         self.foundSet = True
         return True
-        
+    
+    #Given the cards to be removed from the board, generate the next board    
     async def _update_board(self,cards):
-        if (self.boardW>4) or (len(self.deck) == 0):
+        if (self.board.shape[1]>4) or (len(self.deck) == 0):
             #try reducing
             oldBoard = self.board
-            self.boardW -= 1
-            self.board = np.zeros((3,self.boardW),dtype=int)
+            self.board = np.zeros((3,oldBoard.shape[1]-1),dtype=int)
             newi = 0
             for i in range(oldBoard.size):
                 if oldBoard[i%3,i//3] not in cards:
@@ -145,14 +137,8 @@ class SetSession:
                     
         while (not _board_contains_set(self.board)) and (len(self.deck) != 0):
             #repair boards while possible
-            self.boardW += 1
-            oldBoard = self.board
-            self.board = np.zeros((3,self.boardW),dtype=int)
-            for i in range(oldBoard.size):
-                self.board[i%3][i//3] = oldBoard[i%3][i//3]
-            for i in range(3):
-                self.board[i][self.boardW-1] = self.deck[0]
-                self.deck = self.deck[1:]
+            self.board = np.append(self.board,[[self.deck[0]],[self.deck[1]],[self.deck[2]]],axis=1)
+            self.deck = self.deck[3:]
             
     async def end_game(self):
         """End the Set game and display scrores."""
@@ -184,15 +170,16 @@ class SetSession:
         for i in range(self.board.shape[0]):
             for j in range(self.board.shape[1]):
                 v = _card_num_to_vec(self.board[i][j])
-                card = pp.imread(self.dataDir+'/'+str(v[0])+str(v[1])+str(v[2])+str(v[3])+'.png')
+                imfile = str(v[0])+str(v[1])+str(v[2])+str(v[3])+'.png'
+                card = pp.imread(str(self.dataDir/imfile))
                 image[i*_CARD_SIZE[1]:(i+1)*_CARD_SIZE[1],j*_CARD_SIZE[0]:(j+1)*_CARD_SIZE[0]]=card
-        overlay = pp.imread(self.dataDir+'/overlay.png')
+        overlay = pp.imread(str(self.dataDir/'overlay.png'))
         for i in range(image.shape[0]):
             for j in range(image.shape[1]):
                 image[i][j][0] *= overlay[i][j][0]
                 image[i][j][1] *= overlay[i][j][1]
                 image[i][j][2] *= overlay[i][j][2]
-        pp.imsave(self.dataDir+'/board.png',image)
+        pp.imsave(str(self.dataDir/'board.png'),image)
     
 def _is_set(cardList):
     vecs = [_card_num_to_vec(card) for card in cardList]

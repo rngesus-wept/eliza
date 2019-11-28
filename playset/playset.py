@@ -53,9 +53,9 @@ class PlaySet(commands.Cog):
         """
         cmd = self.set_leaderboard_server
         await ctx.invoke(cmd, "wins", 10)
-    @set_leaderboard.command(name="server")
-    @commands.guild_only()
     
+    @set_leaderboard.command(name="server")
+    @commands.guild_only() 
     async def set_leaderboard_server(
         self, ctx: commands.Context, sort_by: str = "wins", top: int = 10
     ):
