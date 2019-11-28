@@ -176,7 +176,7 @@ class SetSession:
 
 def _is_set(cardList):
     vecs = [_card_num_to_vec(card) for card in cardList]
-    return all(sum(vec[card_idx][trait_idx] for card_idx in range(3)) % 3 == 0
+    return all(sum(vecs[card_idx][trait_idx] for card_idx in range(3)) % 3 == 0
                for trait_idx in range(4))
 
 def _board_contains_set(board):
