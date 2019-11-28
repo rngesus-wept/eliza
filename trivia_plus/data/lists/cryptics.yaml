@@ -11,14 +11,15 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ABANDON
 "Left behind a ring with one diamond on top (9)":
 - ABANDONED
-"Beat a hectic retreat":
+"Beat a hectic retreat (5)":
 - ABATE
 "Drops off in a creepy motel (6)":
 - ABATES
 "Swedish pop group with two college degrees (4)":
 - ABBA
-"Turkish ruler appearing in a widely distributed album (5,4)":
+"Turkish ruler appearing in a widely distributed album (5 4)":
 - ABBEYROAD
+- abbey road
 "Religious leader given a small shot to return (5)":
 - ABBOT
 "Stomach is disturbed, bad sign (7)":
@@ -53,8 +54,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ABOARD
 "Masked by fruit beverage, personal hygiene problem is tolerated (5)":
 - ABODE
-"Swinging more than prescribed, ape comes back inside, crazed. Bravo!? (5,3)":
+"Swinging more than prescribed, ape comes back inside, crazed. Bravo!? (5 3)":
 - ABOVEPAR
+- above par
 "In reverse, rear bad, a car backfires and poof? (11)":
 - ABRACADABRA
 "A woman's undergarment on bad thespian costar in \"Amadeus\" (7)":
@@ -77,6 +79,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ABSENTLY
 "Blends dynamite bombs while in a faraway place? (6-8)":
 - ABSENTMINDEDLY
+- absent-mindedly
 "Bathes in mixture of toxic liqueur (8)":
 - ABSINTHE
 "Press against a container of Mexican beer and vodka (7)":
@@ -103,8 +106,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ABSTRACTS
 "Ridiculous ad jacket rubs the wrong way (6)":
 - ABSURD
-"A beverage custom, timeless, in an Arab sheikdom (3,5)":
+"A beverage custom, timeless, in an Arab sheikdom (3 5)":
 - ABUDHABI
+- abu dhabi
 "In a dance, little do plenty (9)":
 - ABUNDANCE
 "The jerk is one trailing a roll of Bounty (9)":
@@ -127,8 +131,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ACADEMIC
 "One in Canada, peut-être? (7)":
 - ACADIAN
-"and 15A. Watch lead pencil spin crazily as misfortunes may occur. (9,4,6)":
-- ACCIDENTS
+"Watch lead pencil spin crazily as misfortunes may occur. (9,4,6)":
+- ACCIDENTSWILLHAPPEN
+- accidents will happen
 "Awards monkey with a cold case (9)":
 - ACCOLADES
 "So, dot com maniac trashed lodgings (14)":
@@ -163,16 +168,18 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ACHES
 "Get with a Chicago threesome, the night before a big event (7)":
 - ACHIEVE
-"A cold fish capturing woman in a vulnerable position (8,4)":
+"A cold fish capturing woman in a vulnerable position (8 4)":
 - ACHILLESHEEL
-"A cold fish embraces that woman's mortal weaknesses (8,5)":
+- achilles'? heel
+"A cold fish embraces that woman's mortal weaknesses (8 5)":
 - ACHILLESHEELS
+- achilles'? heels
 "Heads of Asian countries hope the United Nations gives attention to Germany (7)":
 - ACHTUNG
 "Pollution from kind of power I use up (4 4)":
-- ACIDRAIN
-"Dictates questionably what constitutes proof (4,4)":
-- ACIDTEST
+- ACID RAIN
+"Dictates questionably what constitutes proof (4 4)":
+- ACID TEST
 "Supplier of unreliable gadgetry is centrally located, enriching madman's schemes (4)":
 - ACME
 "Some of the best came stumbling south (5)":
@@ -199,8 +206,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ACRYLIC
 "Act four sits unwell with outspoken opponents  (9)":
 - ACTIVISTS
-"Beginning to play with energy -- this can make you solvent (3,3)":
+"Beginning to play with energy -- this can make you solvent (3 3)":
 - ACTONE
+- act one
 "Finger lake located in Idaho was cold (6)":
 - OWASCO
 "Editors ousting Red agents (6)":
@@ -221,8 +229,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ADAGIO
 "A mother's in Suriname for two American leaders (5)":
 - ADAMS
-"A cross-dresser may be given away by his pitch (a different kind of pitch is found in truly buxom) (5,5)":
+"A cross-dresser may be given away by his pitch (a different kind of pitch is found in truly buxom) (5 5)":
 - ADAMSAPPLE
+- adam'?s apple
 "A disreputable bar with busted tap inside is readily modified (8)":
 - ADAPTIVE
 "Changes advertisement to \"Rms to let\" (6)":
@@ -251,10 +260,12 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ADIPOSE
 "Judge Judi, a cadet, gone astray (10)":
 - ADJUDICATE
-"Famous statesman in Senate's old, vain, incontinent (5,9)":
+"Famous statesman in Senate's old, vain, incontinent (5 9)":
 - ADLAISTEVENSON
+- adlai stevenson
 "Unprepared, a little gerbil darted the wrong way (2-3)":
 - ADLIB
+- ad-lib
 "Marketing guys amend novel (5)":
 - ADMEN
 "Ministers ordain art evil? I doctor a reversal (13)":
@@ -335,10 +346,12 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - AFOOT
 "Possibly, someone from the U. S. A. F. is with wanderer I let go (4-8)":
 - AFROAMERICAN
+- afro-american
 "Great flow dissipated into phosphorescent aura (9)":
 - AFTERGLOW
 "Extra fat clowns in net (5-3)":
 - AFTERTAX
+- after-tax
 "In contact with a Georgia institution (7)":
 - AGAINST
 "Greek hero's a stranger among men (9)":
@@ -399,9 +412,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - AGORA
 "Marketplace where goat loses tip of nose (5)":
 - AGORA
-"Fair touchdown?":
-- AGREE
-"the circled letters, read from left to right,":
+"Fair touchdown? (5)":
 - AGREE
 "Admitted to a craving (6)":
 - AGREED
@@ -439,8 +450,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - AIRLINES
 "These go far in repair plan, essentially (9)":
 - AIRPLANES
-"Flight path is excellent on takeoff, irregular out, and easy at termination (3,5)":
+"Flight path is excellent on takeoff, irregular out, and easy at termination (3 5)":
 - AIRROUTE
+- air route
 "Couples after heading off pretentiousness (4)":
 - AIRS
 "Broadcasts message addendum after greeting to fliers (8)":
@@ -465,14 +477,16 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ALABASTER
 "Smooth and white, in the style of a cooking utensil (9)":
 - ALABASTER
-"A claret, a rum, not part of the dinner price (1,2,5)":
+"A claret, a rum, not part of the dinner price (1 2 5)":
 - ALACARTE
+- a la carte
 "Alma shot nothing at battle (5)":
 - ALAMO
 "Historic mission -- part of uprising Mexico maladministered (5)":
 - ALAMO
-"You should remember this about French menu phrase (1,2,4)":
+"You should remember this about French menu phrase (1 2 4)":
 - ALAMODE
+- a la mode
 "Opening of animal pound near a NY city (6)":
 - ALBANY
 "Bart's also cast as Big Bird (9)":
@@ -537,10 +551,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ALISON
 "Muhammad's first of the desirable ones (1-4)":
 - ALIST
+- a-list
 "Almost all I have is lousy (5)":
 - ALIVE
-"16a-20a-29a":
-- ALL
 "Every trip starts late (3)":
 - ALL
 "Claim echoes from an outcropping (6)":
@@ -559,16 +572,20 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ALLIANCE
 "Wild gorilla sat on Izod shirts. (10)":
 - ALLIGATORS
-"Hopelessly confused, I am pulled apart about my vote (3,5,2)":
+"Hopelessly confused, I am pulled apart about my vote (3 5 2)":
 - ALLMIXEDUP
+- all mixed up
 "Grant uninitiated vote (5)":
 - ALLOT
 "Surely sounds like one making points? (3 5)":
 - ALLRIGHT
+- all right
 "Around around fifty-fifty, comprehensive (3-5)":
 - ALLROUND
+- all-round
 "Knowing everything, signal Lee frantically (3-6)":
 - ALLSEEING
+- all-seeing
 "Enticements disrupt mental rules (11)":
 - ALLUREMENTS
 "Colleague is without ethics, without love (4)":
@@ -605,12 +622,15 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ALSO
 "Al, Ron's a poor loser (4-3)":
 - ALSORAN
+- also-ran
 "Earliest of ancient Latin tradition and ritual in place of sacrifice (5)":
 - ALTAR
-"Evil twin, perhaps, changed ear to leg (5,3)":
+"Evil twin, perhaps, changed ear to leg (5 3)":
 - ALTEREGO
-"Singer admits actor Richard rejected bosom buddy (5,3)":
+- alter ego
+"Singer admits actor Richard rejected bosom buddy (5 3)":
 - ALTEREGO
+- alter ego
 "A large sea bird swallowed every second (9)":
 - ALTERNATE
 "A rattler on bent car part (10)":
@@ -885,8 +905,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - APNEIC
 "Handsome man's L.A. pool damaged (6)":
 - APOLLO
-"For each a soda (1,3)":
+"For each a soda (1 3)":
 - APOP
+- a pop
 "Male goes after forbidden fruit, filled with love and rage (8)":
 - APOPLEXY
 "Emily, the maven of etiquette, splits beer with Mark or Luke (7)":
@@ -903,16 +924,20 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - APPELLATIONS
 "Prize pate spread (9)":
 - APPETIZER
-"Funky laptop machine's like an iBook! (5,9)":
+"Funky laptop machine's like an iBook! (5 9)":
 - APPLEMACINTOSH
-"Impatient dope confused designated hour (9,4)":
+- apple macintosh
+"Impatient dope confused designated hour (9 4)":
 - APPOINTEDTIME
+- appointed time
 "In Alaska, push one indoor social activity (5-3)":
 - APRESSKI
+- apres-ski
 "Shower time, Bonzo? Spring, I hear (5)":
 - APRIL
-"Assumed later in artificial intelligence?  Just the opposite! (1,6)":
+"Assumed later in artificial intelligence?  Just the opposite! (1 6)":
 - APRIORI
+- a priori
 "Run out missing the beginning of recess (4)":
 - APSE
 "Ex dances in wild party with Kiwi (7)":
@@ -959,8 +984,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ARDENT
 "Passionate art outside of cozy room (6)":
 - ARDENT
-"First three of ten entries are a set of laws (4,4)":
+"First three of ten entries are a set of laws (4 4)":
 - AREACODE
+- area code
 "Bowl in a new time period toward sunset (5)":
 - ARENA
 "Neighborhood has new stadium (5)":
@@ -979,8 +1005,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - TUDORS
 "Crosswords(?) aren't about something sticky (8)":
 - ARGUMENT
-"See 33-Across":
-- ARICA
 "Initially, all retirees in Detroit like the desert (4)":
 - ARID
 "Gershwin comes back on train with tortured spirit (5)":
@@ -1027,8 +1051,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - AROMA
 "Originated pointers to the audience (5)":
 - AROSE
-"Hot chocolate drunk morning, noon and night (6,3,5)":
+"Hot chocolate drunk morning, noon and night (6 3 5)":
 - AROUNDTHECLOCK
+- around the clock
 "Indict a sprinkling of reporters? (7)":
 - ARRAIGN
 "Charging a lot (10)":
@@ -1045,8 +1070,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ARSENALS
 "Coarse Nicaraguan conceals a dangerous element (7)":
 - ARSENIC
-"Redcoat shot with style (3,4)":
+"Redcoat shot with style (3 4)":
 - ARTDECO
+- art deco
 "Follower of rational philosophy, losing head, is ... kind of ... well ... (8)":
 - ARTESIAN
 "For example, an off-key recital (7)":
@@ -1069,8 +1095,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ASAP
 "Without delay, like the Associated Press (4)":
 - ASAP
-"Usually regret about loss follows start of stint in AA (2,1,4)":
+"Usually regret about loss follows start of stint in AA (2 1 4)":
 - ASARULE
+- as a rule
 "Funny noises can rise from below (9)":
 - ASCENSION
 "Rise of an odor? (6)":
@@ -1109,18 +1136,23 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ASIDES
 "Like before, I'd begin to edit Stallone's first digressions (6)":
 - ASIDES
-"Like members of Qaddafi's army in retreat (2,2)":
+"Like members of Qaddafi's army in retreat (2 2)":
 - ASIF
+- as if
 "Sorry, Nine-A is stupid (7)":
 - ASININE
-"No guaranties for a certain sibling (2,2)":
+"No guaranties for a certain sibling (2 2)":
 - ASIS
+- as is
 "\"Like its midwest state...\" Associated Press writes, coincidentally (2 2 2 7)":
 - ASITSOHAPPENS
+- as it so happens
 "Coincidentally, agitated soap \"thespians\" (2 2 2 7)":
 - ASITSOHAPPENS
-"Sweatier dancing, so to speak (2,2,4)":
+- as it so happens
+"Sweatier dancing, so to speak (2 2 4)":
 - ASITWERE
+- as it were
 "Interrogating while on the throne(6)":
 - ASKING
 "Probes origins of alleged Senate kickback scandal (4)":
@@ -1249,18 +1281,18 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ASTRO
 "Equally hot, filled to overflowing (6)":
 - ASWARM
-"One Saturday, we call; Mother talks about excellent household appliances (9,8)":
+"One Saturday, we call; Mother talks about excellent household appliances (9 8)":
 - ANSWERINGMACHINES
+- answering machines
 "Not even my ace, Mr. T, is upset (10)":
 - ASYMMETRIC
 "Ecstasy's tolerance, concealing problem of the heart (8)":
 - ASYSTOLE
-"Missile Command designer to assail onboard computer's ability to reason":
+"Missile Command designer to assail onboard computer's ability to reason (5)":
 - ATARI
-"When each grid is placed in its correct quadrant,":
-- ATARI
-"Content of a needle (2,4)":
+"Content of a needle (2 4)":
 - ATEASE
+- at ease
 "Studios rate \"Lies\" poorly (8)":
 - ATELIERS
 "Goddess finds sanctuary in heathen arts (6)":
@@ -1275,20 +1307,23 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ATHLETIC
 "Against that terrible, consuming war (7)":
 - ATHWART
-"Telco gets one working (2,2)":
+"Telco gets one working (2 2)":
 - ATIT
+- at it
 "Titan is finally cut short (5)":
 - ATLAS
 "Too bad about first of tests for strong man (5)":
 - ATLAS
 "Island that's a ring (5)":
 - ATOLL
-"They cause devastation. \"A grave...uncovered crypts...\" (4,5)":
+"They cause devastation. \"A grave...uncovered crypts...\" (4 5)":
 - ATOMBOMBS
+- atom bombs
 "Spray a male cat, to some extent (7)":
 - ATOMIZE
-"Immediately make amends for grabbing one of cookies (2,4)":
+"Immediately make amends for grabbing one of cookies (2 4)":
 - ATONCE
+- at once
 "Nasty note meant showing you're sorry (9)":
 - ATONEMENT
 "A sound New York team gains new compensations (10)":
@@ -1297,8 +1332,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ATONER
 "University occupies a neat hall (6)":
 - ATRIUM
-"Confused poet initially enters self-help group (2,3)":
+"Confused poet initially enters self-help group (2 3)":
 - ATSEA
+- at sea
 "Set back in marsh, cattail's appropriate (6)":
 - ATTACH
 "Time for free love ... or is it sex, maybe (7)":
@@ -1345,8 +1381,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - AUSTERE
 "Real gold:  The new game piece (9)":
 - AUTHENTIC
-"Calamitous to tip distracted, unthinking drivers (9,6)":
+"Calamitous to tip distracted, unthinking drivers (9 6)":
 - AUTOMATICPILOTS
+- automatic pilots
 "Android's gold love-apple close to Krypton (9)":
 - AUTOMATON
 "Machine made from gold, vegetable, and nickel (9)":
@@ -1417,8 +1454,10 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - AXIOM
 "Me in Paris, topsy-turvy after a kiss is given (5)":
 - AXIOM
-"Two affirmations in broadcast SALT agreement? (3,3,3)":
+"Two affirmations in broadcast SALT agreement? (3 3 3)":
 - AYEAYESIR
+- aye aye sir
+- aye-aye sir
 "Miserable bum found in ouskirts of Derby (6)":
 - AYGJXX
 "A couple of bad-boys with a sheepish line? (3)":
@@ -1429,7 +1468,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BABYSITTER
 "Section of network cable left behind (4)":
 - BACK
-"Wild buck in barn ...er, you can ignore it for a while (4,6)":
+"Wild buck in barn ...er, you can ignore it for a while (10)":
 - BACKBURNER
 "It might be seen at a ballpark:  batting average 100, then 1000 (tops) - Wild! (8)":
 - BACKSTOP
@@ -1445,8 +1484,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BAGGAGE
 "Those emptying the boat of water start to belittle those who are seasick? (7)":
 - BAILERS
-"Thirteen broken adzes repaired (6,5)":
+"Thirteen broken adzes repaired (6 5)":
 - BAKERSDOZEN
+- baker'?s dozen
 "Cabal resolved hot issue of headgear (9)":
 - BALACLAVA
 "Bound to hear what they did about the leak? (5)":
@@ -1459,8 +1499,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BALLADEER
 "Degree consumes all-Ireland dancing girl (9)":
 - BALLERINA
-"Bookkeeper having let-down? She's on her toes? (6,6)":
+"Bookkeeper having let-down? She's on her toes? (6 6)":
 - BALLETDANCER
+- ballet dancer
 "Windbag has nothing on after dance? (7)":
 - BALLOON
 "Fir tree cut down for kind of wood (5)":
@@ -1469,8 +1510,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BAMBI
 "Bananas carried around finally in hankies (8)":
 - BANDANAS
-"Prohibit use of milliner's material for automobile part (3,4)":
+"Prohibit use of milliner's material for automobile part (3 4)":
 - BANFELT
+- ban felt
 "Blue fish bracelet (6)":
 - BANGLE
 "Financial ink flowing in boom (7)":
@@ -1487,7 +1529,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BAPTISMAL
 "Sarcastic remarks describing disturbance in West Indian island (8)":
 - BARBADOS
-"Computer labels fish in strips (3,5)":
+"Computer labels fish in strips (8)":
 - BARCODES
 "Flipped over dismal poet (4)":
 - BARD
@@ -1499,10 +1541,12 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BAREST
 "Take back a hot deal (7)":
 - BARGAIN
-"Acquire infielders subjugated by black art, cheap (7-8)":
+"Acquire infielders subjugated by black art, cheap (7 8)":
 - BARGAINBASEMENT
-"Cheap place to drink and pick up ballplayers by night's end (7,8)":
+- bargain basement
+"Cheap place to drink and pick up ballplayers by night's end (7 8)":
 - BARGAINBASEMENT
+- bargain basement
 "Nude redhead receiving backward glance is one serving drinks (9)":
 - BARKEEPER
 "Little kid cleans out one stall (4)":
@@ -1515,8 +1559,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BARRISTER
 "Publican is drunk with talent (9)":
 - BARTENDER
-"Black arts & demons concerned with Homer's issue? (4,7)":
+"Black arts & demons concerned with Homer's issue? (4 7)":
 - BARTSIMPSON
+- bart simpson
 "Standard Balinese shifts (8)":
 - BASELINE
 "A barkless dog as shown in \"Benji\" (7)":
@@ -1539,7 +1584,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BAT
 "An animal which flies high but comes back for a place to wash (7)":
 - BATHTUB
-"Heavily armed fleet of Rev. Spooner's calf ropers? (6,8)":
+"Heavily armed fleet of Rev. Spooner's calf ropers? (14)":
 - BATTLECRUISERS
 "Fought and bled after receiving a little attention (7)":
 - BATTLED
@@ -1555,8 +1600,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BEACON
 "Ben carries a small seed (4)":
 - BEAN
-"Live with stewed spinach ingredients (4,5)":
+"Live with stewed spinach ingredients (4 5)":
 - BEANCHIPS
+- bean chips
 "Produce something unpleasant (4)":
 - BEAR
 "Tolerates relative's big game trophies (9)":
@@ -1573,8 +1619,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BECHAMEL
 "Charm ebbed disturbingly in boudoir (10)":
 - BEDCHAMBER
-"Grace takes care of church dormitory inspection (3,5)":
+"Grace takes care of church dormitory inspection (3 5)":
 - BEDCHECK
+- bed check
 "Be comical. Start to sleep in sleeping bags (8)":
 - BEDROLLS
 "Boudoir broom closets - a cause for Bob Dole (7)":
@@ -1615,8 +1662,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BEING
 "Sing out, holding scale notes in European city (7)":
 - BELFAST
-"Traitorous spies doctored Bond's credential (8,7)":
+"Traitorous spies doctored Bond's credential (8 7)":
 - BENEDICTARNOLDS
+- benedict arnolds
 "Propensities for placing bets about leader of nags (5)":
 - BENTS
 "Jumps all over bees swarming rat (7)":
@@ -1705,10 +1753,12 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BLIPPED
 "Suddenly lots and lots of black reptiles devouring zebra's head (9)":
 - BLIZZARDS
-"Embargo-buster with dark beer and fruit juice, one who regrets having new name (8,6)":
+"Embargo-buster with dark beer and fruit juice, one who regrets having new name (8 6)":
 - BLOCKADERUNNER
-"Bar mail of unadorned capital (5,6)":
+- blockage runner
+"Bar mail of unadorned capital (5 6)":
 - BLOCKLETTER
+- block letter
 "So blue, lost shirt (6)":
 - BLOUSE
 "Go, bundle off  Billy (8)":
@@ -1719,8 +1769,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BLUR
 "Part of book covers ballpark legends, using reliable background sources (5)":
 - BLURB
-"Old but true eccentric exclaimed impulsively (7,3)":
+"Old but true eccentric exclaimed impulsively (7 3)":
 - BLURTEDOUT
+- blurted out
 "Lecher in bed was full of hot air (9)":
 - BLUSTERED
 "Radical Ulster reb is boastful windbag (9)":
@@ -1747,8 +1798,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BOHEMIA
 "Crude rock shot up to top Ten tune (6)":
 - BOLERO
-"Awful evil bellow destroys cotton. (4,6)":
+"Awful evil bellow destroys cotton. (4 6)":
 - BOLLWEEVIL
+- boll weevil
 "Individuals in the care of superior orthopedist (10)":
 - BONESETTER
 "Huge trees in Bosnia destroyed?  Just the opposite! (6)":
@@ -1765,8 +1817,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BOPPERS
 "A kind of acid to take the heads off beetles or roaches, including cockroaches (5)":
 - BORIC
-"Bargain on novel renewed (4,5)":
+"Bargain on novel renewed (4-5)":
 - BORNAGAIN
+- born-again
 "Noisy tunnel in Queens or The Bronx, for example (7)":
 - BOROUGH
 "Hobos continue eating pear (4)":
@@ -1783,16 +1836,15 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BOTHERSOME
 "Consort in laid-back beer garden":
 - BOTOX
-"that read the same horizontally and vertically.":
-- BOTOX
 "Listen to more adventurous rock (7)":
 - BOULDER
 "Setting limits to leaping (8)":
 - BOUNDING
 "She goes to the lanes in a hat (6)":
 - BOWLER
-"Bob Swain's surprise (4,4)":
+"Bob Swain's surprise (4 4)":
 - BOWLOVER
+- bowl over
 "Clay, once, in crater (5)":
 - BOXER
 "Fortified bed holds car back (6)":
@@ -1803,12 +1855,14 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BRAIDINGS
 "Groom and a bride -- utterly thoughtless (5-4)":
 - BRAINDEAD
+- brain-dead
 "Come up with ideas for central character in rebus--what you'll find in this puzzle (10)":
 - BRAINSTORM
 "Sudden inspiration from lingerie left out during heavy rainfall? (10)":
 - BRAINSTORM
-"They help you stop BMW's front-end scratches by tools (5,5)":
+"They help you stop BMW's front-end scratches by tools (5 5)":
 - BRAKESHOES
+- brake shoes
 "Separated bunk houses, cattle spread (8)":
 - BRANCHED
 "Mark's supporter starts to need darning (5)":
@@ -1823,8 +1877,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BRAS
 "Some lingerie is more audacious, yes, when you remove top (10)":
 - BRASSIERES
-"Undergarments with heaps of practical details (5,5)":
+"Undergarments with heaps of practical details (5 5)":
 - BRASSTACKS
+- brass tacks
 "Born most disreputable and insufferable (9)":
 - BRATTIEST
 "Bottom part of trailer supporting beam made a loud noise (6)":
@@ -1859,8 +1914,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BRIGANDS
 "Piece of carob rind is in port (8)":
 - BRINDISI
-"Gambler in the middle to call and raise (5,2)":
+"Gambler in the middle to call and raise (5 2)":
 - BRINGUP
+- bring up
 "One filling brother with panache (4)":
 - BRIO
 "Perishable candy (7)":
@@ -1891,10 +1947,12 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - BRUNEI
 "A mouthful of ale, clear and dark (8)":
 - BRUNETTE
-"Psst! Losers rub us the wrong way, giving unpopular veggies (8, 7)":
+"Psst! Losers rub us the wrong way, giving unpopular veggies (8 7)":
 - BRUSSELSSPROUTS
-"Tendency to hang around post-80's guy? (1,7)":
+- brussels sprouts
+"Tendency to hang around post-80's guy? (1 7)":
 - BSTUDENT
+- B student
 "Jumped Buick without independent sources of electrical discharge (6)":
 - BUCKED
 "Dollar reached top position and collapsed (7)":
@@ -1973,8 +2031,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CABIN
 "Taxi in a log house? (5)":
 - CABIN
-"Vehicle allowed violent entertainment medium (5, 2)":
+"Vehicle allowed violent entertainment medium (5 2)":
 - CABLETV
+- cable tv
 "Boo, in case it's the end of the train (7)":
 - CABOOSE
 "Unfinished book carried in case last in line? (7)":
@@ -2151,8 +2210,10 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CASTILE
 "\"Very rigid California butcher\" I snort (4-4)":
 - CASTIRON
+- cast-iron
 "Revolutionary contra is tough as nails (4-4)":
 - CASTIRON
+- cast-iron
 "Throws line to star at the premier in \"Cats\" (5)":
 - CASTS
 "Cemetery originally contained a tomb with air conditioning inside (8)":
@@ -2167,6 +2228,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CATCH
 "Curious, one bowl holds heroin for compensation (5-2)":
 - CATCHUP
+- catch-up
 "Cal Tech is center of Roman Catholic dogma (9)":
 - CATECHISM
 "Edited schematic religious text (9)":
@@ -2253,8 +2315,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CHAPERONES
 "Guy's leather cowboy pants (5)":
 - CHAPS
-"14d-17d-3d-12a-23d-21d-8d-25d-22a":
-- CHARACTER
 "Cast, critic share theatrical idiosyncrasies (15)":
 - CHARACTERISTICS
 "Clean up cooler actress Garr's quirks and traits (15)":
@@ -2447,6 +2507,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CLOSERS
 "Couples posed for an intimate snapshot (5-2)":
 - CLOSEUP
+- close-up
 "Confused letch grabs doughnut for cover (6)":
 - CLOTHE
 "Wrap portable bed around large male (6)":
@@ -2593,6 +2654,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CONVEX
 "Appropriate work in relaxing place (2-3)":
 - COOPT
+- co-opt
 "No problem to deal with puritan on the radio (9)":
 - COPASETIC
 "City cop enclosed ugly old woman? (10)":
@@ -2667,6 +2729,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CRACKDOWN
 "Wreck plastic cup rack (5-2)":
 - CRACKUP
+- crack-up
 "Make an average float (5)":
 - CRAFT
 "Grape remains on the rise in jam (4)":
@@ -2757,8 +2820,10 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - CROC
 "Heard Italian city in canyon is from the stone age, perhaps (3-6)":
 - CROMAGNON
+- cro-magnon
 "Old man's low moan about every other mean gent (3-6)":
 - CROMAGNON
+- cro-magnon
 "PAL: part of acronym (5)":
 - CRONY
 "Pacino or Crowe? Insider returns to sing like Der Bingle (5)":
@@ -2985,6 +3050,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - DEEP
 "Crank up front half of outhouse in Alabama, for example (4-5)":
 - DEEPSOUTH
+- deep-south
 "Paint grafitti with fed-up professional (6)":
 - DEFACE
 "Flees; senses send strange inability to fight back (15)":
@@ -3417,6 +3483,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - DOWNRIGHT
 "Ever-practical, Mr. Vader keeps own little piggy (4-2-5)":
 - DOWNTOEARTH
+- down-to-earth
 "Recession makes Democrat run town recklessly (8)":
 - DOWNTURN
 "Fall asleep if number of jurors won't come to a conclusion (4)":
@@ -3537,6 +3604,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - DULCIMERS
 "Stupid politicians fling this back repeatedly (3-3)":
 - DUMDUM
+- dum-dum
 "Sci-fi best seller: \"Nude Running Amok\" (4)":
 - DUNE
 "Maybe Jan and Dean's first note holding up (3)":
@@ -4065,8 +4133,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ENNUI
 "Ten nuisances, including boredom (5)":
 - ENNUI
-"Debauched daze for a stripper?; Briefly _______!":
-- ENOADEOANO
 "Heinous character of hatred gripping Oregon (8)":
 - ENORMITY
 "I'm involved in last of the notes in musical interval (8)":
@@ -4455,9 +4521,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - EXIST
 "Is South about to evacuate?  Just the opposite! (5)":
 - EXIST
-"The last clue gives the last answer in the last grid.":
-- EXIST
-"To stay alive, alien abducts six from the rear":
+"To stay alive, alien abducts six from the rear (5)":
 - EXIST
 "Concealment of sex is ten celibates' nature (9)":
 - EXISTENCE
@@ -4603,6 +4667,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - FACECARDS
 "Involving close contact with small plane of fighter pilot (4-2-4)":
 - FACETOFACE
+- face-to-face
 "Copy of corrupt IMac files (9)":
 - FACSIMILE
 "Gang's in act of relocating (7)":
@@ -4771,9 +4836,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - FLASHES
 "Occupant of plane fashioned a fall trend (10)":
 - FLATLANDER
-"Losing oxygen, glides to level ground":
-- FLATS
-"The grids in the puzzle are symmetric word squares":
+"Losing oxygen, glides to level ground (5)":
 - FLATS
 "Buttered up treat in a coffee house grasped by Fred (9)":
 - FLATTERED
@@ -4799,7 +4862,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - FLOUR
 "Holder of strange ritual of troll (5,8)":
 - FLOURTORTILLA
-"Watch for order containing fifty boxes with arrows (4-5)":
+"Watch for order containing fifty boxes with arrows (9)":
 - FLOWCHART
 "Maiden from France lowers bloomers (7)":
 - FLOWERS
@@ -5053,10 +5116,8 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - GERONIMO
 "Development of GEHQ (9)":
 - GESTATION
-"On return, for example, put back costume  (3-2)":
+"On return, for example, put back costume  (5)":
 - GETUP
-"Manic bishop joins attack (5)":
-- GGGOL
 "Get hot rocks in the Jewish quarter (6)":
 - GHETTO
 "Great crowd spirit (5)":
@@ -6115,8 +6176,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - INSPECTOR
 "Pores over bugs in quiet?  Just the opposite! (8)":
 - INSPECTS
-"See 32-Down":
-- INSTALL
 "Ancients reorganized example (8)":
 - INSTANCE
 "Powers-that-be cure West End of troubles fast (7)":
@@ -6281,8 +6340,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - IRONIES
 "Guy who can last in Roman orgy (4,3)":
 - IRONMAN
-"Some might pronounce weird Frost's work \"A Pack of Lies That Cannot Be Undone\"":
-- IRREVERSIBLE
 "Provide water to flying Air Tiger (8)":
 - IRRIGATE
 "Bugs treat Iris badly (9)":
@@ -6395,9 +6452,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - JOLLY
 "Cuts short slips (5)":
 - JOLTS
-".":
-- JOUST
-"Small bit improvised on cue":
+"Small bit improvised on cue (5)":
 - JOUST
 "Did battle with junta's leader, then deposed (7)":
 - JOUSTED
@@ -6456,8 +6511,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 "Kite has low resistance in usual state (6)":
 - KILTER
 "Kim and Yoko in ceremonial dress (6)":
-- KIMONO
-"See 1D":
 - KIMONO
 "Relatives reject South Dakota styles (5)":
 - KINDS
@@ -6673,8 +6726,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - LEANER
 "Sheds last one carelessly (4-3)":
 - LEANTOS
-"See 9 Across":
-- LEAP
 "Skipped the French army physical training (5)":
 - LEAPT
 "Annual earnings can include profit from experience (5)":
@@ -6813,13 +6864,11 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - LIFER
 "Clifton offers encouragement (4)":
 - LIFT
-"It's comprised of jabbing frontally to unseat!":
+"It's comprised of jabbing frontally to unseat! (5)":
 - LIGHT
 "Land and take off:  beginning of flight (5)":
 - LIGHT
 "Slender flame's emanation (5)":
-- LIGHT
-"The clues are listed alphabetically by answer.":
 - LIGHT
 "Dawn is close, with a new beginning (7)":
 - LIGHTEN
@@ -7311,7 +7360,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - MESH
 "Courier parting from Essen, Germany (9)":
 - MESSENGER
-"One who carries germs seen freaking out":
+"One who carries germs seen freaking out (9)":
 - MESSENGER
 "Camping gear, perhaps, provides me with small sketch (4 3)":
 - MESSKIT
@@ -7691,8 +7740,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - NATAL
 "Mr. Cole, Mr. Alda and those people over there, given a little charge, beginning to sing country songs (8,7)":
 - NATIONALANTHEMS
-"9a-24a-30a-7d-13a-10a-4d":
-- NATIONS
 "Innocent bystanders ultimately interrupted by one of the locals (7)":
 - NATIVES
 "Frank turned brown sitting on mountains (7)":
@@ -7781,10 +7828,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - NEON
 "Off phones yet, beginners? (9)":
 - NEOPHYTES
-".":
-- NERDS
-"Remove battery element of lunar module":
-- NERDS
 "Somewhat insane Roman (4)":
 - NERO
 "New England river flowing with less constraint (7)":
@@ -8333,8 +8376,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - ONCEAWEEK
 "Love McEnroe, beaten again (8, 2 wds.)":
 - ONCEMORE
-"11d-27a-5d":
-- ONE
 "Arranged encore at Albee's \"Zoo Story,\" e.g. (3-5)":
 - ONEACTER
 "A Gore follows a Ryan (5)":
@@ -8405,9 +8446,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - OPENSESAME
 "Passport for entry to Oman restricts English correspondent (4,6)":
 - OPENSESAME
-".":
-- OPERA
-"Fondant, or usual filling, for donut?":
+"Fondant, or usual filling, for donut? (5)":
 - OPERA
 "Work a rope trickily (5)":
 - OPERA
@@ -8557,20 +8596,16 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - OUI
 "Board relaying messages in France and Germany for sure(5)":
 - OUIJA
-".":
-- OUNCE
 "At one time, gobbling up two tablespoons (5)":
 - OUNCE
 "Bounce bounce's leader in weight (5)":
 - OUNCE
-"Discard most of pickle":
+"Discard most of pickle (5)":
 - OUNCE
 "Headless horseman's maneuver to unseat (4)":
 - OUST
 "Ejection of Jack from medieval competition (7)":
 - OUSTING
-"15a-18d-1d":
-- OUT
 "Al Fresco is to do our cooking (7)":
 - OUTDOOR
 "Ring twice in ramshackle tudor having no roof (7)":
@@ -9241,11 +9276,11 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - POSITIVE
 "Sheriff's group might be corrupted, s'pose? (5)":
 - POSSE
-"Have western bands start to sing":
+"Have western bands start to sing (7)":
 - POSSESS
 "The price of correspondence: mad Gestapo (7)":
 - POSTAGE
-"Greatest poem celebrating mail-room equipment":
+"Greatest poem celebrating mail-room equipment (7 5)":
 - POSTAGEMETER
 "After Mr. Gore becomes berserk... (6)":
 - POSTAL
@@ -9423,8 +9458,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - PSALM
 "Softly, French author questions socially correct behavior (2,3,2)":
 - PSANDQS
-"Talk about a small space rabbit":
-- PSEEDEERHE
 "Name assumed to be no dupe's my disguise (9)":
 - PSEUDONYM
 "Listening to playwright's baloney (5)":
@@ -9657,7 +9690,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - RATIOCINATE
 "Tits are flying birds (7)":
 - RATITES
-"Entering pace car returning from competiton to get ahead?":
+"Entering pace car returning from competiton to get ahead? (3 4)":
 - RATRACE
 "Entering pace car returning from lab's labyrinthine competition? (7)":
 - RATRACE
@@ -10669,9 +10702,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - SCRAMBLED
 "Beat it and ran, for example, with Girl Scout ingredients (9,4)":
 - SCRAMBLEDEGGS
-".":
-- SCRAP
-"Rocky's second dramatic prize":
+"Rocky's second dramatic prize (5)":
 - SCRAP
 "Fight in diocese no end about worthless stuff (6)":
 - SCRAPE
@@ -11635,9 +11666,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - STEEL
 "Deepest swimming is totally immersed (7)":
 - STEEPED
-".":
-- STEER
-"Oh, for a musical with some class":
+"Oh, for a musical with some class (5)":
 - STEER
 "How old is the cow in the bottom of the boat? (8)":
 - STEERAGE
@@ -11715,9 +11744,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - STOIC
 "Rag lying about note? Absolutely (5-4)":
 - STONECOLD
-".":
-- STONY
-"State to vandalize historical American residence":
+"State to vandalize historical American residence (5)":
 - STONY
 "Steals, returning three-legged chair (5)":
 - STOOL
@@ -12003,8 +12030,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - SWEET
 "Like a shrimp covered with spots, our favorite type of Cantonese dish (5,3,4)":
 - SWEETANDSOUR
-"Dotty sees newts with quality of 29A (9)":
-- SWEETNESS
 "We set apes free with vegetables (9)":
 - SWEETPEAS
 "Unbreaking waves rise to the surface in seconds (6)":
@@ -12319,11 +12344,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - TEMPEST
 "Templates lacking a bit of taste for houses of worship (7)":
 - TEMPLES
-".":
-- TEMPO
 "Pot? Me? About time! (5)":
 - TEMPO
-"Swing splits totem pole":
+"Swing splits totem pole (5)":
 - TEMPO
 "System positively displays rates of speed (6)":
 - TEMPOS
@@ -12361,9 +12384,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - TENTACLED
 "Get used to being in Treasury Department with a secure job (7)":
 - TENURED
-".":
-- TEPEE
-"Writing exercise: \"The Self\"":
+"Writing exercise: \"The Self\" (5)":
 - TEPEE
 "Improved tramline leads to boundary (8)":
 - TERMINAL
@@ -12425,11 +12446,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - THEISM
 "He's endlessly absorbed in contemplation of a sort with those people (4)":
 - THEM
-"Beatty's hanging around premiere of \"Reds,\" irritating people":
+"Beatty's hanging around premiere of \"Reds,\" irritating people (5)":
 - THEME
 "Emily gets into the topic (5)":
-- THEME
-"The first clue gives the first answer in the first grid.":
 - THEME
 "The idea -- a little meal filled you once (5)":
 - THEME
@@ -12711,9 +12730,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - TORSI
 "Italian dessert: Spelling eats a huge amount, Braxton eats a scrap (7)":
 - TORTONI
-"Boyfriend blabs on air, revealing cosmetic procedure":
-- TORUS
-"will spell out a suitable replacement title.":
+"Boyfriend blabs on air, revealing cosmetic procedure (5)":
 - TORUS
 "Mixed greens & teals, so dad's remodeled (6,5)":
 - TOSSEDSALAD
@@ -13071,10 +13088,6 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - UMPTEENTH
 "Unversed, holding ad, putting it back in, is not promoted (12)":
 - UNADVERTISED
-".":
-- UNARM
-"Ox herd":
-- UNARM
 "United Nations leads a war, with Nepal's chief caught napping (7)":
 - UNAWARE
 "Upright nun bet crookedly (6)":
@@ -13465,7 +13478,7 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - WATERED
 "After crashing into wall, it goes over the edge (9)":
 - WATERFALL
-"Rudely, we hog latrine in bar":
+"Rudely, we hog latrine in bar (8 4)":
 - WATERINGHOLE
 "Somewhat later, in court, a major defeat (8)":
 - WATERLOO
@@ -13661,11 +13674,9 @@ CONFIG: {delay: 60.0, slow_reveal: 7.0, half_reveal: 50.0}
 - YEARS
 "Ones who opt for easy breaks (4)":
 - YEAS
-".":
-- YEAST
 "Cause of uprising at army's last bridge position (5)":
 - YEAST
-"Producer of alcohol is as yet unfamiliar":
+"Producer of alcohol is as yet unfamiliar (5)":
 - YEAST
 "Leaders of Yard eventually grab German safecracker (4)":
 - YEGG
