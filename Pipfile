@@ -9,6 +9,9 @@ pylint = "*"
 yarl = "<1.2"
 fuzzywuzzy = "*"
 python-levenshtein = "*"
+wget = "*"
+numpy = "*"
+scikit-image = "*"
 
 [dev-packages]
 
