@@ -7,8 +7,8 @@ import discord
 import itertools
 import numpy as np
 import matplotlib.pyplot as pp
+import pathlib
 import os
-import wget
 from zipfile import ZipFile
 
 __all__ = ["SetSession"]
@@ -24,16 +24,7 @@ _LETTERS = "WSZEDXRFCTGVYHBUJNIKM"
 
 class SetSession:
     def __init__(self, ctx):
-        self.dataDir = cog_data_path(self)
-        if not 'cards' in os.listdir(self.dataDir):
-            print("Card images not found. Downloading.")
-            url = 'https://frky-storage.s3-us-west-1.amazonaws.com/cards.zip'
-            wget.download(url, str(self.dataDir/'cards.zip'))
-            print(' ')
-            zip = ZipFile(self.dataDir/'cards.zip')
-            zip.extractall(self.dataDir)
-            zip.close()
-        self.dataDir = self.dataDir/'cards'
+        self.dataDir = str(pathlib.Path(__file__).parent.resolve() / "cards")
         self.ctx = ctx
         self.scores = Counter()
         self.deck = np.random.permutation(81)
