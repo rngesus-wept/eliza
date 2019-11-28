@@ -27,6 +27,7 @@ class SetSession:
     def __init__(self, ctx):
         self.dataDir = str(pathlib.Path(__file__).parent.resolve() / "cards")
         self.ctx = ctx
+        self.output_image_path = self.dataDir / f'board-{ctx.message.channel.id}.png'
         self.scores = Counter()
         self.deck = random.sample(range(81), 81)
         self.board = np.zeros((3,4),dtype=int)
@@ -48,17 +49,16 @@ class SetSession:
 
     async def run(self):
         await self._send_startup_msg()
-        self.game_running = True
-        while self.game_running:
+        while True:
             await asyncio.sleep(2)
-            f = discord.File(self.dataDir/'board.png')
+            f = discord.File(self.output_image_path)
             await self.ctx.send(file=f)
             foundSet = await self.wait_for_set()
             await self._update_board(foundSet)
             if _board_contains_set(self.board):
                 self._gen_board_image()
             else:
-                self.game_running = False
+                break
 
         await self.end_game()
 
@@ -173,7 +173,7 @@ class SetSession:
                 image[i][j][0] *= overlay[i][j][0]
                 image[i][j][1] *= overlay[i][j][1]
                 image[i][j][2] *= overlay[i][j][2]
-        pp.imsave(str(self.dataDir/'board.png'),image)
+        pp.imsave(self.output_image_path, image)
 
 def _is_set(cardList):
     vecs = [_card_num_to_vec(card) for card in cardList]
