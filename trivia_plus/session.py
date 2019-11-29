@@ -149,11 +149,13 @@ class TriviaSession:
     async def _send_startup_msg(self):
         list_names = []
         for idx, tup in enumerate(self.settings["lists"].items()):
-            name, author = tup
+            name, (author, count) = tup
             if author:
-                title = _("{trivia_list} (by {author})").format(trivia_list=name, author=author)
+                title = _("{trivia_list} ({count} entries by {author})").format(
+                    trivia_list=name, author=author, count=count)
             else:
-                title = name
+                title = _("{trivia_list} ({count} entries)").format(
+                    trivia_list=name, count=count)
             list_names.append(title)
         await self.ctx.send(
             _("Starting Trivia: {list_names}").format(list_names=humanize_list(list_names))

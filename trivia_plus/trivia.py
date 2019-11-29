@@ -93,18 +93,18 @@ class Trivia(commands.Cog):
         settings = self.conf.guild(ctx.guild)
         await settings.delay.set(seconds)
         await ctx.send(_("Done. Maximum seconds to answer set to {num}.").format(num=seconds))
-        
+
     @triviaset.command(name="slowreveal")
     async def triviaset_slowreveal(self, ctx: commands.Context, seconds: float):
         """Set the interval at which answers will be slowly revealed."""
         settings = self.conf.guild(ctx.guild)
         await settings.slow_reveal.set(seconds)
         await ctx.send(_("Done. Slow reveal interval seconds set to {num}.").format(num=seconds))
-        
+
     @triviaset.command(name="halfreveal")
     async def triviaset_halfreveal(self, ctx: commands.Context, seconds: float):
         """Set the interval at which half of an answer will be slowly revealed.
-        
+
         When this setting is nonzero, half of the answer's letters will be revealed in this
         amount of time in seconds, one letter at a time (but never faster than the `slowreveal`
         setting). Revelation will continue even after half the letters are shown."""
@@ -231,7 +231,7 @@ class Trivia(commands.Cog):
                 )
             else:
                 trivia_dict.update(dict_)
-                authors.append(trivia_dict.pop("AUTHOR", None))
+                authors.insert(0, (trivia_dict.pop("AUTHOR", None), len(dict_)))
                 continue
             return
         if not trivia_dict:
@@ -243,7 +243,7 @@ class Trivia(commands.Cog):
         config = trivia_dict.pop("CONFIG", None)
         if config and settings["allow_override"]:
             settings.update(config)
-        settings["lists"] = dict(zip(categories, reversed(authors)))
+        settings["lists"] = dict(zip(categories, authors))
         session = TriviaSession.start(ctx, trivia_dict, settings)
         self.trivia_sessions.append(session)
         LOG.debug("New trivia session; #%s in %d", ctx.channel, ctx.guild.id)
