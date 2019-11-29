@@ -1,0 +1,413 @@
+AUTHOR: phenomist
+# Logic puzzle genres
+# Number placement
+"Name the genre: In an NxN grid, place the numbers 1-N such that every number appears in every row and column exactly once":
+- Latin Square
+"Name the genre: Latin square condition. Outside clues give the number of \"buildings\" you could see from that row/column if all numbers were that height. That is, the longest ascending subsequence from that direction.":
+- Skyscrapers
+"Name the genre: Latin square condition. 1-N also appears in every region exactly once.":
+- Sudoku
+- Number Place
+- Jigsaw Sudoku
+"Name the genre: Latin square condition. White dots represent consecutive numbers and black dots represent numbers that are a factor of two away":
+- Kropki
+"Name the sudoku variant: Cages (independent of regions, which also exist) denote the sum of the numbers":
+- Killer Sudoku
+- Killer
+"Name the sudoku variant: There exist shapes where the numbers must occur in ascending order starting from the bulb":
+- Thermo-Sudoku
+- Thermometer Sudoku
+- Thermometers?
+"Name the sudoku variant: There exist shapes where all numbers in the tail sum up to the circled cell that it points to.":
+- Arrow Sudoku
+- Arrows?
+"Name the sudoku variant: Some cells have a slash in them. Place two numbers in these cells.":
+- Tight Fit Sudoku
+- Tight Fit
+"Name the genre: Place some set of letters in every row/column. Outside clues denote the first letter seen in the row/column.":
+- Easy as ABC
+- ABC View
+"Name the genre: Latin square condition. Cages can have a mathematical operation that when applied to all numbers in the cage give the clue":
+- Tomtom
+- Kenken
+"Name the genre: Latin square condition. Cages have numbers that denote the product of all numbers in it.":
+- Room of Factors
+- Factors
+- Inshi no heya
+"Name the genre: Latin square condition. Within a region, numbers must appear at most once, and the numbers that appear must be consecutive.":
+- Renban
+"Name the genre: Latin square condition. There are less than and greater than signs which must be followed.":
+- Futoshiki
+# Number placement, partial latin square
+"Name the genre: Place the numbers 1-K without repeating in rows/columns, and shade the remaining squares. Clues denote sums of every run of numbers in that row/column.":
+- Japanese Sums
+"Name the genre: Place the numbers 1-(N-2) without repeating in rows/columns, and shade two squares in each row/column. Clues denote the sum of every number between the two squares in the row/column.":
+- Doppelblock
+"Name the genre: Place the numbers 1-K (provided) without repeating in rows/columns. Clues provide both the sum of adjacent squares as well as the number of numbers involved in the sum.":
+- Slovak Sums
+"Name the genre: Place the numbers 1-K (provided) without repeating in rows/columns. Traversing through the given path, the numbers must go through 1-K in order repeatedly from the outside to the center.":
+- Magic Labyrinth
+# Number placement, not latin square
+"Name the genre: Numbers on the left and top denote the sum of the consecutive unshaded squares right/below it. Numbers can't repeat within these runs either.":
+- Kakuro
+"Name the genre: Place 1-K in regions of size K. The same number N in a row/column must be greater than a distance of N apart.":
+- Ripple Effect
+"Name the genre: Place 1-K in regions of size K. The same number cannot touch, even diagonally.":
+- Suguru
+"Name the genre: In every region, place N instances of the number N. Numbered squares must form a connected set. Identical numbers may not be adjacent over region borders.":
+- Nanro
+"Name the genre: Place the numbers 1-N^2 such that consecutive numbers are diagonally adjacent.":
+- Hidato
+- Hidoku
+- Numbrix
+
+# Object placement
+"Name the genre: Given K, place K objects in every row, column, and region such that no object touches another, even diagonally":
+- Star Battle
+"Name the genre: Place one mirror in every region such that clues on the side reflect to each other and give number of reflections":
+- Kin-kon-kan
+- Kinkonkan
+"Name the genre: Place lamps that illuminate all cells horizontally and vertically until it reaches a wall. No two lamps may illuminate each other. All cells are illuminated by at least one lamp. Numbers give the number of adjacent lamps.":
+- Akari
+"Name the genre: Place all pieces according to the piece bank (typically 1 1x4, 2 1x3, 3 1x2, 4 1x1). No two pieces may touch, even at a corner. Clues on the outside give the number of squares in the row/column used by the piece. Some piece portions and unused squares may be given.":
+- Battleships
+"Name the genre: Place all pieces according to the piece bank (typically pentominoes). No two pieces may touch at a side. Unoccupied squares must remain connected. Some occupied and unoccupied squares may be given to you.":
+- Statue Park
+"Name the genre: Place some pieces according to the piece bank at most once (typically pentominoes). No two pieces may touch, even at a corner. Clues give the nearest squares in all four directions (in the case of a tie, all such arrows are given).":
+- Pentopia
+"Name the genre: Put some namesake things next to trees such that every thing can be paired to a tree perfectly matching the two. No two things may touch, even at a corner. Outside clues give the number of things in the row/column.":
+- Tents
+"Name the genre: Place squares, triangles, and circles such that every region has exactly one of each. No two of the same shape may touch, even at a corner. All cells with shapes must form a connected set.":
+- Hakoiri
+"Name the genre: Place squares, triangles, and circles such that every region has either exactly one of each, or three of one. Two of the same shape may not be adjacent when crossing region borders.":
+- Tripletts
+- Wanororu
+"Name the genre: Draw diagonal lines in every cell such that clues on grid intersections denote how many lines emanate from it, and no enclosed areas are made.":
+- Gokigen Naname
+- Slant
+- Slalom
+"Name the genre: Draw shapes covering every cell such that the every clue contains exactly one shape and the clue can deform into the shape (lengths can vary, but not direction or intersections.":
+- Curve Data
+"Name the genre: Draw X's and O's into every cell such that no three X's or O's may appear in a row or column. Rows and columns must contain an equal number of X's and O's. Rows must be unique. Columns must be unique.":
+- Binario
+- Binairo
+- Binox
+- Binoxxo
+- Unruly
+"Name the genre: Place these namesake items into empty squares. Numbers denote the number of items that point to the number.":
+- Arrows
+"Name the genre: Draw triangles (covering half of the square) in some unfilled squares. The numbers denote the number of adjacent squares that contain triangles. The remaining white space must be rectangles, either orthogonal or diagonal with respect to the grid.":
+- Shakashaka
+"Name the genre: Place some 1x2 items comprising + and -, such that the same symbol is not adjacent to each other. Outside clues give the number of + and - in the row/column.":
+- Magnets
+"Name the genre: Place some groups of numbers 1-5 such that the 1 (head) does not see any other numbers in front of it (away from the 2 in its group). Groups do not touch. Clues show the first number that it sees, 0 meaning that it sees no number.":
+- Hebi-Ichigo
+- Hebi ?ichigo
+"Name the genre: Draw some 1x3's such that the sums are unique from 1-K (provided by the puzzle). Outside clues give the total sum of numbers inside these 1x3's.":
+- Pillen
+- Pills
+# Loop genres
+"Name the genre: Draw a loop through every circle. At black circles the loop must turn, but then must go straight in both adjacent squares. At white circles the loop must go straight, but then must turn in at least one adjacent square.":
+- Masyu
+"Name the genre: Draw a loop through every circle. At black circles the loop must turn, but then must go straight in at least one adjacent square. At white circles the loop must go straight, but then must turn in both adjacent squares.":
+- Syuma
+"Name the genre: Draw a loop through all unshaded cells":
+- Simple Loop
+"Name the genre: Draw a loop using every vertex exactly once":
+- Hamilton Maze
+- Hamiltonian Path
+- Hamilton Path
+- Hamilton
+"Name the genre: Draw a loop using all cells and enter every region exactly twice.":
+- Double Back
+"Name the genre: Draw a loop visiting every region exactly once. Unvisited squares must not cross region borders.":
+- Country Road
+"Name the genre: Draw a loop. Arrowed numbers refer to the total length of the loop that goes straight. White is inside the loop and black is outside the loop.":
+- Castle Wall
+"Name the genre: Draw a loop using edges. Numbers refer to the number of segments used by the path.":
+- Slitherlink
+"Name the genre: Draw a loop using edges. Numbers refer to the number of segments used by the path. The loop may cross itself.":
+- Crosslink
+"Name the genre: Draw a loop using edges. Numbers refer to the number of squares seen horizontally/vertically, including itself.":
+- Corral
+- Cave
+- Bag
+"Name the genre: Draw a loop through cells. Numbers refer to the number of cells used by the path among its surrounding squares.":
+- Linesweeper
+"Name the genre: Draw a loop. In corresponding regions, the loop should be identical in all such regions.":
+- Persistence of Memory
+"Name the genre: Draw a loop. Clues give the nearest loop segments in all four directions (in the case of a tie, all such arrows are given).":
+- Myopia
+"Name the genre: Draw a loop. Go through every gate exactly once. Starting from a given starting point in some order, the numbered gates should represent the order in which you traverse the gates.":
+- Slalom
+- Suraromu
+"Name the genre: Draw a loop. Enter every region exactly once. Alternate between going through every instance of two different namesake objects within a region.":
+- Moon or Sun
+"Name the genre: Draw a loop using all cells. Numbers indicate the length of the longest loop segment in the region.":
+- Maxi Loop
+# Loop - crossing
+"Name the genre: Draw a path that can cross itself but only in the blue regions. Follow the arrows.":
+- Ice Barn
+"Name the genre: Draw a loop that can cross itself at designated crosses. It must also reflect at given triangles, and the total length of the lines from the numbered triangles must match the number.":
+- Reflect Link
+"Name the genre: Draw a loop that can cross itself, visiting all cells. Some parts of the loop are already given to you.":
+- Pipelink
+- Pipe Link
+# Loop - nonorthogonal
+"Name the genre: Draw a loop connecting all given points. Square points must be right angles, pentagon points at obtuse angles, and triangle points at acute angles.":
+- Angle Loop
+"Name the genre: Draw a loop connecting all given points. Letters must be visited consecutively, separated by at least one dot. The loop may intersect itself, but only at right angles.":
+- Kouchoku
+# Network puzzles
+"Name the genre: Connect all of the numbered dots up into a single connected component. Connections must be orthogonal, cannot cross each other, and there may be one or two lines between each pair.":
+- Hashiwokakero
+- Bridges
+- Hashi
+"Name the genre: Place an arrow in every non-circled cell. In a region, the same direction arrow may not occur more than once. From any square, following the arrows must lead to a circled cell (not outside the grid or in a loop).":
+- Roma
+"Name the genre: Connect all of the numbered dots into a single connected component. Connections cannot cross each other. The clues give the starting direction of the connections, and the numbers give the number of turns in the connection emitted by the clue.":
+- Hotaru Beam
+- Glow of Fireflies
+# Line puzzles
+"Name the genre: Connect all paired numbers together by lines that do not intersect each other following grid lines":
+- Numberlink
+- Arukone
+"Name the genre: Connect every clue to a fish. Clue numbers give the number of cells used by each path.":
+- Anglers
+"Name the genre: Connect identical numbers such that the length of the path is equal to both numbers.":
+- Link-a-pix
+- Linkapix
+- Link a pix
+- Ketten
+- Logolinks
+- Number a net
+- Paint by pairs
+# Shading genres - Dynasty
+"Name the genre: Shade some cells that are not adjacent. Then draw a loop covering all the other cells. Numbers with arrows cannot be shaded and denote the number of shaded cells the arrow points to.":
+- Yajilin
+"Name the genre: Shade some cells that are not adjacent. Unshaded cells must form a connected set. Numbers with arrows can be shaded. If unshaded, they denote the number of shaded cells the arrow points to. Otherwise, ignore the clue.":
+- Yajisan-Kazusan
+- yajisan ?kazusan
+"Name the genre: Shade some cells that are not adjacent. Unshaded cells must form a connected set. Numbers cannot be shaded and give the number of unshaded cells it can see horizontally/vertically including itself.":
+- Kuromasu
+- Kurodoko
+"Name the genre: Shade some cells that are not adjacent. Unshaded cells must form a connected set. Numbers in a region count the number of shaded cells in that region. Unshaded cells cannot cross two or more borders in a row.":
+- Heyawake
+"Name the genre: Shade some cells that are not adjacent. Unshaded cells must form a connected set. Numbers in a region count the number of shaded cells in that region. Unshaded cells cannot cross two or more borders in a row. Shaded cells in a region must be rotationally symmetric.":
+- Ayeheya
+"Name the genre: Shade some cells that are not adjacent. Unshaded cells form a connected set. Unshaded numbers should be unique in its row/column.":
+- Hitori
+"Name the genre: Shade some cells that are not adjacent. Unshaded cells form a connected set. No colored arrow should point to another object of the same color (which can point past shaded squares).":
+- Out of Sight
+"Name the genre: Shade some cells that are not adjacent. Unshaded cells form a connected set. Circled cells cannot be shaded; the path from any circle to any other circle must curve at least twice.":
+- Curving Road
+"Name the genre: First, cross out one number in each region. Then, shade some cells that are not adjacent. Unshaded cells form a connected set. Numbers (even crossed out ones) cannot be shaded. Uncrossed numbers must count the number of adjacent shaded squares.":
+- Usowan
+- Uso-?one
+# Shading genres - Wall
+"Name the genre: Shade some cells. Every region must be completely filled or unfilled. Numbers give the number of cells in each row/column that are filled.":
+- Tile Paint
+- Tairupeinto
+"Name the genre: Shade some cells. Every region must be completely filled or unfilled. All regions with clues must be unfilled. No loops of unshaded cells may exist. No 2x2 may be shaded. Then, draw a path from S to F. Triangles are not along this path, while circles are.":
+- Nurimaze
+"Name the genre: Shade some cells. If a cell is shaded, then so are the cells to its sides and the cell below it, if there is no border. Numbers give the number of cells in each row/column that are filled.":
+- Aquarium
+"Name the genre: Shade some cells, making a connected set. Clues cannot be shaded and give consecutive blocks of shaded cells in the 8 squares around it. No 2x2 square may be shaded.":
+- Tapa
+"Name the genre: Shade some cells, making a connected set. Clues cannot be shaded and give the size of the unshaded region it is in. Every unshaded region has exactly 1 clue. No 2x2 square may be shaded.":
+- Nurikabe
+"Name the genre: Shade some cells, making a connected set. Clues cannot be shaded and give the number of consecutive shaded cells it can see horizontally/vertically. No 2x2 square may be shaded.":
+- Canal View
+"Name the genre: Draw some black and white circles, so that the black circles form a connected set, and the white circles also form a connected set. Some circles are given to you.":
+- Yin-Yang
+- Yin and yang
+- Yinyang
+- Yin Yang
+"Name the genre: Shade some cells, making a connected set. Every region should have exactly 4 cells shaded in a connected group. Adjacent groups should not be congruent. No 2x2 square may be shaded.":
+- LITS
+"Name the genre: Shade some cells, making a connected set. Clues, at grid intersections, give the number of shaded squares around it. Unshaded cells must form a connected set.":
+- Creek
+# Shading genres - other
+"Name the genre: Shade some cells. Clues cannot be shaded and give the total number of shaded cells in the 8 squares around it.":
+- Minesweeper
+"Name the genre: Shade some cells. Outside clues give the lengths of all the runs in that row/column.":
+- Nonogram
+- Picross
+- Edel
+- Hanjie
+"Name the genre: Shade some cells. Every region should have exactly 2 cells shaded. Every shaded square is adjacent to exactly one other shaded square.":
+- Norinori
+"Name the genre: Shade some cells. Clues cannot be shaded and give the total areas of all polyominos adjacent to it.":
+- Kurotto
+"Name the genre: Shade some cells, forming squares. Unshaded cells must be connected. Clues cannot be shaded and give the total areas of all squares adjacent to it.":
+- Tasquare
+- Tasukuea
+"Name the genre: Shade some cells. In every region, the shaded cells must be connected. Across regions, shaded cells cannot be adjacent. Drop all of the pieces by gravity; exactly the bottom half of squares may be shaded.":
+- Stostone
+"Name the genre: Shade some cells. Every shaded cell borders exactly one other shaded cell. Clues may not be shaded. Identical clues must be in the same region and different clues must be in different regions.":
+- Dominion
+"Name the genre: Shade some cells, forming rectangles. Numbers in regions give the number of shaded cells in that region.":
+- Chocona
+- Chocolate
+"Name the genre: Shade some cells, two per row and column. Shaded squares may not touch, even diagonally. Outside numbers give the number of unshaded between the pair of shaded squares in the row/column.":
+- Gappy
+- Gappy Blocks
+- Gaps
+"Name the genre: Shade some regions. Some clues are at region intersections: white circles indicate that a majority of surrounding regions are white, black circles indicate that a majority of surrounding regions are black, and gray circles indicate an even split.":
+- Stained Glass
+"Name the genre: Shade some cells. Every region should have at least one cell shaded, and this must be connected within a region. Numbers indicate the number of shaded cells in a region. The number of shaded cells in adjacent regions may not be the same. Shaded cells cannot be adjacent across regions.":
+- Shimaguni
+"Name the genre: Shade some cells. Every unshaded region must be rectangular and may not touch each other orthogonally, but they must connect diagonally. At most one number may appear in an unshaded region; if it does, it denotes the area. No 2x2 square may be shaded.":
+- Mochikoro
+"Name the genre: Shade some hexes. There must be 6 unshaded regions, each of size 6. Some shaded cells are given to you.":
+- Honey Islands
+- Hexa Islands
+# Movement genres
+"Name the genre: You may move pieces horizontally/vertically. Numbered pieces must move exactly that many squares. Every region should have exactly one piece after movements have completed. Movement paths may not intersect.":
+- Satogaeri
+"Name the genre: You may move pieces. Every region should have exactly one type of piece after movements have completed. Movement paths may not intersect.":
+- Kaero
+- Return Home
+"Name the genre: Numbered pieces denote the maximum number of \"strokes\" that you may use. A stroke of number N is a movement of size N horizontally/vertically. This number decreases by 1 for every stroke. Don't land in the water and land everything into holes.":
+- Herugolf
+"Name the genre: You may move pieces horizontally/vertically. Every shaded region must have at least one piece. If it has a number, it represents the total sum of the piece values that land on the region.":
+- Yosenabe
+# Region division genres
+"Name the genre: Divide into regions. No two adjacent regions should be the same area. Numbers denote the area of the region":
+- Fillomino 
+"Name the genre: Divide into regions. No two adjacent regions should be the same area. Numbers denote the area of the region. Regions must be paths that cannot touch themselves, even at a corner. O denotes that it is an end of a region.":
+- Snake Pit
+- Snake Pit X
+"Name the genre: Divide into regions. All regions should be rectangular and contain exactly one number. Numbers denote the area of the region.":
+- Shikaku
+"Name the genre: Divide into regions. All regions should be rectangular and contain exactly one number. Numbers denote half the perimeter of the region.":
+- Rekuto
+"Name the genre: Divide into regions. Areas not divisible by 3 must be rectangular; areas divisible by 3 must be hexagonal. Numbers denote the area of the region":
+- Aho-ni-narikire
+"Name the genre: Divide into regions. All regions should be rectangular. Every region contains exactly one symbol. + means it's a square, | means it's longer than it's wide, - means it's wider than it's long. No four regions may meet at a corner":
+- Tatamibari
+"Name the genre: Divide into regions. All regions should be rectangular, size 1x1, 1x2, 1x3, or 1x4. Numbers denote the area of the region that it is in. No two regions of the same area may be adjacent. No four regions may meet at a corner.":
+- Fillmat
+- Firumatto
+"Name the genre: Divide into regions. All regions must be rectangular. Numbers denote the number of borders used around the number. All regions must contain exactly one number.":
+- Nawabari
+- Territorium
+- Territory
+"Name the genre: Divide into regions. All regions should be rotationally symmetric. Dots denote centers of every region":
+- Spiral Galaxies
+- Tentai Show
+"Name the genre: Divide into regions. Every region should be exactly area 5. Numbers denote the number of borders used by regions":
+- Fivecells
+- Five Cells
+"Name the genre: Divide into regions. Every region should be exactly area 4. Numbers denote the number of borders used by regions":
+- Fourcells
+- Four Cells
+"Name the genre: Divide into regions. Every region should contain exactly two numbers. The area of the region should be strictly between these two numbers":
+- Araf
+"Name the genre: Divide into regions. Every region should be exactly area 3. No two regions of the same shape and orientation should be adjacent":
+- Heteromino
+"Name the genre: Divide into regions. Every region's shaded and unshaded squares should be connected and congruent to each other":
+- Double Choco
+"Name the genre: Divide into regions. Every region contains exactly one clue. Clues may give the number of squares north, south, east, or west in the region that it is in":
+- Compass
+"Name the genre: Divide into regions. Every region should be exactly area 5. Letters denote the type of shape to place. No two congruent regions should be adjacent":
+- Pentominous
+"Name the genre: Divide into regions. Every region should be exactly area 2. Every unordered pair of numbers should appear in regions exactly once.":
+- Dominoes
+"Name the genre: Divide into regions. Every region should be L-shaped of width 1. Circles give elbows (if it has a number, it denotes the area). Arrows denote the ends of the regions, with the arrow pointing towards the elbow.":
+- Sashigane
+"Name the genre: Divide into regions. Numbers must be in their own region. Four region borders can never intersect; three region borders can only intersect at marked points.":
+- Border Block
+"Name the genre: Divide into regions. Separate one namesake animal from the other namesake animal. Every region must have at least one animal. Region borders may intersect but may not turn except at marked points. Borders may not intersect at marked points; some marked points may be unused.":
+- Wolves and Sheep
+- Yagit
+
+# Translate the logic puzzle
+"Translate me to Japanese: Digit single":
+- Sudoku
+"Translate me to Japanese: Painted wall":
+- Nurikabe
+"Translate me to Japanese: Directing arrow link":
+- Yajilin
+"Translate me to Japanese: Build bridges!":
+- Hashiwokakero
+- Hashi
+"Translate me to Japanese: Evil influence":
+- Masyu
+"Translate me to Japanese: Addition cross":
+- Kakuro
+"Translate me to Japanese: One person":
+- Hitori
+"Translate me to Japanese: Cut into boxes":
+- Shikaku
+"Translate me to Japanese: Homecoming":
+- Satogaeri
+"Translate me to Japanese: Flow":
+- Nagare
+"Translate me to Japanese: Light":
+- Akari
+"Translate me to Japanese: Divided rooms":
+- Heyawake
+"Translate me to Japanese: Carpenter's square":
+- Sashigane
+"Translate me to Japanese: Snake 1-5":
+- Hebi-Ichigo
+- Hebi ?ichigo
+"Translate me to Japanese: Island country":
+- Shimaguni
+"Translate me to German: Railway stations":
+- Bahnhöfe
+- Bahnhofe
+"Translate me to German: Straight away":
+- Geradeweg
+"Translate me to German: Letter salad":
+- Buchstabensalat (another name for Easy as ABC)
+- Buchstabensalat
+"Translate me from German: Schlange":
+- Snake
+"Translate me from German: Pfeile":
+- Arrows
+"Translate me from German: Vier Winde":
+- Four Winds
+
+# Logic puzzle variants
+"Which logic puzzle variant makes it so that every numbered clue is off by 1 and is German for \"close miss\"?":
+- Knapp-Daneben
+- knapp ?daneben
+"Which logic puzzle variant requires one to substitute letters for numbers?":
+- Cipher
+"Which logic puzzle variant makes one clue in each row and column wrong?":
+- Liar
+"Which logic puzzle variant of Masyu only gives white circles, but allows you to change some of them to black circles?":
+- Deformable Masyu
+- Deformable
+"Which logic puzzle variant additionally forbids numbers that are one off from another to be adjacent?":
+- Nonconsecutive
+- Non-consecutive
+"Which logic puzzle variant allows one to wrap around over both sides of the grid?":
+- Toroidal
+# Logic puzzle trivia
+"What is the fewest number of givens required to uniquely determine a 9x9 standard Sudoku?":
+- 17
+"How many free pentominoes are there?":
+- 12
+"Directed by 2007 WPC champion Pal Madarassy, in **which city** is the annual 24 Hour Puzzle Championship held?":
+- Budapest
+"**Which genre's** etymology comes from \"Turkish Area Paint\"?":
+- Tapa
+"**Which English word** can both refer to Gokigen Naname as well as Suraromu?":
+- Slalom
+"By far the most decorated WPC champion of all time, **who won** WPC 11 times?":
+- Ulrich Voigt
+- Voigt
+"As of 2019, two people have won separate WPC and WSC titles. **Name both.**":
+- Ken Endo and Thomas Snyder
+- ((Ken )?Endo|Endo Ken)( and| ?, ?| ?& ?)? (Thomas |Tom )Snyder
+- (Thomas |Tom )Snyder( and| ?, ?| ?& ?)? ((Ken )?Endo|Endo Ken)
+# Logic puzzle adjacent
+"This fictional spacecraft from Star Wars is also a deduction found in Sudoku.":
+- X-wing or Y-wing
+- X-wing
+- Y-wing
+"This animal with binomial name Xiphias gladius is also a deduction found in Sudoku.":
+- Swordfish
