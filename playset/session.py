@@ -15,11 +15,11 @@ from zipfile import ZipFile
 __all__ = ["SetSession"]
 
 _CARD_SIZE = (84,61)
-_LETTER_MAP = {"W":(0,0),"E":(0,1),"R":(0,2),"T":(0,3),"Y":(0,4),"U":(0,5),"I":(0,6),
-               "S":(1,0),"D":(1,1),"F":(1,2),"G":(1,3),"H":(1,4),"J":(1,5),"K":(1,6),
+_LETTER_MAP = {"Q":(0,0),"W":(0,1),"E":(0,2),"R":(0,3),"T":(0,4),"Y":(0,5),"U":(0,6),
+               "A":(1,0),"S":(1,1),"D":(1,2),"F":(1,3),"G":(1,4),"H":(1,5),"J":(1,6),
                "Z":(2,0),"X":(2,1),"C":(2,2),"V":(2,3),"B":(2,4),"N":(2,5),"M":(2,6)}
 #possible letters top-to-bottom, left-to-right for valid letter checking
-_LETTERS = "WSZEDXRFCTGVYHBUJNIKM"
+_LETTERS = "QAZWSXEDCRFVTGBYHNUJM"
 
 
 
