@@ -194,6 +194,18 @@ AUTHOR: rngesus.wept
 "**What 1983 movie** title is also the name of this card? https://i.imgur.com/yv1mFA4.jpg":
 - Wargames
 - War Games
+"**Name one of the three countries** whose names have been redacted from this card. https://i.imgur.com/wZVzoRr.jpg":
+- France, the UK, or Israel
+- (France|Isreal)
+- (the )?U(nited )?K(ingdom)?
+"**Whose image** has been redacted from this card? https://i.imgur.com/WAC96Xn.jpg":
+- John F. Kennedy
+- JFK
+- Kennedy
+"**Whose picture** is on this card? https://i.imgur.com/EIxc4J9.jpg":
+- Mohammed Reza Shah Pahlavi
+- Mohammed Pahlavi
+- Pahlavi
 "In _Twilight Struggle_, the player who causes **this rating** to drop to 0 automatically loses the game, on account of having started a nuclear war.":
 - DEFCON
 "**What country**'s name has been redacted from this _Twilight Struggle_ card? https://i.imgur.com/Sel4hiB.jpg":
@@ -582,7 +594,10 @@ AUTHOR: rngesus.wept
 # Forbidden Stars, Everdell, Descent, Grand Austria Hotel, Alchemists
 # Champions of Midgard, Star Realms, Underwater Cities, Lorenzo il Magnifico, Legendary: Alien
 # Istanbul, Inis, Game of Thrones BG, Castles of Mad King Ludwig
+# ------------------------------------------------------------------------------------------
 # Resistance: Avalon, Chaos in the Old World, Railways of the World, Ora et Labora
+"In _Resistance: Avalon_, the Evil team can win by identifying the holder of **what character card**?":
+- Merlin
 # Chronicles of Crime, Commands & Colors: Ancients, Clank! Space, Santorini, Decrypto
 # Suburbia, Dinosaur Island, LotR LCG, Hansa Teutonica, Nations
 # Quacks of Quedlinburg, Endeavor: Age of Sail, Jaipur, Vinhos, Memoir '44
@@ -842,7 +857,15 @@ AUTHOR: rngesus.wept
 "**What (mathematical?) name** refers to the type of shapes placed on the board during a game of _Blokus_?":
 - Polyominoes
 - Polyominos?
+# -----------------------------------------------------------------------------------
 # Flash Point, Guillotine, ONUW, Survive: Atlantis, Hey That's My Fish, Ghost Stories
+"In _Flash Point_, **what profession** are the players?":
+- Firefighters
+- fire ?fighters?
+"The term 'flash point' refers to the temperature where a liquid becomes a fire hazard due to the presence of **what**?":
+- Vapor
+- evaporation
+- vapou?rs?
 # -----------------------------------------------------------------------------------
 # UNO, Kingsburg, Kingdom Builder, Acquire, Tokaido, Bang! Dice, Thurn and Taxis
 # 6 nimmt!, Tikal, Apples to Apples, Coloretto, Spyfall, Exploding Kittens
