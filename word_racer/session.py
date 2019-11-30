@@ -1,16 +1,10 @@
 import asyncio
-import random
 from collections import Counter
 from redbot.core.utils.chat_formatting import box
 from redbot.core.data_manager import cog_data_path
 import discord
-import itertools
 import numpy as np
-import matplotlib.pyplot as pp
 import pathlib
-import os
-import random
-from zipfile import ZipFile
 import re
 from PIL import Image, ImageDraw, ImageFont
 
@@ -38,7 +32,7 @@ class WordRacerSession:
         # feel free to experiment with this
         self.dictDir = self.dataDir/"dict/enable2k.txt"
         self.fontDir = self.dataDir/"fonts/arialbd.ttf"
-        
+
         self.ctx = ctx
         self.output_image_path = self.dataDir / f'board-{ctx.channel.id}.png'
         self.scores = Counter()
