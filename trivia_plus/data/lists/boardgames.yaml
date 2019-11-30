@@ -122,6 +122,26 @@ AUTHOR: rngesus.wept
 - delay_factor: 2.0
 - QRE
 - (Q(ER|RE)|E(QR|RQ)|R(QE|EQ))
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/KoQynpD.png":
+- delay_factor: 2.0
+- ERA
+- (E(RA|AR)|R(EA|AE)|A(ER|RE))
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/hNnFKaj.png":
+- delay_factor: 2.0
+- WRD, ASD, or WRAS
+- (W(RD|DR)|R(WD|DW)|D(WR|RW))
+- (A(SD|DS)|S(AD|DA)|D(AS|SA))
+- (Q(R(AS|SA)|A(RS|SR)|S(RA|AR))|R(Q(AS|SA)|A(QS|SQ)|S(QA|AQ))|A(Q(RS|SR)|R(QS|SQ)|S(QR|RQ))|S(Q(RA|AR)|R(QA|AQ)|A(QR|RQ)))
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/mc5mfsV.png":
+- delay_factor: 2.0
+- EAD
+- (E(AD|DA)|A(ED|DE)|D(EA|AE))
+"Think fast! (Select one or more cards such that they contain an even number of each symbol.) https://i.imgur.com/tL8usjR.png":
+- delay_factor: 2.0
+- QAD, RAS, or QRSD
+- (Q(AD|DA)|A(QD|DQ)|D(QA|AQ))
+- (R(AS|SA)|A(RS|SR)|S(RA|AR))
+- (Q(R(SD|DS)|S(RD|DR)|D(RS|SR))|R(Q(SD|DS)|S(QD|DQ)|D(QS|SQ))|S(Q(RD|DR)|R(QD|DQ)|D(QR|RQ))|D(Q(RS|SR)|R(QS|SQ)|S(QR|RQ)))
 
 ##### BGG Top 100
 # -------------------------------------------------------
