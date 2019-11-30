@@ -7,6 +7,15 @@ AUTHOR: rngesus.wept
 "**What genre of games** is defined by the permanent alteration of otherwise reusable game components over multiple plays?":
 - Legacy
 - Legacy Games?
+"**What genre of games** includes spinoff campaign versions of _Scythe_, _Betrayal at House on the Hill_, and _Aeon's End_?":
+- Legacy
+- Legacy Games?
+"**What genre of games** is defined by the (mostly) permanent alteration of single-use sheets, along with some element of randomness?":
+- Roll & Write
+- roll (&|and) write
+"**What genre of games** includes _Ganz Schön Clever_, _Welcome To..._, and _Yahtzee_?":
+- Roll & Write
+- roll (&|and) write
 "**What genre of game**, named for what are seen as its most central player activities, includes _Twilight Imperium_, _Eclipse_, and _Dominant Species_?":
 - 4X
 "**What genre of game** includes _Pandemic_, _Spirit Island_, _The Mind_, and _Hanabi_?":
@@ -16,10 +25,14 @@ AUTHOR: rngesus.wept
 "**What game genre** includes _Automobiles_, _Hyperborea_, and _War Chest_, but not _Dominion_, _Ascension_, or _Star Realms_?":
 - Bag building
 - Bag-?build(ing|er)
+"**What game genre** includes _Catacombs_, _Click Clack Lumberjack_ (a.k.a. _Tik Tok Woodsman), and _Jenga_?":
+- Dexterity
 "**What common game mechanic** allows players to choose their actions by putting one or more pawns onto a space associated with that action, inhibiting other players from doing the same?":
 - Worker placement
 "**What adversarial game mechanic** is part of the win condition in games like _Mafia_, _Monopoly_, or _Coup_, but tends to be avoided or marginalized in newer games, especially longer ones?":
 - Player elimination
+"**What game mechanic** uses die rolls to determine an outcome, and permits players a limited number of rerolls of any subset of those dice?":
+- Push Your Luck
 "**What theme** is present in _Anachrony_, _Tragedy Looper_, and _Chrononauts_ (and actually informs the game mechanics instead of being slapped on)?":
 - Time travel
 "**What phrase** is used to describe game mechanics where a player calls out or attacks a specific other player?":
@@ -124,6 +137,9 @@ AUTHOR: rngesus.wept
 - Terraforming Mars
 "**What game** features these cards? https://i.imgur.com/9bTFkt1.jpg":
 - Terraforming Mars
+"In _Terraforming Mars_, **what amount of time** does the game describe each full round of play as representing?":
+- A generation
+- generation
 "Along with ocean cover and atmospheric oxygen, **what third global parameter** triggers the end of a game of _Terraforming Mars_?":
 - Temperature
 "In the base game of _Terraforming Mars_, building a city in **one of two locations** does not count as a city built \"ON MARS\"; name either.":
@@ -155,7 +171,7 @@ AUTHOR: rngesus.wept
 "**What country**'s name has been redacted from this _Twilight Struggle_ card? https://i.imgur.com/Sel4hiB.jpg":
 - Libya
 # ----------------------------------------------
-# --- Brass, Twilight Imperium, Gaia Project, Scythe, Great Western Trial
+# --- Brass, Twilight Imperium, Gaia Project, Scythe, Great Western Trail
 "The board game _Brass_ takes its name from Yorkshire slang for **what**? (As in \"Where there's muck, there's brass.\")":
 - Money
 "Upon publication of its sequel, _Brass_ gained the name of an industrial city both for its original incarnation and for its sequel. Name **either city**.":
@@ -260,6 +276,9 @@ AUTHOR: rngesus.wept
 "In _Concordia_, cards that score 2 points for each type of commodity your network can produce are associated with **what Roman diety of merchants**?":
 - Mercury
 - Mercurius
+"**Name one of the three cards** that can trigger the end of a game of _Concordia_.":
+- Architect, Senator, or Consul
+- (architect|senator|consul)
 "**What game** is shown in its early stages this picture? https://i.imgur.com/rSXTR73.jpg":
 - Concordia
 "**What geographic region** is the common setting of trade in _Concordia_, _Navegador_, and _Genoa_?":
@@ -520,7 +539,13 @@ AUTHOR: rngesus.wept
 # Five Tribes, The Gallerist, Clank!, El Grande
 # Rising Sun, Eldritch Horror, Mombasa
 # Battlestar Galactica, Patchwork, Troyes, Lisboa, SHCD
+# ------------------------------------------------------------------------------------
 # Russian Railroads, Roll for the Galaxy, Crokinole, Aeon's End, Tigris & Euphrates
+"In _Aeon's End_, **what perpetually besieged city** represents one of the three failure conditions for the players?":
+- Gravehold
+"**What mechanic or action**, present in the vast majority of other deck-builders, is almost completely absent in _Aeon's End_?":
+- Shuffling
+- shuffle
 # Trajan, Teotihuacan, Too Many Bones
 # Architects of the West Kingdom, Star Wars XWing, Raiders of the North Sea, TIME Stories
 # Kemet, Pandemic: Iberia, Dead of Winter, Yokohama, Stone Age
@@ -777,6 +802,9 @@ AUTHOR: rngesus.wept
 - Great Zimbabwe
 "**What game** is shown in progress in this picture? https://i.imgur.com/BLju6pH.jpg":
 - War Chest
+"**What is the victory condition** for a 1v1 game of _War Chest_?":
+- Control 6 control points
+- Control (6|six)
 # ---------------------------------------------------------------------------------
 # --- Key Market, Ginkgopolis, Thunderstone Quest, Dinosaur Island, Calimala
 # Continental Divide, Gugong, Goa, Sorcerer City, Evolution(: Climate)
@@ -796,3 +824,5 @@ AUTHOR: rngesus.wept
 "**Name one of the three disasters** that precipitated the events of _Lisboa_.":
 - Earthquake, tsunami, fire
 - (earthquake|tsunami|fire)
+
+##### "Classics"
