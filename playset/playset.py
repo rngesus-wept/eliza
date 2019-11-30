@@ -12,7 +12,7 @@ class PlaySet(commands.Cog):
         self.set_sessions = []
         self.conf = Config.get_conf(self, identifier=UNIQUE_ID, force_registration=True)
         self.conf.register_member(wins=0, games=0, total_score=0)
- 
+
     @commands.group(invoke_without_command=True)
     async def playset(self, ctx: commands.Context):
         session = self._get_set_session(ctx.channel)
@@ -22,8 +22,8 @@ class PlaySet(commands.Cog):
         session = SetSession.start(ctx)
         self.set_sessions.append(session)
         print("New Set session; "+str(ctx.channel)+" in "+str(ctx.guild.id))
-        
-    @playset.command(name="stop")
+
+    @playset.command(name="stop", aliases=["cancel"])
     async def set_stop(self, ctx: commands.Context):
         """Stop an ongoing set session."""
         session = self._get_set_session(ctx.channel)
@@ -33,7 +33,7 @@ class PlaySet(commands.Cog):
         await session.end_game()
         session.force_stop()
         await ctx.send("Set stopped.")
-        
+
     @staticmethod
     def _get_sort_key(key: str):
         key = key.lower()
@@ -53,9 +53,9 @@ class PlaySet(commands.Cog):
         """
         cmd = self.set_leaderboard_server
         await ctx.invoke(cmd, "wins", 10)
-    
+
     @set_leaderboard.command(name="server")
-    @commands.guild_only() 
+    @commands.guild_only()
     async def set_leaderboard_server(
         self, ctx: commands.Context, sort_by: str = "wins", top: int = 10
     ):
@@ -81,7 +81,7 @@ class PlaySet(commands.Cog):
         data = {guild.get_member(u): d for u, d in data.items()}
         data.pop(None, None)  # remove any members which aren't in the guild
         await self.send_leaderboard(ctx, data, key, top)
-        
+
     async def send_leaderboard(self, ctx: commands.Context, data: dict, key: str, top: int):
         """Send the leaderboard from the given data.
         Parameters
@@ -109,7 +109,7 @@ class PlaySet(commands.Cog):
         for page in pagify(leaderboard, shorten_by=10):
             ret.append(await ctx.send(box(page, lang="py")))
         return ret
-        
+
     @staticmethod
     def _get_leaderboard(data: dict, key: str, top: int):
         # Mix in average score
@@ -163,7 +163,7 @@ class PlaySet(commands.Cog):
             if rank == top:
                 break
         return "\n".join(lines)
-        
+
     @commands.Cog.listener()
     async def on_set_end(self, session: SetSession):
         """Event for a Set session ending.
@@ -180,7 +180,7 @@ class PlaySet(commands.Cog):
             self.set_sessions.remove(session)
         if session.scores:
             await self.update_leaderboard(session)
-            
+
     async def update_leaderboard(self, session):
         """Update the leaderboard with the given scores.
         Parameters
@@ -192,7 +192,7 @@ class PlaySet(commands.Cog):
         for member, score in session.scores.items():
             if score>max_score:
                 max_score=score
-                
+
         for member, score in session.scores.items():
             if member.id == session.ctx.bot.user.id:
                 continue
@@ -202,7 +202,7 @@ class PlaySet(commands.Cog):
             stats["total_score"] += score
             stats["games"] += 1
             await self.conf.member(member).set(stats)
-            
+
     def _get_set_session(self, channel: discord.TextChannel) -> SetSession:
         return next(
             (session for session in self.set_sessions if session.ctx.channel == channel), None
