@@ -97,7 +97,7 @@ class SetSession:
         if early_exit:
             return False
         guess = message.content.upper()
-        if len(guess) != 3:
+        if len(set(guess)) != 3:
             return False
         validLetters = _LETTERS[:3*self.board.shape[1]]
         if set(guess) - set(validLetters):
