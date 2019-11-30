@@ -37,6 +37,14 @@ AUTHOR: rngesus.wept
 - Time travel
 "**What phrase** is used to describe game mechanics where a player calls out or attacks a specific other player?":
 - Take That
+"**What genre of card game** has players vying to be the first to empty their hands?":
+- Card shedding
+- (card-?)?shedding
+"**What genre of card game** has players taking turns to play card combinations of increasing value?":
+- Climbing
+"**What genre of card game** has players trying to play (or sometimes not play) the single highest card of any played, usually including a trump suit?":
+- Trick-taking
+- Trick taking
 
 ##### SET
 "Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/TeaQN9N.jpg":
@@ -566,6 +574,8 @@ AUTHOR: rngesus.wept
 "**What mechanic or action**, present in the vast majority of other deck-builders, is almost completely absent in _Aeon's End_?":
 - Shuffling
 - shuffle
+"In _Aeon's End_, **what term** is used on the generic Nemesis cards to indicate that a Bad Thing happens, the details of which are specified on each Nemesis' board separately?":
+- Unleash
 # Trajan, Teotihuacan, Too Many Bones
 # Architects of the West Kingdom, Star Wars XWing, Raiders of the North Sea, TIME Stories
 # Kemet, Pandemic: Iberia, Dead of Winter, Yokohama, Stone Age
@@ -580,7 +590,11 @@ AUTHOR: rngesus.wept
 # Combat Commander: Europe, Age of Steam, Near and Far, Village, Trickerion
 # TtR Nordic, Welcome To..., Sagrada, Targi, This War of Mine
 # Sekigahara, Splendor, Goa, Xia, Tichu
+# -------------------------------------------------------------------------------------------
 # La Granja, Go, Legendary Marvel, Zombicide Black Plague, Steam
+"In 2016, **what professional Go player** became the only human to take a game off AlphaGo during its professional career?":
+- Lee Sedol
+- (I|Ri|Lee) Se-?Dol
 # Princes of Florence, Detective, That's Pretty Clever, MtG
 # LotR Journeys, Viticulture, Star Realms Colony Wars, Ra, Cyclades
 # Shogun, Galaxy Trucker, Kanban, YINSH
@@ -783,17 +797,53 @@ AUTHOR: rngesus.wept
 - baduk
 - i-?go
 - wei ?qi
+# -----------------------------------------------------------------------------------
 # Chess, Monopoly, Bang, Shadows over Camelot, Scrabble, Kingdomino, Machi Koro
+"In _Chess_, the algebraic notation 'O-O-O' refers to **what move** being performed?":
+- Queenside Castle
+- queen('s)?[- ]side castl(e|ing)
+"In _Chess_, the term 'piece' conventionally excludes **what most numerous physical piece** on the board?":
+- Pawns
+- Pawn
+"In _Chess_, **what Italian term** meaning 'little flank' refers to a one-space Bishop move that positions it on one of the main diagonals of the board?":
+- Fianchetto
+- fianch?ett?[ao]
+"**Who** is currently considered the strongest active chess player in the world? (full name required)":
+- Magnus Carlsen
+- Magnus [CK]arlss?[eo]n
+"In _Monopoly_, **what process** happens (or at least _should_) after a player lands on a property and declines to purchase it at the listed price?":
+- Auction
+"**What was the name** of _Monopoly_'s predecessor?":
+- The Landlord's Game
+- Landlord'?s Game
 # Saboteur, Forbidden Desert, RoboRally, Smash Up, San Juan, Tsuro, For Sale
-# Blokus, Colt Express, Cards Against Humanity, Elder Sign, Camel Up
+"**What year** was _Monopoly_ first published?":
+- 1933
+# -----------------------------------------------------------------------------------
+# --- Blokus, Colt Express, Cards Against Humanity, Elder Sign, Camel Up
+"**What (mathematical?) name** refers to the type of shapes placed on the board during a game of _Blokus_?":
+- Polyominoes
+- Polyominos?
 # Flash Point, Guillotine, ONUW, Survive: Atlantis, Hey That's My Fish, Ghost Stories
+# -----------------------------------------------------------------------------------
 # UNO, Kingsburg, Kingdom Builder, Acquire, Tokaido, Bang! Dice, Thurn and Taxis
 # 6 nimmt!, Tikal, Apples to Apples, Coloretto, Spyfall, Exploding Kittens
 # Clue, Formula D, Pillars of the Earth, Diamant, Mice and Mystics, Modern Art
 # Zombicide, Zombie Dice, Ingenious, Fluxx, Battle Line, Century: Spice Road
 # Jamaica, Escape: Curse Temple, Qwirkle, Friday, Mr. Jack
 # Zombies!!!, Sentinels of the Multiverse, Saint Petersburg, Sid Meier's Civilization
+# -----------------------------------------------------------------------------------
 # Biblios, Innovation, Lord of the Rings (2000), Zooloretto, Last Night on Earth
+"**What game** uses the term 'dogma' to refer to its card effects?":
+- Innovation
+"Prior to its publication, **what was the unofficial title** for _Innovation_'s _Cities_ expansion?":
+- No Place Like Home
+"In _Innovation_, **what Age 4 technology** punishes players who have Castle icons left visible from the previous Ages?":
+- Gunpowder
+"In _Innovation_, **which card color** is most associated with advances related to food and health?":
+- Yellow
+"In _Innovation_, **which card color** is most associated with advances related to politics and law?":
+- Purple
 # Castle Panic, Concept, Scotland Yard, Tiny Epic Galaxies, Quarriors
 
 
@@ -804,7 +854,7 @@ AUTHOR: rngesus.wept
 - boat
 "**What game** is shown in progress in this picture? https://i.imgur.com/H3T2rr0.jpg":
 - Keyflower
-"Though it's homage to fighting games in general, **what specific fighting game series** does _BattleCON_ draw its inspiration from?":
+"Though it's an homage to fighting games in general, **what specific fighting game series** does _BattleCON_ draw its inspiration from?":
 - BlazBlue
 - Blaz Blue
 "**What fighting game series** was licensed for season 3 of _Exceed_ from Jasco, which also makes a card game and a board game using this intellectual property?":
@@ -835,7 +885,26 @@ AUTHOR: rngesus.wept
 - Race for the Galaxy and Settlers of Catan
 - (Race for the Galaxy|RftG)( and |, ?| ?/ ?| )(Settlers|Catan|Settlers of Catan)
 - (Settlers|Catan|Settlers of Catan)( and |, ?| ?/ ?| )(Race for the Galaxy|RftG)
-# Bridge, Fields of Green, Rococo, TOKYO METRO, Heaven & Ale, IKI
+# ---------------------------------------------------------------------------------
+# --- Bridge, Fields of Green, Rococo, TOKYO METRO, Heaven & Ale, IKI
+"In _Bridge_ and _Mahjong_, **what designations** are used to refer to individual players or seats?":
+- Cardinal directions
+- Compass directions
+"**What phase** of a _Bridge_ game happens before any actual cardplay?":
+- Auction
+"**What form of _Bridge_** is played in teams of four, with each team eventually playing both sides of every hand?":
+- Duplicate
+"Contracts in _Bridge_ may be in one of the four standard card suits, or in **what fifth non-suit**?":
+- No-trump
+- no-?trump
+"In _Bridge_, **what term** refers to the player who sits out the cardplay portion of each hand?":
+- Dummy
+"In _Rococo_, players aim to produce and present **what good** at a ball?":
+- Dresses
+- Dress
+"The Rococo style originated and became popular during the reign of **what French monarch**?":
+- Louis XV
+- Louis (the )?fifteen(th)?
 # Vindication, Gentes, Letter Jam, Signorie, Carson City, Tyrants of the Underdark
 # Mini Rail, Pulsar 2849, Macao, Lowlands, Staufer Dynasty, Medina, New York Slice
 # Ponzi Scheme, Council of 4, Wendake
