@@ -204,6 +204,7 @@ AUTHOR: rngesus.wept
 - Kennedy
 "**Whose picture** is on this card? https://i.imgur.com/EIxc4J9.jpg":
 - Mohammed Reza Shah Pahlavi
+- Mohammed Reza Pahlavi
 - Mohammed Pahlavi
 - Pahlavi
 "In _Twilight Struggle_, the player who causes **this rating** to drop to 0 automatically loses the game, on account of having started a nuclear war.":
@@ -438,10 +439,12 @@ AUTHOR: rngesus.wept
 - (first|start(s|ing)? with) (an?|(the )?letter )?F
 "**What game** is shown in progress in this picture? https://i.imgur.com/HPcjiwH.jpg":
 - Power Grid
-"In _Power Grid_, what resource do the red cylinders represent? https://i.imgur.com/cLSZe30.jpg":
+"In _Power Grid_, **what resource** do the red cylinders represent? https://i.imgur.com/cLSZe30.jpg":
 - Nuclear fuel
 - Nuclear
 - Radioactive
+"In _Power Grid_, **what resource** do the black cylinders represent? https://i.imgur.com/cLSZe30.jpg":
+- Oil
 "**What city name** is redacted from this picture? https://i.imgur.com/WiSwuFU.jpg":
 - Philadelphia
 "**What other, more popular game** was published by the same company as _Mechs vs. Minions_?":
