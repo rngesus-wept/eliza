@@ -18,6 +18,22 @@ class WordRacer(commands.Cog):
  
     @commands.group(invoke_without_command=True)
     async def wordracer(self, ctx: commands.Context):
+        """
+        Discord port for the defunct Yahoo! Games "Word Racer".
+        
+        Find words in the grid Boggle-style. That is, find a sequence of connected letters,
+        where you may pick letters horizontally, vertically, or diagonally, but you may only
+        use each space once. You have to be fast, however - only the first person to call out
+        a valid word can claim the points!
+
+        The longer the word, the more points it gives. Starting from the second round, there are
+        also colored bonus letters. If you use these letters into your word, then these points
+        may be multiplied! Blue gives you double points and red gives you triple points.
+        Getting multiple bonuses works multiplicatively! (so e.g. two 2x = 4x) There may also 
+        be a small penalty for guessing words not in the dictionary.
+
+        Highest score wins! Good luck!
+        """
         session = self._get_wordracer_session(ctx.channel)
         if session is not None:
             await ctx.send("There is already an ongoing Word Racer session in this channel.")
@@ -26,7 +42,7 @@ class WordRacer(commands.Cog):
         self.wordracer_sessions.append(session)
         print("New Word Racer session; "+str(ctx.channel)+" in "+str(ctx.guild.id))
         
-    @wordracer.command(name="stop")
+    @wordracer.command(name="stop", aliases=["cancel"])
     async def wordracer_stop(self, ctx: commands.Context):
         """Stop an ongoing Word Racer session."""
         session = self._get_wordracer_session(ctx.channel)

@@ -24,6 +24,12 @@ _FREQ = [[142,25,66,53,218,15,42,34,168,1,8,88,44,130,124,45,1,135,180,125,50,10
 
 _BONUSES = [{}, {(0,2):2,(5,3):2}, {(0,0):3,(5,5):3}, {(0,0):3,(0,5):2,(5,0):2,(5,5):3}]
 
+_ROUND_TIME = 120
+_ROUND_SECTIONS = 4
+
+
+_PENALTY_FOR_WRONG = 1
+
 class WordRacerSession:
     def __init__(self, ctx):
         self.level = 0
@@ -92,7 +98,7 @@ class WordRacerSession:
         timer_task = self.ctx.bot.loop.create_task(self.timer_task())
         reaction_task = self.ctx.bot.loop.create_task(self.reactions_handler())
         try:
-            await self.ctx.bot.wait_for("message", check=self.check_message, timeout=120)
+            await self.ctx.bot.wait_for("message", check=self.check_message, timeout=_ROUND_TIME)
         except asyncio.TimeoutError:
             #Round over
             pass
@@ -115,11 +121,12 @@ class WordRacerSession:
             await self.send_table("Total scores so far:")
         
         table = ""
+        max_len = max(map(len, self.valid_words))
         for word, score in self.valid_words.most_common():
             claim = "none"
             if word in self.claims:
                 claim = self.claims[word]
-            table += f"{word}\t{score}\t{claim}\n"
+            table += f"{word.ljust(max_len+1)}{score:4} {claim}\n"
             if len(table) > 1900:
                 await self.ctx.send(box(table, lang="diff"))
                 table = ""
@@ -127,16 +134,17 @@ class WordRacerSession:
             await self.ctx.send(box(table, lang="diff"))
     
     async def timer_task(self):
-        reveal = 3
+        section_period = _ROUND_TIME/_ROUND_SECTIONS
+        reveal = _ROUND_SECTIONS - 1
         while reveal:
-            await asyncio.sleep(30)
-            msg = f"{30*reveal} seconds remaining in round {self.level+1}. {len(self.valid_words)-len(self.claims)} words left to find."
+            await asyncio.sleep(section_period)
+            msg = f"{section_period*reveal} seconds remaining in round {self.level+1}. {len(self.valid_words)-len(self.claims)} words left to find."
             await self.send_round_table(msg)
             reveal -= 1
-        await asyncio.sleep(30)
+        await asyncio.sleep(section_period)
 
     def check_message(self, message: discord.Message):
-        early_exit = message.channel != self.ctx.channel or message.author == self.ctx.guild.me
+        early_exit = message.channel != self.ctx.channel or message.author.bot
         if early_exit:
             return
         guess = message.content.lower()
@@ -145,8 +153,8 @@ class WordRacerSession:
         if guess not in self.valid_words:
             # Wrong answer handling
             self.reaction_queue.append((message, "\N{CROSS MARK}"))
-            self.scores[message.author] -= 1
-            self.round_scores[message.author] -= 1
+            self.scores[message.author] -= _PENALTY_FOR_WRONG
+            self.round_scores[message.author] -= _PENALTY_FOR_WRONG
             return
         if guess in self.claims:
             # Slow answer handling
@@ -168,15 +176,17 @@ class WordRacerSession:
     async def send_table(self, msg):
         """Send a table of scores to the session's channel."""
         table = f"+ {msg} \n\n"
+        max_len = max(map(lambda x: len(str(x)), self.round_scores))
         for user, score in self.scores.most_common():
-            table += f"+ {user}\t{score}\n"
+            table += f"+ {str(user).ljust(max_len+2)}{score}\n"
         await self.ctx.send(box(table, lang="diff"))
     
     async def send_round_table(self, msg):
         """Send a table of round scores to the session's channel."""
         table = f"+ {msg} \n\n"
+        max_len = max(map(lambda x: len(str(x)), self.round_scores))
         for user, score in self.round_scores.most_common():
-            table += f"+ {user}\t{score}\n"
+            table += f"+ {str(user).ljust(max_len+2)}{score}\n"
         f = discord.File(str(self.output_image_path))
         await self.ctx.send(box(table, lang="diff"), file=f)
 
