@@ -85,6 +85,7 @@ class WordRacerSession:
             # Round cleanup
             await self.finish_round()
             self.level += 1
+            await asyncio.sleep(10)
 
         await self.end_game()
 
