@@ -25,7 +25,7 @@ _FREQ = [[142,25,66,53,218,15,42,34,168,1,8,88,44,130,124,45,1,135,180,125,50,10
 _BONUSES = [{}, {(0,2):2,(5,3):2}, {(0,0):3,(5,5):3}, {(0,0):3,(0,5):2,(5,0):2,(5,5):3}]
 
 _ROUND_TIME = 120
-_ROUND_SECTIONS = 4
+_ROUND_SECTIONS = 6
 
 
 _PENALTY_FOR_WRONG = 1
@@ -34,7 +34,7 @@ class WordRacerSession:
     def __init__(self, ctx):
         self.level = 0
         self.dataDir = pathlib.Path(__file__).parent.resolve() / 'data'
-        
+
         # feel free to experiment with this
         self.dictDir = self.dataDir/"dict/enable2k.txt"
         self.fontDir = self.dataDir/"fonts/Roboto-Medium.ttf"
@@ -60,7 +60,7 @@ class WordRacerSession:
         return session
 
     async def run(self):
-        
+
         await self._send_startup_msg()
 
         # Round loop
@@ -85,7 +85,7 @@ class WordRacerSession:
             # Round cleanup
             await self.finish_round()
             self.level += 1
-            
+
         await self.end_game()
 
     async def _send_startup_msg(self):
@@ -95,7 +95,7 @@ class WordRacerSession:
             if _PENALTY_FOR_WRONG > 1:
                 plural = "s"
             penalty = f"Incorrect calls are -{_PENALTY_FOR_WRONG} point{plural}. "
-        
+
         await self.ctx.send(f"Starting Word Racer. Find words boggle-style and gain points."
                             f" {penalty}In rounds 2-4 there are bonuses:"
                             f" blue is 2x points and red is 3x points (they multiplicatively stack)."
@@ -126,7 +126,7 @@ class WordRacerSession:
         await self.send_round_table(f"- Round {self.level+1} over! \n Round scores:")
         if self.level in [1,2]:
             await self.send_table("Total scores so far:")
-        
+
         table = ""
         max_len = max(map(len, self.valid_words))
         for word, score in self.valid_words.most_common():
@@ -139,7 +139,7 @@ class WordRacerSession:
                 table = ""
         if table != "":
             await self.ctx.send(box(table, lang="diff"))
-    
+
     async def timer_task(self):
         section_period = _ROUND_TIME/_ROUND_SECTIONS
         reveal = _ROUND_SECTIONS - 1
@@ -172,8 +172,8 @@ class WordRacerSession:
         self.scores[message.author] += self.valid_words[guess]
         self.round_scores[message.author] += self.valid_words[guess]
         self.reaction_queue.append((message, "\N{WHITE HEAVY CHECK MARK}"))
-        return 
-        
+        return
+
     async def end_game(self):
         """End the game and display scores."""
         if self.scores:
@@ -187,7 +187,7 @@ class WordRacerSession:
         for user, score in self.scores.most_common():
             table += f"+ {str(user).ljust(max_len+2)}{score}\n"
         await self.ctx.send(box(table, lang="diff"))
-    
+
     async def send_round_table(self, msg):
         """Send a table of round scores to the session's channel."""
         table = f"+ {msg} \n\n"
