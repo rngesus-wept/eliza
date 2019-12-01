@@ -248,7 +248,7 @@ class Trivia(commands.Cog):
         self.trivia_sessions.append(session)
         LOG.debug("New trivia session; #%s in %d", ctx.channel, ctx.guild.id)
 
-    @trivia.command(name="stop")
+    @trivia.command(name="stop", aliases=["cancel"])
     async def trivia_stop(self, ctx: commands.Context):
         """Stop an ongoing trivia session."""
         session = self._get_trivia_session(ctx.channel)
