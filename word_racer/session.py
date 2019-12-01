@@ -6,6 +6,7 @@ import discord
 import numpy as np
 import pathlib
 import re
+import time
 from PIL import Image, ImageDraw, ImageFont
 
 __all__ = ["WordRacerSession"]
@@ -24,8 +25,14 @@ _FREQ = [[142,25,66,53,218,15,42,34,168,1,8,88,44,130,124,45,1,135,180,125,50,10
 
 _BONUSES = [{}, {(0,2):2,(5,3):2}, {(0,0):3,(5,5):3}, {(0,0):3,(0,5):2,(5,0):2,(5,5):3}]
 
+
+_SHOW_BOARD_BY_MESSAGES = True
+# Settings used if _SHOW_BOARD_BY_MESSAGE is false
 _ROUND_TIME = 120
 _ROUND_SECTIONS = 6
+# Setting used if _SHOW_BOARD_BY_MESSAGE is true
+_MESSAGE_THRESHOLD_TO_POST = 15
+
 _PAUSE_BETWEEN_ROUNDS = 20
 
 
@@ -84,7 +91,8 @@ class WordRacerSession:
             # Round cleanup
             await self.finish_round()
             self.level += 1
-            await asyncio.sleep(_PAUSE_BETWEEN_ROUNDS)
+            if self.level != _LEVEL_COUNT:
+                await asyncio.sleep(_PAUSE_BETWEEN_ROUNDS)
 
         await self.end_game()
 
@@ -114,8 +122,16 @@ class WordRacerSession:
 
 
     async def reactions_handler(self):
+        messages_to_post = 0
+        time_start = time.time()
         while not self.round_finish or self.reaction_queue:
             if self.reaction_queue:
+                if _SHOW_BOARD_BY_MESSAGES:
+                    messages_to_post += 1
+                    if messages_to_post == _MESSAGE_THRESHOLD_TO_POST:
+                        messages_to_post = 0
+                        msg = f"{_ROUND_TIME-(time.time()-time_start):.2f} seconds remaining in round {self.level+1}. {len(self.valid_words)-len(self.claims)} words left to find."
+                        throw_task = self.ctx.bot.loop.create_task(self.send_round_table(msg))
                 m = self.reaction_queue.pop(0)
                 await m[0].add_reaction(m[1])
             else:
@@ -132,10 +148,16 @@ class WordRacerSession:
         for word, score in self.valid_words.most_common():
             if word in self.claims:
                 continue
-            top_unclaimed.append(word)
+            top_unclaimed.append(f"{word} ({score})")
             if len(top_unclaimed) >= 10:
                 break
-        table = f'Top unclaimed words: {", ".join(top_unclaimed)}'
+        total = sum([y for x,y in self.valid_words.items()])
+        total_count = len(self.valid_words)
+        claimed = sum([y for x,y in self.valid_words.items() if x in self.claims])
+        claim_count = len(self.claims)
+
+        table = f'Total points (words): {total} ({total_count}), Claimed: {claimed} ({claim_count}), Unclaimed: {total-claimed} ({total_count-claim_count})\n'
+        table += f'Top unclaimed words: {", ".join(top_unclaimed)}'
         table += '\n' + ('-' * len(table)) + '\n'
         for word, score in self.valid_words.most_common():
             if word not in self.claims:
@@ -151,8 +173,9 @@ class WordRacerSession:
         reveal = _ROUND_SECTIONS - 1
         while reveal:
             await asyncio.sleep(section_period)
-            msg = f"{section_period*reveal} seconds remaining in round {self.level+1}. {len(self.valid_words)-len(self.claims)} words left to find."
-            await self.send_round_table(msg)
+            if not _SHOW_BOARD_BY_MESSAGES:
+                msg = f"{section_period*reveal} seconds remaining in round {self.level+1}. {len(self.valid_words)-len(self.claims)} words left to find."
+                await self.send_round_table(msg)
             reveal -= 1
         await asyncio.sleep(section_period)
 
@@ -161,7 +184,7 @@ class WordRacerSession:
         if early_exit:
             return
         guess = message.content.lower()
-        if not re.match(r"[a-z]{3,}", guess): # check if guess is a string of letters
+        if not re.match(r"^[a-z]{3,}$", guess): # check if guess is a string of letters
             return
         if guess not in self.valid_words:
             # Wrong answer handling
@@ -197,6 +220,8 @@ class WordRacerSession:
         await self.ctx.send(box(table, lang="diff"))
     async def send_round_table(self, msg):
         """Send a table of round scores to the session's channel."""
+        if not self.round_scores:
+            return
         table = f"+ {msg} \n\n"
         max_len = max(map(lambda x: len(str(x)), self.round_scores))
         for user, score in self.round_scores.most_common():
