@@ -89,10 +89,17 @@ class WordRacerSession:
         await self.end_game()
 
     async def _send_startup_msg(self):
-        await self.ctx.send("Starting Word Racer. Find words boggle-style and gain points."
-                            " Incorrect calls are -1 point. In rounds 2-4 there are bonuses:"
-                            " blue is 2x points and red is 3x points (they multiplicatively stack)."
-                            " Good luck!")
+        penalty = ""
+        if _PENALTY_FOR_WRONG > 0:
+            plural = ""
+            if _PENALTY_FOR_WRONG > 1:
+                plural = "s"
+            penalty = f"Incorrect calls are -{_PENALTY_FOR_WRONG} point{plural}. "
+        
+        await self.ctx.send(f"Starting Word Racer. Find words boggle-style and gain points."
+                            f" {penalty}In rounds 2-4 there are bonuses:"
+                            f" blue is 2x points and red is 3x points (they multiplicatively stack)."
+                            f" Good luck!")
 
     async def run_round(self):
         timer_task = self.ctx.bot.loop.create_task(self.timer_task())
