@@ -31,7 +31,7 @@ class WordRacerSession:
         
         # feel free to experiment with this
         self.dictDir = self.dataDir/"dict/enable2k.txt"
-        self.fontDir = self.dataDir/"fonts/arialbd.ttf"
+        self.fontDir = self.dataDir/"fonts/Roboto-Medium.ttf"
 
         self.ctx = ctx
         self.output_image_path = self.dataDir / f'board-{ctx.channel.id}.png'
@@ -64,11 +64,9 @@ class WordRacerSession:
             self.valid_words = Counter()
             self.round_scores = Counter()
             self._gen_board()
-            print("board generated")
             self._get_score_dict()
-            print("words scored")
             self._gen_image()
-            await asyncio.sleep(1)
+            await asyncio.sleep(3)
 
             # send board image
             f = discord.File(str(self.output_image_path))
@@ -86,7 +84,9 @@ class WordRacerSession:
 
     async def _send_startup_msg(self):
         await self.ctx.send("Starting Word Racer. Find words boggle-style and gain points."
-                            " Incorrect calls are -1 point. Good luck!")
+                            " Incorrect calls are -1 point. In rounds 2-4 there are bonuses:"
+                            " blue is 2x points and red is 3x points (they multiplicatively stack)."
+                            " Good luck!")
 
     async def run_round(self):
         timer_task = self.ctx.bot.loop.create_task(self.timer_task())
@@ -114,16 +114,13 @@ class WordRacerSession:
         if self.level in [1,2]:
             await self.send_table("Total scores so far:")
         
-        counter = 0
         table = ""
         for word, score in self.valid_words.most_common():
-            counter += 1
-            claim = "unclaimed"
+            claim = "none"
             if word in self.claims:
                 claim = self.claims[word]
-            table += f"+ {word}\t{score}\t{claim}\n"
-            if counter == 50:
-                counter = 0
+            table += f"{word}\t{score}\t{claim}\n"
+            if len(table) > 1900:
                 await self.ctx.send(box(table, lang="diff"))
                 table = ""
         if table != "":
