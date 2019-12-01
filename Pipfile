@@ -11,6 +11,7 @@ fuzzywuzzy = "*"
 python-levenshtein = "*"
 numpy = "*"
 scikit-image = "*"
+pillow = "6.2.1"
 
 [dev-packages]
 
