@@ -231,7 +231,7 @@ class Trivia(commands.Cog):
                 )
             else:
                 trivia_dict.update(dict_)
-                authors.insert(0, (trivia_dict.pop("AUTHOR", None), len(dict_)))
+                authors.insert(0, (trivia_dict.pop("AUTHOR", None), len(dict_) - 1))
                 continue
             return
         if not trivia_dict:

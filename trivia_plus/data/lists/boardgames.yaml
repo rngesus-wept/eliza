@@ -5,51 +5,59 @@ AUTHOR: rngesus.wept
 
 ##### Genres
 "**What genre of games** is defined by the permanent alteration of otherwise reusable game components over multiple plays?":
-- Legacy
-- Legacy Games?
+- legacy games
+- legacy( games?)?
 "**What genre of games** includes spinoff campaign versions of _Scythe_, _Betrayal at House on the Hill_, and _Aeon's End_?":
-- Legacy
-- Legacy Games?
+- legacy games
+- legacy( games?)?
 "**What genre of games** is defined by the (mostly) permanent alteration of single-use sheets, along with some element of randomness?":
-- Roll & Write
-- roll (&|and) write
+- roll & write
+- roll-(and|n)-write
+- roll (&|and|'?n'?) write
 "**What genre of games** includes _Ganz Schön Clever_, _Welcome To..._, and _Yahtzee_?":
-- Roll & Write
-- roll (&|and) write
+- roll & write
+- roll-(and|n)-write
+- roll (&|and|'?n'?) write
+"**What two-word phrase** describes games like _Macao_ or _Oracle of Delphi_, wherein players tend to generate victory points for every action they take?":
+- point salad
 "**What genre of game**, named for what are seen as its most central player activities, includes _Twilight Imperium_, _Eclipse_, and _Dominant Species_?":
 - 4X
 "**What genre of game** includes _Pandemic_, _Spirit Island_, _The Mind_, and _Hanabi_?":
+- cooperative
 - Cooperative Games
-- Cooperative
 - co-?op
 "**What game genre** includes _Automobiles_, _Hyperborea_, and _War Chest_, but not _Dominion_, _Ascension_, or _Star Realms_?":
-- Bag building
+- bag building
 - Bag-?build(ing|er)
-"**What game genre** includes _Catacombs_, _Click Clack Lumberjack_ (a.k.a. _Tik Tok Woodsman), and _Jenga_?":
-- Dexterity
+"**What game genre** includes _Catacombs_, _Click Clack Lumberjack_ (a.k.a. _Tok Tok Woodsman_), and _Jenga_?":
+- dexterity
 "**What game genre** includes _Castles of Mad King Ludwig_, _Alhambra_, and _Carcassonne_?":
-- Tile laying
-- Tile-laying
+- tile-laying
+- tile laying
 "**What game mechanic** allows players to choose their actions by putting one or more pawns onto a space associated with that action, inhibiting other players from doing the same?":
-- Worker placement
+- worker placement
 "**What adversarial game mechanic** is part of the win condition in games like _Mafia_, _Monopoly_, or _Coup_, but tends to be avoided or marginalized in newer games, especially longer ones?":
-- Player elimination
+- player elimination
 "**What game mechanic** centers around the choice between taking guaranteed rewards based on visible game state, or attempting to gain more, subject to randomness?":
-- Push Your Luck
+- push your luck
 "**What game mechanic** is present in _Celestia_, _Incan Gold_, _Can't Stop_, and _King of Tokyo_?":
-- Push Your Luck
+- push your luck
+"**What game mechanic** requires players to commit to a sequence of multiple moves at once, carrying them all out even if the first move has unintended results?":
+- action programming
+- action queue
 "**What theme** is present in _Anachrony_, _Tragedy Looper_, and _Chrononauts_ (and actually informs the game mechanics instead of being slapped on)?":
-- Time travel
+- time travel
 "**What phrase** is used to describe game mechanics where a player calls out or attacks a specific other player?":
-- Take That
+- take that
+- take-that
 "**What genre of card game** has players vying to be the first to empty their hands?":
-- Card shedding
+- card shedding
 - (card-?)?shedding
 "**What genre of card game** has players taking turns to play card combinations of increasing value?":
-- Climbing
+- climbing
 "**What genre of card game** has players trying to play (or sometimes not play) the single highest card of any played, usually including a trump suit?":
-- Trick-taking
-- Trick taking
+- trick-taking
+- trick taking
 
 ##### SET
 "Think fast! (Three letters, no spaces. Enter **None** if no sets are present.) https://i.imgur.com/TeaQN9N.jpg":
@@ -171,10 +179,10 @@ AUTHOR: rngesus.wept
 "**What game** features these cards? https://i.imgur.com/9bTFkt1.jpg":
 - Terraforming Mars
 "In _Terraforming Mars_, **what amount of time** does the game describe each full round of play as representing?":
-- A generation
+- a generation
 - generation
 "Along with ocean cover and atmospheric oxygen, **what third global parameter** triggers the end of a game of _Terraforming Mars_?":
-- Temperature
+- temperature
 "In the base game of _Terraforming Mars_, building a city in **one of two locations** does not count as a city built \"ON MARS\"; name either.":
 - Phobos or Ganymede
 - Phobos
@@ -183,11 +191,11 @@ AUTHOR: rngesus.wept
 - "Through the Ages: A New Story of Civilization"
 - Through the Ages
 "In _Through the Ages: A New Story of Civilization_, **what quality** of a civilization, represented by lyre icons, determines the game's winner?":
-- Culture
+- culture
 "In _Through the Ages: A New Story of Civilization_, leaders like Julius Caesar, Napoleon Bonaparte, and Joan of Arc confer red cubes, which represent **what type of action**?":
-- Military
+- military
 "**What word** refers to the turn-by-turn selection of cards from a common pool, or to a drag-reducing technique simulated in _Flamme Rouge_ or _Formula D_?":
-- Drafting
+- drafting
 "**What game** completes this John F. Kennedy quote: \"Now the trumpet summons us again, not as a call to bear arms, though arms we need; not as a call to battle, though embattled we are -- but a call to bear the burden of a long...\"":
 - Twilight Struggle
 "**What period of American history**, from 1945 to 1989, is covered by the game _Twilight Struggle_?":
@@ -195,7 +203,8 @@ AUTHOR: rngesus.wept
 "**What country**'s name has been redacted from this _Twilight Struggle_ card? https://i.imgur.com/iFBg1FC.jpg":
 - Poland
 "**What three words** have been redacted from this card, which refers to a work released in 1964? https://i.imgur.com/Zhav7qN.jpg":
-- To Stop Worrying
+- "\"To Stop Worrying\""
+- to stop worrying
 "**What 1983 movie** title is also the name of this card? https://i.imgur.com/yv1mFA4.jpg":
 - Wargames
 - War Games
@@ -219,30 +228,30 @@ AUTHOR: rngesus.wept
 # ----------------------------------------------
 # --- Brass, Twilight Imperium, Gaia Project, Scythe, Great Western Trail
 "The board game _Brass_ takes its name from Yorkshire slang for **what**? (As in \"Where there's muck, there's brass.\")":
-- Money
+- money
 "Upon publication of its sequel, _Brass_ gained the name of an industrial city both for its original incarnation and for its sequel. Name **either city**.":
 - Lancashire or Birmingham
 - Lancashire
 - Birmingham
 "**What two commodities** are represented by black and orange cubes in _Brass_?":
-- Iron and Coal
-- Iron,? Coal
-- Coal and Iron
-- Coal,? Iron
+- iron and coal
+- iron,? coal
+- coal and iron
+- coal,? iron
 "**What game** is this player mat set up for? https://i.imgur.com/4LXlU3t.jpg":
 - "Brass: Birmingham"
 - Brass Birmingham
 "In the second half of _Brass_, the industrial network is dominated by rails, which supercede **what previous means of transportation**?":
-- Canal
-- Canals
+- canal
+- canals
 "**Who designed** _Steam_, _Railways of the World_, and _A Few Acres of Snow_?":
 - Martin Wallace
 - Wallace
 "**What game**, whose fourth edition was released in 2017, has an estimated play time of 4 to 8 hours and a space opera theme?":
 - Twilight Imperium
 "_Twilight Imperium_'s Hacan race most resemble **what terrestial creature**?":
-- Lion
-- Lions
+- lion
+- lions
 "**What game** is shown near its end in this picture? https://i.imgur.com/usAA9rS.jpg":
 - Twilight Imperium
 "_Twilight Imperium_'s gargantuan War Suns are an homage to what famous fictional spacecraft?":
@@ -259,8 +268,8 @@ AUTHOR: rngesus.wept
 - Jamie Stegmaier
 - Stegmaier
 "In _Scythe_, points are mainly scored by completing objectives, controlling hexes, and holding resources. **What other measure** of their faction's success determines the value of these assets?":
-- Popularity
-- Popular
+- popularity
+- popular
 "As of the end of 2018, two faction-personality pairings are banned in competitive _Scythe_ play. **Name either** of the involved fake Eastern European factions.":
 - Rusviet or Crimea
 - Rusviet
@@ -284,8 +293,8 @@ AUTHOR: rngesus.wept
 "Identify the game: In the land of **[game name]** dwell 14 different peoples in 7 landscapes... to develop and grow, they must terraform neighboring landscapes into their home environments in competition with the other groups.":
 - Terra Mystica
 "In _Terra Mystica_, Alchemists and Darklings are native to **what type of terrain**, also represented in a popular card game?":
-- Swamp
-- Swamps
+- swamp
+- swamps
 "**What game** is shown in this picture? https://i.imgur.com/xp4FeiT.jpg":
 - Terra Mystica
 "**What 2017 cooperative game** is often described as taking the opposite perspective as _Settlers of Catan_?":
@@ -293,9 +302,7 @@ AUTHOR: rngesus.wept
 "**What game** is shown in this picture? https://i.imgur.com/SMJrKmQ.jpg":
 - Spirit Island
 "In _Spirit Island_, players get access to cards like those depicted by accruing enough of **what resource**, represented by the symbols around the tally marks? https://i.imgur.com/Ubx9Blc.jpg":
-- Fear
-"**What two-word phrase** describes games like _Macao_ or _Oracle of Delphi_, wherein players tend to generate victory points for every action they take?":
-- Point Salad
+- fear
 "**What numbered series of games**, whose name comes from Latin for a common game component, includes _Ra_, _Puerto Rico_, and _In the Year of the Dragon_?":
 - Alea Big Box
 - Alea
@@ -318,7 +325,7 @@ AUTHOR: rngesus.wept
 - 7 Wonders Duel
 - Seven Wonders Duel
 "In the title of expansion _Concordia: Salsa_, \"salsa\" refers to **what added commodity**?":
-- Salt
+- salt
 "In _Concordia_, cards that score 2 points for each type of commodity your network can produce are associated with **what Roman diety of merchants**?":
 - Mercury
 - Mercurius
@@ -336,44 +343,46 @@ AUTHOR: rngesus.wept
 # ------------------------------------------------------
 # --- Brass: L, Viticulture, Arkham Horror LCG, Puerto Rico, Feast for Odin
 "_Brass: Lancashire_ concerns the industrialization of Britain and the production of **what material for consumer goods**?":
-- Cotton
+- cotton
 "**What port city**'s name has been redacted from this image? https://i.imgur.com/BggrRtI.jpg":
 - Liverpool
 "**What product** is the main focus of _Viticulture_?":
-- Wine
+- wine
 "**What region in Italy** provides not only the setting of _Viticulture_ but the name of its first expansion?":
 - Tuscany
 "**What word,** redacted from this _Viticulture_ card, refers to someone who studies fermentation? https://i.imgur.com/OByYYfp.jpg":
-- Zymologist
+- "\"zymologist\""
+- zymologist
 "**What word** from the title of this card's game **refers to damage done** to the resource represented by the blue brain? https://i.imgur.com/YAanoXk.png":
-- Horror
+- horror
 "**What three-word phrase,** trademarked by Fantasy Flight Games, refers to collectible card games whose regular releases come in non-random packs?":
 - Living Card Game
 "The fictional city of Carcosa features prominently in **what play-within-a-story,** conceived by Robert Chambers and later incorporated into H. P. Lovecraft's work?":
 - The King in Yellow
 - King in Yellow
 "In _Puerto Rico_, **what euphemism** refers to the brown disks placed into plantations, quarries, and buildings to make them productive?":
-- Colonists
-- Colonist
+- colonists
+- colonist
 "In _Puerto Rico_, **what product** is associated with blue barrels and buildings?":
-- Indigo
+- indigo
 "**What game's** player board is shown in this picture? https://i.imgur.com/QcIzG4i.jpg":
 - Puerto Rico
 "**What designer**'s oeuvre includes _Bohnanza_, _Patchwork_, and _Agricola_?":
 - Uwe Rosenberg
 - Rosenberg
 "**What player role** is indicated by the moose figurine in _A Feast for Odin_, the dinosaur figurine in _Evolution_, and the knife in _Dead of Winter_?":
-- First player
-- Starting player
+- first player
+- starting player
 "**What is the name** of the blue-sailed ships in _A Feast for Odin_, used for overseas trading and emigration in the game, and cargo in real life?":
-- Knarr
-- Knarrs
+- "\"knarr\""
+- knarrs
+- knarr
 # ------------------------------------------------------------
 # --- Caverna, Orleans, Agricola, Food Chain Magnate, Mansions of Madness
 "**What game** is the predecessor of _Caverna: The Cave Farmers_, but with fewer dwarves and more starving?":
 - Agricola
 "In _Caverna: The Cave Farmers_, **what resource** does the Cuddle Room provide additional space for?":
-- Sheep
+- sheep
 "**What game** is shown in this picture? https://i.imgur.com/AS7SCpT.jpg":
 - "Caverna: The Cave Farmers"
 - Caverna
@@ -381,17 +390,18 @@ AUTHOR: rngesus.wept
 - Orléans
 - Orleans
 "In _Orléans_, if a player is required to pay something to an event and cannot, **what is the name of the penalty** they become subject to?":
-- Torture
+- torture
 "**What farming simulation game** offers variability between games through varying decks of Minor Improvements and Occupations?":
 - Agricola
 "In Latin, what does _Agricola_ mean?":
-- Farmer
+- "\"farmer\""
+- farmer
 "**What annual game award** was split twice, in 2011 and 2012, to accommodate different tiers of game complexity?":
 - Spiel des Jahres
 "In this picture, **what do the blue discs represent**? https://i.imgur.com/qxSqjiZ.jpg":
-- Workers
-- People
-- Family( members)
+- workers
+- people
+- family( members)
 "**What game**'s cards are shown in this picture? https://i.imgur.com/v9WMI0Z.jpg":
 - Food Chain Magnate
 "**What Dutch board game publisher** is known for deep, complicated games that look a little too much like prototypes for how they're priced?":
@@ -400,30 +410,30 @@ AUTHOR: rngesus.wept
 - having a garden
 - Garden
 "Of the various foods and drinks that can be sold in _Food Chain Magnate_, **what does the green bottle represent**?":
-- Beer
+- beer
 "**What additional device,** not included with the game, is required to play _Mansions of Madness_, _Chronicles of Crime_, and _XCOM: The Board Game_ (and strongly recommended for _Alchemists_)?":
-- Smartphone
-- Phone
-- App
-- Phone app
+- a smartphone
+- (smart)?phone
+- app
+- phone app
 "**What is the name** of the distorted five-pointed star shown in many of Fantasy Flight's _Arkham Horror_ universe releases? https://i.imgur.com/ZqDfl9E.png":
 - Elder Sign
 "Of _Mansions of Madness_'s various Insanity effects, only one compels player action outside of the game mechanics. **What does it prohibit** the affected player from doing?":
-- Speaking
-- Talk(ing)?
-- Speak
+- speaking
+- talk(ing)?
+- speak
 # ----------------------------------------------------------
 # --- Wingspan, Blood Rage, KD:M, Power Grid, Mechs vs Minions
 "**What engine-building game** sees players paying for cards with invertebrates, seeds, fish, fruit, and rodents?":
 - Wingspan
 "In _Wingspan_, birds like the American Robin, Sandhill Crane, and Tree Swallow get cards tucked under them when activated. **What real-life behavior** does this represent?":
-- Flocking
-- Flock
+- flocking
+- flock
 "In _Wingspan_, birds like the Northern Harrier, Greater Roadrunner, and Swainson's Hawk get cards tucked under them when activated. **What real-life behavior** does this represent?":
-- Hunting
-- Predat(ion|or)
-- Hunt
-- Eat(ing)? (other )?birds
+- hunting
+- predat(ion|or)
+- hunt
+- eat(ing)? (other )?birds
 "**What game** is shown in progress in this picture? https://i.imgur.com/9qMQEQy.jpg":
 - Wingspan
 "**What mythical entity** is at the center of _Blood Rage_'s world map?":
@@ -445,26 +455,23 @@ AUTHOR: rngesus.wept
 "**What game** is shown in progress in this picture? https://i.imgur.com/HPcjiwH.jpg":
 - Power Grid
 "In _Power Grid_, **what resource** do the red cylinders represent? https://i.imgur.com/cLSZe30.jpg":
-- Nuclear fuel
-- Nuclear
-- Radioactive
+- nuclear fuel
+- nuclear
+- radioactive
 "In _Power Grid_, **what resource** do the black cylinders represent? https://i.imgur.com/cLSZe30.jpg":
-- Oil
+- oil
 "**What city name** is redacted from this picture? https://i.imgur.com/WiSwuFU.jpg":
 - Philadelphia
 "**What other, more popular game** was published by the same company as _Mechs vs. Minions_?":
 - League of Legends
-"**What game mechanic** requires players to commit to a sequence of multiple moves at once, carrying them all out even if the first move has unintended results?":
-- Action programming
-- Action queue
 "**What game** is shown in progress in this picture? https://i.imgur.com/HteOdbW.jpg":
 - Mechs vs. Minions
 - Mechs vs?\.? Minions
 # -----------------------------------------------------------------
 # --- SW Imperial Assault, Tzolkin, Root, Eclipse, Azul
 "**What creature**, which first appeared in _Attack of the Clones_, is depicted by these figurines? (singular okay) https://i.imgur.com/GQ7F6vh.jpg":
-- Nexu
-- Nex(us|i|es|a)
+- a nexu
+- Nex(us|i|es|a|u)
 "**Star Wars: Imperial Assault**'s combat system is largely copied from **what previous fantasy (flight) game**?":
 - "Descent: Journeys in the Dark"
 - Descent
@@ -474,7 +481,7 @@ AUTHOR: rngesus.wept
 - "Tzolk'in: The Mayan Calendar"
 - "Tzolk'?in(:? The Mayan Calendar)?"
 "**What resource** is required to pay your workforce in _Tzolk'in_?":
-- Corn
+- corn
 "**What 2018 game** features asymmetric rules and victory conditions for warring clans of woodland creatures?":
 - Root
 "**What game**'s cards are shown in this picture? https://i.imgur.com/skxukcn.png":
@@ -486,8 +493,8 @@ AUTHOR: rngesus.wept
 "_Azul_'s title refers to a distinctive style of ceramic tile from **what country**?":
 - Portugal
 "**What is the name** of these ceramic tiles which inspired the theme of _Azul_? https://i.imgur.com/IyZRrbF.png":
-- Azulejos
-- Azulejo
+- "\"azulejo\""
+- azulejos?
 "**What game**'s components are shown in this picture? https://i.imgur.com/KCOIiKd.png":
 - Azul
 # -----------------------------------------------------------------------
@@ -499,7 +506,7 @@ AUTHOR: rngesus.wept
 "**What game** is shown in this picture? https://i.imgur.com/mGdWbw5.jpg":
 - Le Havre
 "In _Le Havre_, **what is the upgraded version** of the basic resource Coal?":
-- Coke
+- coke
 "**What game** is shown in this picture? https://i.imgur.com/M2zAU6W.jpg":
 - The Voyages of Marco Polo
 - Voyages of Marco Polo
@@ -521,13 +528,14 @@ AUTHOR: rngesus.wept
 - non-?perishable
 - (don't|do not) .*\b(rot(ten)?|spoil(ed)?)
 "In _Robinson Crusoe_, **what item** improves the effects of taking the Rest action?":
-- Bed
+- a bed
+- bed
 "**What modern-day country** roughly corresponds to the region the Romans named \"Caledonia\"?":
 - Scotland
 "**What game** is shown in this picture? https://i.imgur.com/Af6UDxV.jpg":
 - Clans of Caledonia
 "In _Clans of Caledonia_, **name a good** that can only be obtained by import.":
-- Cotton, Tobacco, or Sugarcane
+- cotton, tobacco, or sugarcane
 - (cotton|tobacco|sugar ?cane)
 # -------------------------------------------------------------------------
 # --- Android: Netrunner, Anachrony, Race for the Galaxy
@@ -550,13 +558,14 @@ AUTHOR: rngesus.wept
 "**What game's** components are shown in this picture? https://i.imgur.com/0vwLTNq.jpg":
 - Anachrony
 "In _Anachrony_, players may take small loans of various resources. If they fail to pay back these loans, **what type of token** do they risk accruing?":
+- paradox tokens
 - Paradox
 - Paradoxes
 - Anomal(y|ies)
 "**What material**, represented in _Anachrony_ by purple cubes, shares its name with a hypothetical zeroth element of the periodic table and the theoretical matter at the core of certain stars?":
-- Neutronium
+- neutronium
 "**What apocalpytic event** comes both before and after the events of _Anachrony_?":
-- Meteor strike
+- meteor strike
 - (Meteor|asteroid)
 "**What card's art** is shown in this picture? https://i.imgur.com/aCZH4GG.png":
 - Galactic Trendsetters
@@ -574,17 +583,18 @@ AUTHOR: rngesus.wept
 "**What country** is Arle in?":
 - Germany
 "In _Fields of Arle_, **what type of terrain** must players dehydrate to cut peat and later convert into farmland?":
-- Moor
-- Moors
+- moors
+- moor
 "**What profession** builds vehicles in _Fields of Arle_ and increases cart space in _Istanbul_?":
-- Wainwright
+- wainwright
 "**What game** is shown in this picture? https://i.imgur.com/OI9iVFY.jpg":
 - Fields of Arle
 "**What game** is shown in this picture? https://i.imgur.com/2ZBWe7l.jpg":
 - Dominant Species
 "In _Dominant Species_, **what ecological event** converts other biomes to Tundra?":
-- Glaciation
+- glaciation
 "The events of _Dominant Species_ occur around 90,000 BCE, during **what geological epoch**?":
+- the Pleistocene
 - Pleistocene
 "**What country** is Caylus in?":
 - France
@@ -599,10 +609,11 @@ AUTHOR: rngesus.wept
 "In _Aeon's End_, **what perpetually besieged city** represents one of the three failure conditions for the players?":
 - Gravehold
 "**What mechanic or action**, present in the vast majority of other deck-builders, is almost completely absent in _Aeon's End_?":
-- Shuffling
+- shuffling
 - shuffle
 "In _Aeon's End_, **what term** is used on the generic Nemesis cards to indicate that a Bad Thing happens, the details of which are specified on each Nemesis' board separately?":
-- Unleash
+- "\"Unleash\""
+- unleash
 # Trajan, Teotihuacan, Too Many Bones
 # Architects of the West Kingdom, Star Wars XWing, Raiders of the North Sea, TIME Stories
 # ------------------------------------------------------------------------------------------
@@ -638,9 +649,11 @@ AUTHOR: rngesus.wept
 - Lee Sedol
 - (I|Ri|Lee) Se-?Dol
 "**What Japanese Go term** for having some form of initiative or priority has the literal translation 'front hand'?":
-- Sente
+- "\"Sente\""
+- sente
 "**What Japanese Go term** for threatening a capture is also the name of a game console producer from the 1970s?":
-- Atari
+- "\"Atari\""
+- atari
 "**What game** is being played in this picture? https://i.imgur.com/1EULjV9.jpg":
 - Go
 - baduk
@@ -652,9 +665,9 @@ AUTHOR: rngesus.wept
 - 1993
 - 93
 "**What _Magic: The Gathering_ mechanic**, removed in 2010, penalized players for generating more resources than they could spend?":
-- Mana burn
+- mana burn
 "**What is the name**, in _Magic: The Gathering_, of the thing that _Android: Netrunner_ calls the Heap or Archives?":
-- Graveyard
+- "\"graveyard\""
 "In 2002, Mike Rosewater wrote an article identifying three major archetypes among _Magic: The Gathering_ playstyles; **name one**.":
 - Johnny, Spike, or Timmy
 - (johnny|spike|timmy)
@@ -689,13 +702,14 @@ AUTHOR: rngesus.wept
 - Catan
 - Settlers of Catan
 "In _Catan_, victory points can shift from one player to another due to a change in who has the largest army and **what other objective**?":
-- Longest road
+- the longest road
+- longest road
 "In 2016, the publishing rights for _Catan_ changed hands in a bid by its then-publisher to stay afloat. **Name the company** that currently publishes _Catan_, **or the company** that shut down just two years after it sold the right to do so.":
 - Mayfair Games (previous publisher) or Asmodee (current publisher)
 - Mayfair( Games)?
 - Asmodee
 "**What animal** is a resource in _Catan_?":
-- Sheep
+- sheep
 "Assuming the use of fair dice, **what are the chances** of any single die roll causing the Robber to move in _Catan_? (Simplified fraction, please)":
 - "1/6"
 "**What game** is the origin of the word \"meeple\", which has come to replace \"pawn\" in describing any non-unique wooden piece representing a human and having human features?":
@@ -705,27 +719,30 @@ AUTHOR: rngesus.wept
 "**What game** is shown at its end in this picture? https://i.imgur.com/6r58ZJh.jpg":
 - Carcassonne
 "**What item** was featured an ill-received _Carcassonne_ expansion that attempted to add an action/dexterity mechanic to the game?":
-- Catapult
+- a catapult
+- catapult
 "In the base game of _Carcassonne_, **what is the only tile feature** that cannot be extended by placing like tiles next to it?":
-- Monastery
-- Monasteries
+- monasteries
+- monastery
 "In _Pandemic_, players lose when they are unable to place new cubes, they are unable to draw new cards, or **what event** happens too many times?":
-- Outbreak
-- Outbreaks
+- an outbreak
+- Outbreaks?
 "The base game of _Pandemic_ also includes a semi-cooperative mode. **What adversarial role** does one player assume in this mode?":
-- Bioterrorist
+- the Bioterrorist
+- bioterrorist
 "_Pandemic_ designer Matt Leacock has released three other cooperative titles whose names all start with **what word**?":
-- Forbidden
+- "\"Forbidden\""
 "In the base game of _Pandemic_, **what South American capital** is the only city on the board that connected to only one other city?":
 - Santiago
 "In _Pandemic_, a disease goes from being \"cured\" to being \"eradicated\" when players do **what**?":
-- Remove all its cubes from the board
+- remove all its cubes from the board
 - (eliminate|remove|clear) .*\b(all|entire(ly)?|complete(ly)?)\b
 "**Name a city** represented among the player boards in _7 Wonders_ base game.":
 - Alexandria, Babylon, Ephesus, Giza, Halicarnassus, Olympia, and Rhodes
 - (Alexandria|Babylon|Ephes[ou]s|Giza|Halicarnass[ou]s|Olympia|Rhod[eo]s)
 "**What dedicated room** for writing and illumination in medieval times also enables a _7 Wonders_ player to build the Library and the Courthouse without having the appropriate resources?":
-- Scriptorium
+- a scriptorium
+- scriptorium
 "_7 Wonders_ designer Antoine Bauza also designed what cooperative game where players can't see their own cards?":
 - Hanabi
 "_7 Blunders_ is a _7 Wonders_ variant in which players vie for the lowest score instead of the highest. **What French word** describes this style of rules inversion?":
@@ -738,23 +755,25 @@ AUTHOR: rngesus.wept
 - 18
 - Eighteen
 "In _Dominion_, what greedy algorithm strategy is seen as broken by new players and a benchmark by more experienced ones?":
-- Big Money
+- "\"Big Money\""
+- big money
 "In the base _Dominion_ card set, Chapel is the only card that possesses **what valuable effect**?":
-- Trashing a card
+- trashing a card
 - (trash(ing)?|scrap(ping)?|remov(e|al))
 "While _Dominion_ is generally considered to be the archetypal deck-building game, one game, released a year earlier, features the deck-building mechanic in its combat deck, which is modified in familiar ways by the Research action. **Name the video game franchise** this latter game was based on.":
 - Starcraft
 "**What game** has 12 official expansions as of 2019, starting with _Intrigue_ in 2009 and most recently _Renaissance_ in 2018?":
 - Dominion
 "A game of Dominion is about to end when either three supply piles are empty, or when **what single supply pile** is?":
+- the Province supply
 - Province
 - Provinces
 "**What train game** shares its name with a song in which John Lennon opines, \"The girl that's driving me mad is going away\"?":
 - Ticket to Ride
 "Named with the Sanskrit word for \"circle\", what bonus is scored in _Ticket to Ride: India_ for tickets completed in two distinct ways by the same player?":
-- Mandala
+- "\"mandala\""
 "**What term**, referring to the car(s) in a train that do actual work, is used in _Ticket to Ride_ to refer to the wild cards?":
-- Locomotive
+- "\"locomotive\""
 "**What city's name** has been redacted from this Ticket to Ride board? https://i.imgur.com/kMwgCFo.png":
 - Bucharest
 - Bucuresti
@@ -769,12 +788,14 @@ AUTHOR: rngesus.wept
 "**What game** is being played in this picture? https://i.imgur.com/Hhhlrwk.jpg":
 - Codenames
 "In _Codenames_, **what role** is given to the single word in the grid that, if selected, causes the selecting team to lose immediately?":
-- Assassin
+- the assassin
+- assassin
 # +2 Codenames questions
 # ---------------------------------------------------------------------------
 # ---King of Tokyo, Love Letter, Citadels, Munchkin, Forbidden Island, Arkham Horror
 "_King of Tokyo_ is themed after **what genre of movie**, named for its gargantuan city-destroying creatures?":
-- Kaiju
+- Kaiju movies
+- kaiju
 "**What game** is shown in this picture? https://i.imgur.com/eHFU820.jpg":
 - King of Tokyo
 "The designer of _King of Tokyo_ is better known for his work on **what card game**?":
@@ -804,42 +825,44 @@ AUTHOR: rngesus.wept
 - Steve Jackson Games
 - Steve Jackson
 "**What behavior** was cheekily permitted in original printings of _Munchkin_ rules, but retracted (in 2010) when its player base turned out to be full of sweaty tryhards?":
-- Cheating
+- cheating
 "**What game**'s tiles are shown in this picture? https://i.imgur.com/2WlSVtF.jpg":
 - Forbidden Island
 "To win _Forbidden Island_, players must retrieve four relics and then rendevous on **what tile**?":
 - Fools' Landing
 - Fool'?s Landing
 "In _Forbidden Island_, **what threat** do players face?":
-- Flooding
+- flooding
 "**What game** is the namesake of the Fantasy Flight game universe that includes _Final Hour_, _Elder Sign_, and _Mansions of Madness_?":
 - Arkham Horror
 "**What animal** is shown on the _Arkham Horror_ board in this picture? https://i.imgur.com/fAXEasO.jpg":
-- Bearded dragon
-- Bearded lizard
+- a bearded dragon
+- Bearded (lizard|dragon)
 - Pogona
 "**What is the more common term** for the beings _Arkham Horror_ refers to as \"Ancient Ones\"?":
-- Elder Gods
-- elder god
+- "\"Elder God\""
+- elder gods?
 "**What name** is associated with educational institutions in the Cthulhu mythos, and was also used for a 2019 puzzle hunt in the greater Boston area?":
 - Miskatonic
 "In _Arkham Horror_ and the Cthulhu mythos, Miskatonic University is named after **what nearby (fictional) geographic feature**?":
-- River
+- a river
+- river
 "**What unique tome in _Arkham Horror_** is also a relic in _Slay the Spire_, an activated item in _The Binding of Isaac_, and a research option in _Crusader Kings II_?":
-- Necronomicon
+- "the _Necronomicon_"
+- necronomicon
 # --------------------------------------------------------------------------------
 # --- Bohnanza, Hanabi, Lost Cities, Betrayal at the House on the Hill, Coup
 "**What good** is the centerpiece of trade in _Bohnanza_?":
-- Beans
+- beans
 "**What kind of food** is represented on this _Bohnanza_ card? https://i.imgur.com/0gj2H8n.png":
-- Black-Eyed Bean
+- a black-eyed bean
 - Black[- ]?Eyed (Beans?|Peas?)
 "**What constraint**, unusual in card games, is placed on _Bohnanza_ players?":
-- their cards cannot be reordered
+- that their cards cannot be reordered
 - (can't|cannot) .*(reorder(ed)?|rearranged?|changed?)
 - (cards|hands) .*(ordered|in order)
 "\"Hanabi\" (fireworks) is also a compound word in Japanese; **what are the English translations** of its constituent parts?":
-- Flower and fire
+- "\"flower\" and \"fire\""
 - flower( and | |, ?| ?/ ?)fire
 - fire( and | |, ?| ?/ ?)flower
 "_Hanabi_'s original French release also came with rules for playing **what other game** with the same cards, named after the Japanese art of flower arrangement?":
@@ -854,7 +877,8 @@ AUTHOR: rngesus.wept
 - Baldur's Gate
 - baldurs gate
 "In _Betrayal at House on the Hill_, **what term** is used for a scenario in which the titular betrayal happens?":
-- Haunt
+- "a \"haunt\""
+- haunt
 "**What game** is shown in this picture? https://i.imgur.com/rxfPQia.jpg":
 - Betrayal at House on the Hill
 - Betrayal
@@ -864,7 +888,8 @@ AUTHOR: rngesus.wept
 "**What country** does _Coup_ take place in?":
 - Italy
 "**What character role** in _Coup_ blocks assassination attempts?":
-- Contessa
+- the Contessa
+- contessa
 "_Coup_ takes place in the same universe as **what social deduction game**?":
 - Resistance
 "**What fictional currency** is used in _Coup_?":
@@ -876,9 +901,10 @@ AUTHOR: rngesus.wept
 "**What game**'s components are staged in this picture? https://i.imgur.com/j0wDUp5.jpg":
 - Takenoko
 "In _Takenoko_, **what is the in-game explanation** for the effects players gain from die rolls?":
-- Weather
+- the weather
+- weather
 "In _Sushi Go_, the value of the next card drafted is tripled by **what condiment**?":
-- Wasabi
+- wasabi
 "In addition to being a type of sushi, _nigiri_ also refers to a method of first player selection in **what game**?":
 - Go
 - baduk
@@ -887,13 +913,13 @@ AUTHOR: rngesus.wept
 "**What game** is shown in this picture? https://i.imgur.com/G1G3tqw.jpg":
 - Hive
 "Unlike most other abstract strategy games, _Hive_ is played without **what kind of component**?":
-- A board
+- a board
 - board
 "In _Hive_, **which piece** do players try to immobilize to win the game?":
 - the queen
 - queen
 "**What** does 'Alhambra' mean in Arabic? (insofar as the word is a reasonable transcription of its actual Arabic form)":
-- The Red One
+- the Red One
 - red one
 "**What country** is the Alhambra in?":
 - Spain
@@ -906,13 +932,14 @@ AUTHOR: rngesus.wept
 # -----------------------------------------------------------------------------------
 # Chess, Monopoly, Bang, Shadows over Camelot, Scrabble, Kingdomino, Machi Koro
 "In _Chess_, the algebraic notation 'O-O-O' refers to **what move** being performed?":
+- queenside castling
 - Queenside Castle
 - queen('s)?[- ]side castl(e|ing)
 "In _Chess_, the term 'piece' conventionally excludes **what most numerous physical piece** on the board?":
-- Pawns
-- Pawn
+- pawns
+- pawn
 "In _Chess_, **what Italian term** meaning 'little flank' refers to a one-space Bishop move that positions it on one of the main diagonals of the board?":
-- Fianchetto
+- fianchetto
 - fianch?ett?[ao]
 "**Who** is currently considered the strongest active chess player in the world? (full name required)":
 - Magnus Carlsen
@@ -920,26 +947,36 @@ AUTHOR: rngesus.wept
 "The word 'check' takes all its modern meanings from its _Chess_ definition. Thus, the word's roots are in **what language**?":
 - Persian
 "In _Monopoly_, **what process** happens (or at least _should_) after a player lands on a property and declines to purchase it at the listed price?":
-- Auction
+- an auction
+- auction
 "**What was the name** of _Monopoly_'s predecessor?":
 - The Landlord's Game
 - Landlord'?s Game
 "**What year** was _Monopoly_ first published?":
 - 1933
+"Articles on _Monopoly_ strategy advise spiteful board gamers to hoard **what component-limited item**?":
+- houses
+- house
+"**Name either** of the two priciest properties in Monopoly.":
+- Park Place or Boardwalk
+- (park place|boardwalk)
 # -----------------------------------------------------------------------------------
 # Saboteur, Forbidden Desert, RoboRally, Smash Up, San Juan, Tsuro, For Sale
+
 # -----------------------------------------------------------------------------------
 # --- Blokus, Colt Express, Cards Against Humanity, Elder Sign, Camel Up
 "**What (mathematical?) name** refers to the type of shapes placed on the board during a game of _Blokus_?":
+- "\"polyomino\""
 - Polyominoes
 - Polyominos?
 # -----------------------------------------------------------------------------------
 # Flash Point, Guillotine, ONUW, Survive: Atlantis, Hey That's My Fish, Ghost Stories
 "In _Flash Point_, **what profession** are the players?":
-- Firefighters
+- firefighter
+- firefighters
 - fire ?fighters?
 "The term 'flash point' refers to the temperature where a liquid becomes a fire hazard due to the presence of **what**?":
-- Vapor
+- vapor
 - evaporation
 - vapou?rs?
 "**What game** is shown in this picture? https://i.imgur.com/sQA7oDV.jpg":
@@ -950,7 +987,7 @@ AUTHOR: rngesus.wept
 - Ted Alspach
 - Alspach
 "In _Hey! That's My Fish!_, **what animal** are all the players?":
-- Penguins
+- penguins
 - Penguin
 # -----------------------------------------------------------------------------------
 # UNO, Kingsburg, Kingdom Builder, Acquire, Tokaido, Bang! Dice, Thurn and Taxis
@@ -978,9 +1015,9 @@ AUTHOR: rngesus.wept
 "In _Innovation_, **what Age 4 technology** punishes players who have Castle icons left visible from the previous Ages?":
 - Gunpowder
 "In _Innovation_, **which card color** is most associated with advances related to food and health?":
-- Yellow
+- yellow
 "In _Innovation_, **which card color** is most associated with advances related to politics and law?":
-- Purple
+- purple
 # Castle Panic, Concept, Scotland Yard, Tiny Epic Galaxies, Quarriors
 
 
@@ -1007,12 +1044,12 @@ AUTHOR: rngesus.wept
 - Eshu
 - Esu
 "**What game** is shown in progress in this picture? https://i.imgur.com/OWmIYGj.jpg":
-- The Great Zimbabwe
+- the Great Zimbabwe
 - Great Zimbabwe
 "**What game** is shown in progress in this picture? https://i.imgur.com/BLju6pH.jpg":
 - War Chest
 "**What is the victory condition** for a 1v1 game of _War Chest_?":
-- Control 6 control points
+- to control 6 control points
 - Control (6|six)
 # ---------------------------------------------------------------------------------
 # --- Key Market, Ginkgopolis, Thunderstone Quest, Dinosaur Island, Calimala
@@ -1020,7 +1057,7 @@ AUTHOR: rngesus.wept
 "The game _Gùgōng_ concerns political machinations in **what titular location**?":
 - Forbidden City
 "**What term for bribery** could not possibly be happening in _Gùgōng_, as the Chinese of the time had no particular exposure to Latin?":
-- Quid pro quo
+- quid pro quo
 "In _Calimala_, players contribute to the construction of cathedrals Santa Croce, San Minato, and Santa Maria del Fiore in **what Italian city**?":
 - Florence
 # ---------------------------------------------------------------------------------
@@ -1039,19 +1076,22 @@ AUTHOR: rngesus.wept
 # ---------------------------------------------------------------------------------
 # --- Bridge, Fields of Green, Rococo, TOKYO METRO, Heaven & Ale, IKI
 "In _Bridge_ and _Mahjong_, **what designations** are used to refer to individual players or seats?":
-- Cardinal directions
-- Compass directions
+- cardinal directions
+- compass directions
 "**What phase** of a _Bridge_ game happens before any actual cardplay?":
-- Auction
+- the auction
+- auction
 "**What form of _Bridge_** is played in teams of four, with each team eventually playing both sides of every hand?":
-- Duplicate
+- "_duplicate_ bridge"
+- duplicate
 "Contracts in _Bridge_ may be in one of the four standard card suits, or in **what fifth non-suit**?":
-- No-trump
+- no-trump
 - no-?trump
 "In _Bridge_, **what term** refers to the player who sits out the cardplay portion of each hand?":
-- Dummy
+- "\"dummy\""
+- dummy
 "In _Rococo_, players aim to produce and present **what good** at a ball?":
-- Dresses
+- dresses
 - Dress
 "The Rococo style originated and became popular during the reign of **what French monarch**?":
 - Louis XV
@@ -1059,7 +1099,8 @@ AUTHOR: rngesus.wept
 # ---------------------------------------------------------------------------------
 # Vindication, Gentes, Letter Jam, Signorie, Carson City, Tyrants of the Underdark
 "In _Tyrants of the Underdark_, players advance the interests of clans of **what fictional race**?":
-- Drow
+- the drow
+- drow
 # ---------------------------------------------------------------------------------
 # Mini Rails, Pulsar 2849, Macao, Lowlands, Staufer Dynasty, Medina, New York Slice
 # ---------------------------------------------------------------------------------
@@ -1067,10 +1108,10 @@ AUTHOR: rngesus.wept
 # ---------------------------------------------------------------------------------
 # --- Other
 "**Name one of the three disasters** that precipitated the events of _Lisboa_.":
-- Earthquake, tsunami, fire
+- an earthquake, a tsunami, or a fire
 - (earthquake|tsunami|fire)
 "**What type of aperiodic tiling** inspired this game design? https://i.imgur.com/EiC8qYJ.jpg":
-- Penrose tiles
+- Penrose tiling
 - Penrose( til(es|ing))?
 
 ##### "Classics"
