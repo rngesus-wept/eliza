@@ -27,11 +27,13 @@ AUTHOR: rngesus.wept
 - Bag-?build(ing|er)
 "**What game genre** includes _Catacombs_, _Click Clack Lumberjack_ (a.k.a. _Tik Tok Woodsman), and _Jenga_?":
 - Dexterity
-"**What common game mechanic** allows players to choose their actions by putting one or more pawns onto a space associated with that action, inhibiting other players from doing the same?":
+"**What game mechanic** allows players to choose their actions by putting one or more pawns onto a space associated with that action, inhibiting other players from doing the same?":
 - Worker placement
 "**What adversarial game mechanic** is part of the win condition in games like _Mafia_, _Monopoly_, or _Coup_, but tends to be avoided or marginalized in newer games, especially longer ones?":
 - Player elimination
-"**What game mechanic** uses die rolls to determine an outcome, and permits players a limited number of rerolls of any subset of those dice?":
+"**What game mechanic** centers around the choice between taking guaranteed rewards based on visible game state, or attempting to gain more, subject to randomness?":
+- Push Your Luck
+"**What game mechanic** is present in _Celestia_, _Incan Gold_, _Can't Stop_, and _King of Tokyo_?":
 - Push Your Luck
 "**What theme** is present in _Anachrony_, _Tragedy Looper_, and _Chrononauts_ (and actually informs the game mechanics instead of being slapped on)?":
 - Time travel
@@ -271,7 +273,7 @@ AUTHOR: rngesus.wept
 - San Francisco
 - sf
 # ----------------------------------------------
-# --- War of the Ring, Spirit Island, Castles of Burgundy, 7 Wonders Duel, Concordia
+# --- War of the Ring, Terra Mystica, Spirit Island, Castles of Burgundy, 7 Wonders Duel, Concordia
 "In **what game** does one player control the armies of the Free People (along with a group of Companions with a non-military objective) and the other the Shadow Armies?":
 - War of the Ring
 "**What fictional location** is represented by this custom-made component? https://i.imgur.com/fDiILlw.jpg":
@@ -581,6 +583,8 @@ AUTHOR: rngesus.wept
 - Glaciation
 "The events of _Dominant Species_ occur around 90,000 BCE, during **what geological epoch**?":
 - Pleistocene
+"**What country** is Caylus in?":
+- France
 
 # Five Tribes, The Gallerist, Clank!, El Grande
 # Rising Sun, Eldritch Horror, Mombasa
@@ -596,7 +600,12 @@ AUTHOR: rngesus.wept
 - Unleash
 # Trajan, Teotihuacan, Too Many Bones
 # Architects of the West Kingdom, Star Wars XWing, Raiders of the North Sea, TIME Stories
+# ------------------------------------------------------------------------------------------
 # Kemet, Pandemic: Iberia, Dead of Winter, Yokohama, Stone Age
+"**What country's** name was \"Kemet\" in its native language? (Its current name is an Ancient Greek interpretation of the name of one of its cities.)":
+- Egypt
+"**What game** is shown in this picture? https://i.imgur.com/26ydczJ.jpg":
+- Kemet
 # Forbidden Stars, Everdell, Descent, Grand Austria Hotel, Alchemists
 # Champions of Midgard, Star Realms, Underwater Cities, Lorenzo il Magnifico, Legendary: Alien
 # Istanbul, Inis, Game of Thrones BG, Castles of Mad King Ludwig
@@ -892,10 +901,13 @@ AUTHOR: rngesus.wept
 - Eights
 - Crazy 8'?s
 # 6 nimmt!, Tikal, Apples to Apples, Coloretto, Spyfall, Exploding Kittens
-# Clue, Formula D, Pillars of the Earth, Diamant, Mice and Mystics, Modern Art
+# -----------------------------------------------------------------------------------
+# --- Clue, Formula D, Pillars of the Earth, Diamant, Mice and Mystics, Modern Art
 "_Pillars of the Earth_, _World without End_, and _A Column of Fire_ are all inspired by novels of the same name by **what author**?":
 - Ken Follett
 - Follett
+"_Incan Gold_ was also published under **what name**, which is French for \"diamond\"?":
+- Diamant
 # Zombicide, Zombie Dice, Ingenious, Fluxx, Battle Line, Century: Spice Road
 # Jamaica, Escape: Curse Temple, Qwirkle, Friday, Mr. Jack
 # Zombies!!!, Sentinels of the Multiverse, Saint Petersburg, Sid Meier's Civilization
