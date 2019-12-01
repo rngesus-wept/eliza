@@ -26,6 +26,7 @@ _BONUSES = [{}, {(0,2):2,(5,3):2}, {(0,0):3,(5,5):3}, {(0,0):3,(0,5):2,(5,0):2,(
 
 _ROUND_TIME = 120
 _ROUND_SECTIONS = 6
+_PAUSE_BETWEEN_ROUNDS = 20
 
 
 _PENALTY_FOR_WRONG = 1
@@ -85,7 +86,7 @@ class WordRacerSession:
             # Round cleanup
             await self.finish_round()
             self.level += 1
-            await asyncio.sleep(10)
+            await asyncio.sleep(_PAUSE_BETWEEN_ROUNDS)
 
         await self.end_game()
 
