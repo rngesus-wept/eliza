@@ -27,6 +27,9 @@ AUTHOR: rngesus.wept
 - Bag-?build(ing|er)
 "**What game genre** includes _Catacombs_, _Click Clack Lumberjack_ (a.k.a. _Tik Tok Woodsman), and _Jenga_?":
 - Dexterity
+"**What game genre** includes _Castles of Mad King Ludwig_, _Alhambra_, and _Carcassonne_?":
+- Tile laying
+- Tile-laying
 "**What game mechanic** allows players to choose their actions by putting one or more pawns onto a space associated with that action, inhibiting other players from doing the same?":
 - Worker placement
 "**What adversarial game mechanic** is part of the win condition in games like _Mafia_, _Monopoly_, or _Coup_, but tends to be avoided or marginalized in newer games, especially longer ones?":
@@ -585,9 +588,11 @@ AUTHOR: rngesus.wept
 - Pleistocene
 "**What country** is Caylus in?":
 - France
-
+# ---------------------------------------------------------------------------------------
 # Five Tribes, The Gallerist, Clank!, El Grande
+# ---------------------------------------------------------------------------------------
 # Rising Sun, Eldritch Horror, Mombasa
+
 # Battlestar Galactica, Patchwork, Troyes, Lisboa, SHCD
 # ------------------------------------------------------------------------------------
 # Russian Railroads, Roll for the Galaxy, Crokinole, Aeon's End, Tigris & Euphrates
@@ -641,15 +646,42 @@ AUTHOR: rngesus.wept
 - baduk
 - i-?go
 - wei ?qi
+# -------------------------------------------------------------------------------------------
 # Princes of Florence, Detective, That's Pretty Clever, MtG
+"**What year** was the first release of _Magic: The Gathering_?":
+- 1993
+- 93
+"**What _Magic: The Gathering_ mechanic**, removed in 2010, penalized players for generating more resources than they could spend?":
+- Mana burn
+"**What is the name**, in _Magic: The Gathering_, of the thing that _Android: Netrunner_ calls the Heap or Archives?":
+- Graveyard
+"In 2002, Mike Rosewater wrote an article identifying three major archetypes among _Magic: The Gathering_ playstyles; **name one**.":
+- Johnny, Spike, or Timmy
+- (johnny|spike|timmy)
+"_Magic: the Gathering_ occasionally publishes sets of weird, funny, and/or fourth-wall-breaking cards; **name one such set**.":
+- Unglued, Unhinged, Unstable, and Unsanctioned
+- un(glued|hinged|stable|sanctioned)
+# -------------------------------------------------------------------------------------------
 # LotR Journeys, Viticulture, Star Realms Colony Wars, Ra, Cyclades
+# -------------------------------------------------------------------------------------------
 # Shogun, Galaxy Trucker, Kanban, YINSH
+# -------------------------------------------------------------------------------------------
 # Rajas of the Ganges, Sushi Go Party, 1830: R&RB, Imperial Settlers
+# -------------------------------------------------------------------------------------------
 # Deception: Hong Kong, Lewis & Clark, Coimbra, Isle of Skye, Imperial
+# -------------------------------------------------------------------------------------------
 # Glory to Rome, Hero Realms, Secret Hitler, Bora Bora, 1960: Making
+"In real life, **who won the election** portrayed in _1960: The Making of the President_?":
+- John F. Kennedy
+- JFK
+- Kennedy
+# -------------------------------------------------------------------------------------------
 # Dungeon Petz, AoE III, Seasons, Exit: The Game, Space Alert
+# -------------------------------------------------------------------------------------------
 # Summoner Wars, Dead of Winter, Hannibal: Rome vs Carthage, Dixit, Runewars
+# -------------------------------------------------------------------------------------------
 # BattleLore, Navegador, Indonesia, Alien Frontiers, Samurai
+# -------------------------------------------------------------------------------------------
 # Fury of Dracula, Mage Wars Arena, Flamme Rouge, Antiquity
 
 ##### Top 100 Owned/Popular
@@ -802,6 +834,10 @@ AUTHOR: rngesus.wept
 "**What kind of food** is represented on this _Bohnanza_ card? https://i.imgur.com/0gj2H8n.png":
 - Black-Eyed Bean
 - Black[- ]?Eyed (Beans?|Peas?)
+"**What constraint**, unusual in card games, is placed on _Bohnanza_ players?":
+- their cards cannot be reordered
+- (can't|cannot) .*(reorder(ed)?|rearranged?|changed?)
+- (cards|hands) .*(ordered|in order)
 "\"Hanabi\" (fireworks) is also a compound word in Japanese; **what are the English translations** of its constituent parts?":
 - Flower and fire
 - flower( and | |, ?| ?/ ?)fire
@@ -823,6 +859,8 @@ AUTHOR: rngesus.wept
 - Betrayal at House on the Hill
 - Betrayal
 - Betrayal at (the )?(Haunted )?House on (the )?Hill
+"**What game**'s Kickstarter promos are shown in this picture? https://i.imgur.com/GEFIOml.jpg":
+- Coup
 "**What country** does _Coup_ take place in?":
 - Italy
 "**What character role** in _Coup_ blocks assassination attempts?":
@@ -846,6 +884,25 @@ AUTHOR: rngesus.wept
 - baduk
 - i-?go
 - wei ?qi
+"**What game** is shown in this picture? https://i.imgur.com/G1G3tqw.jpg":
+- Hive
+"Unlike most other abstract strategy games, _Hive_ is played without **what kind of component**?":
+- A board
+- board
+"In _Hive_, **which piece** do players try to immobilize to win the game?":
+- the queen
+- queen
+"**What** does 'Alhambra' mean in Arabic? (insofar as the word is a reasonable transcription of its actual Arabic form)":
+- The Red One
+- red one
+"**What country** is the Alhambra in?":
+- Spain
+"**What game**'s tiles, along with part of its real-life namesake, are shown in this picture? https://i.imgur.com/UZ6HcZI.jpg":
+- Alhambra
+"_Mysterium_, from 2015, was originally published as _Tajemnicze Domostwo_ in 2013 in **what country**?":
+- Poland
+"**What game**'s player screen is shown in this picture? https://i.imgur.com/a5X9R0x.jpg":
+- Mysterium
 # -----------------------------------------------------------------------------------
 # Chess, Monopoly, Bang, Shadows over Camelot, Scrabble, Kingdomino, Machi Koro
 "In _Chess_, the algebraic notation 'O-O-O' refers to **what move** being performed?":
@@ -867,9 +924,10 @@ AUTHOR: rngesus.wept
 "**What was the name** of _Monopoly_'s predecessor?":
 - The Landlord's Game
 - Landlord'?s Game
-# Saboteur, Forbidden Desert, RoboRally, Smash Up, San Juan, Tsuro, For Sale
 "**What year** was _Monopoly_ first published?":
 - 1933
+# -----------------------------------------------------------------------------------
+# Saboteur, Forbidden Desert, RoboRally, Smash Up, San Juan, Tsuro, For Sale
 # -----------------------------------------------------------------------------------
 # --- Blokus, Colt Express, Cards Against Humanity, Elder Sign, Camel Up
 "**What (mathematical?) name** refers to the type of shapes placed on the board during a game of _Blokus_?":
@@ -933,6 +991,8 @@ AUTHOR: rngesus.wept
 - boat
 "**What game** is shown in progress in this picture? https://i.imgur.com/H3T2rr0.jpg":
 - Keyflower
+"In 2016, _Keyflower_ got a reimplementation in a modern setting, with scoring locations like National Gallery, Royal Opera House, and Royal Albert Hall. This release was called _Key to the City -- **what city**_?":
+- London
 "Though it's an homage to fighting games in general, **what specific fighting game series** does _BattleCON_ draw its inspiration from?":
 - BlazBlue
 - Blaz Blue
@@ -961,12 +1021,17 @@ AUTHOR: rngesus.wept
 - Forbidden City
 "**What term for bribery** could not possibly be happening in _Gùgōng_, as the Chinese of the time had no particular exposure to Latin?":
 - Quid pro quo
+"In _Calimala_, players contribute to the construction of cathedrals Santa Croce, San Minato, and Santa Maria del Fiore in **what Italian city**?":
+- Florence
+# ---------------------------------------------------------------------------------
 # Dynasties: Heirate, Symphony No 9, Irish Gauge, Riverboat, First Class
-# ----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------
 # --- Broom Service, Millennium Blades, Minerva, Deus, Mottainai, Crusaders: Thy Will Be Done
 "**What card game**, also about making potions, was the predecessor to **Broom Service**?":
 - Witch's Brew
 - Witchs Brew
+"In _Millennium Blades_, players take the roles of professional players of **what fictional CCG**?":
+- Millennium Blades
 "**What two other games** are referenced by this _Millennium Blades_ card? https://i.imgur.com/V1derUH.png":
 - Race for the Galaxy and Settlers of Catan
 - (Race for the Galaxy|RftG)( and |, ?| ?/ ?| )(Settlers|Catan|Settlers of Catan)
@@ -991,10 +1056,15 @@ AUTHOR: rngesus.wept
 "The Rococo style originated and became popular during the reign of **what French monarch**?":
 - Louis XV
 - Louis (the )?fifteen(th)?
+# ---------------------------------------------------------------------------------
 # Vindication, Gentes, Letter Jam, Signorie, Carson City, Tyrants of the Underdark
-# Mini Rail, Pulsar 2849, Macao, Lowlands, Staufer Dynasty, Medina, New York Slice
+"In _Tyrants of the Underdark_, players advance the interests of clans of **what fictional race**?":
+- Drow
+# ---------------------------------------------------------------------------------
+# Mini Rails, Pulsar 2849, Macao, Lowlands, Staufer Dynasty, Medina, New York Slice
+# ---------------------------------------------------------------------------------
 # Ponzi Scheme, Council of 4, Wendake
-# ------------------------------------------------------
+# ---------------------------------------------------------------------------------
 # --- Other
 "**Name one of the three disasters** that precipitated the events of _Lisboa_.":
 - Earthquake, tsunami, fire
