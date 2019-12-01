@@ -158,7 +158,7 @@ class WordRacerSession:
 
         table = f'Total points (words): {total} ({total_count}), Claimed: {claimed} ({claim_count}), Unclaimed: {total-claimed} ({total_count-claim_count})\n'
         table += f'Top unclaimed words: {", ".join(top_unclaimed)}'
-        table += '\n' + ('-' * len(table)) + '\n'
+        table += '\n\n'
         for word, score in self.valid_words.most_common():
             if word not in self.claims:
                 continue
