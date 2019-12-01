@@ -188,10 +188,10 @@ class WordRacerSession:
 
     async def send_table(self, msg):
         """Send a table of scores to the session's channel."""
-        if not self.round_scores:
+        if not self.scores:
             return
         table = f"+ --{msg}-- \n\n"
-        max_len = max(map(lambda x: len(str(x)), self.round_scores))
+        max_len = max(map(lambda x: len(str(x)), self.scores))
         for user, score in self.scores.most_common():
             table += f"+ {str(user).ljust(max_len+2)}{score}\n"
         await self.ctx.send(box(table, lang="diff"))
