@@ -130,11 +130,19 @@ class WordRacerSession:
 
         table = ""
         max_len = max(map(len, self.valid_words))
+        top_unclaimed = []
         for word, score in self.valid_words.most_common():
-            claim = "none"
             if word in self.claims:
-                claim = self.claims[word]
-            table += f"{word.ljust(max_len+1)}{score:4} {claim}\n"
+                continue
+            top_unclaimed.append(word)
+            if len(top_unclaimed) >= 10:
+                break
+        table = f'Top unclaimed words: {", ".join(top_unclaimed)}'
+        table += '\n' + ('-' * len(table)) + '\n'
+        for word, score in self.valid_words.most_common():
+            if word not in self.claims:
+                continue
+            table += f"{word.ljust(max_len+1)}{score:4} {self.claims[word]}\n"
             if len(table) > 1900:
                 await self.ctx.send(box(table, lang="diff"))
                 table = ""
@@ -183,7 +191,9 @@ class WordRacerSession:
 
     async def send_table(self, msg):
         """Send a table of scores to the session's channel."""
-        table = f"+ {msg} \n\n"
+        if not self.round_scores:
+            return
+        table = f"+ --{msg}-- \n\n"
         max_len = max(map(lambda x: len(str(x)), self.round_scores))
         for user, score in self.scores.most_common():
             table += f"+ {str(user).ljust(max_len+2)}{score}\n"
