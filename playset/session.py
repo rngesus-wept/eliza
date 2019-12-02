@@ -96,13 +96,13 @@ class SetSession:
         early_exit = message.channel != self.ctx.channel or message.author.bot
         if early_exit:
             return False
-        guess = message.content.upper()
+        guess = message.content.upper().strip()
         if len(set(guess)) != 3:
             return False
         validLetters = _LETTERS[:3*self.board.shape[1]]
         if set(guess) - set(validLetters):
             return False
-        cards = [self.board[_LETTER_MAP[letter]] for letter in guess]
+        cards = [self.board[_LETTER_MAP[letter]] for letter in set(guess)]
         if not _is_set(cards):
             self.wrongAnswers.append(message)
             return False
