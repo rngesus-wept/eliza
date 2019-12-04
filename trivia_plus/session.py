@@ -18,7 +18,7 @@ T_ = Translator("TriviaSession", __file__)
 
 _ = lambda s: s
 _REVEAL_MESSAGES = (
-    _("I know this one! {answer}!"),
+    _("I know this one! It's {answer}!"),
     _("Easy: {answer}."),
     _("Oh really? It's {answer} of course."),
     _("Ah, sorry, I was looking for {answer}."),

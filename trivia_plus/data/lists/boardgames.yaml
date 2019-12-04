@@ -247,6 +247,8 @@ AUTHOR: rngesus.wept
 "**Who designed** _Steam_, _Railways of the World_, and _A Few Acres of Snow_?":
 - Martin Wallace
 - Wallace
+"**Identify the game**: Each of seventeen spacefaring factions offers a completely different play experience, from the wormhole-hopping Ghosts of Creuss to the Emirates of Hacan, masters of trade and economics. These races are offered many paths to victory, but only one may sit upon the throne of Mecatol Rex as the new masters of the galaxy.":
+- Twilight Imperium
 "**What game**, whose fourth edition was released in 2017, has an estimated play time of 4 to 8 hours and a space opera theme?":
 - Twilight Imperium
 "_Twilight Imperium_'s Hacan race most resemble **what terrestial creature**?":
@@ -262,7 +264,7 @@ AUTHOR: rngesus.wept
 - they're colonizable by any race
 - (any(one)?|every(one)?|all)\b(.+\b)?(inhabit(ed)?|(habit|coloniz)able|colonized?)
 - (inhabit(ed)?|(habit|coloniz)able|colonized?)\b(.+\b)?(any(one)?|every(one)?|all)
-"**What well-hyped 2016 game** has players acting as fake Eastern European factions vying for control of the lands around a mysterious factory?":
+"**Identify the game**: It is a time of unrest in 1920s Europa. The ashes from the first great war still darken the snow. The capitalistic city-state known simply as \"The Factory\", which fueled the war with heavily armored mechs, has closed its doors, drawing the attention of several nearby countries.":
 - Scythe
 "**Who designed** _Viticulture_, _Charterstone_, and _Tapestry_?":
 - Jamie Stegmaier
@@ -290,7 +292,7 @@ AUTHOR: rngesus.wept
 - War of the Ring
 "**What fictional location** is represented by this custom-made component? https://i.imgur.com/fDiILlw.jpg":
 - Mount Doom
-"Identify the game: In the land of **[game name]** dwell 14 different peoples in 7 landscapes... to develop and grow, they must terraform neighboring landscapes into their home environments in competition with the other groups.":
+"**Identify the game**: In the (fictional) land of [_the game's namesake_] dwell 14 different peoples in 7 landscapes... to develop and grow, they must terraform neighboring landscapes into their home environments in competition with the other groups.":
 - Terra Mystica
 "In _Terra Mystica_, Alchemists and Darklings are native to **what type of terrain**, also represented in a popular card game?":
 - swamp
@@ -298,6 +300,8 @@ AUTHOR: rngesus.wept
 "**What game** is shown in this picture? https://i.imgur.com/xp4FeiT.jpg":
 - Terra Mystica
 "**What 2017 cooperative game** is often described as taking the opposite perspective as _Settlers of Catan_?":
+- Spirit Island
+"**Identify the game**: In the most distant reaches of the world, magic still exists, embodied by [_title word 1_]s of the land, of the sky, and of every natural thing. As the great powers of Europe stretch their colonial empires further and further, they will inevitably lay claim to a place where [_title word 1_]s still hold power - and when they do, the land itself will fight back alongside the [_title word 2_]ers who live there."
 - Spirit Island
 "**What game** is shown in this picture? https://i.imgur.com/SMJrKmQ.jpg":
 - Spirit Island
@@ -308,6 +312,8 @@ AUTHOR: rngesus.wept
 - Alea
 "**What is the English title** of the game whose German name is _Die Bergen von Burgund_?":
 - Castles of Burgundy
+"In _Castles of Burgundy_, **what metallic resource** (which is actually the name of a plant in real life) allows players to buy exclusive black-backed tiles?":
+- silverling
 "**What designer** has a reputation for dry point-gathering games like _Trajan_, _Notre Dame_, and _Bora Bora_?":
 - Stefan Feld
 - Feld
@@ -392,6 +398,9 @@ AUTHOR: rngesus.wept
 "**What game** is shown in this picture? https://i.imgur.com/J4V5XRy.jpg":
 - Orléans
 - Orleans
+"**Identify the game**: In [_the game's namesake city_] and the area of the Loire, you can take trips to other cities to acquire coveted goods and build trading posts. You must assemble a following of farmers, merchants, knights, monks, and more to gain supremacy through trade, construction, and science in medieval France.":
+- Orléans
+- Orleans
 "In _Orléans_, if a player is required to pay something to an event and cannot, **what is the name of the penalty** they become subject to?":
 - torture
 "**What farming simulation game** offers variability between games through varying decks of Minor Improvements and Occupations?":
@@ -414,6 +423,8 @@ AUTHOR: rngesus.wept
 - Garden
 "Of the various foods and drinks that can be sold in _Food Chain Magnate_, **what does the green bottle represent**?":
 - beer
+"**Identify the game**: [A] fully cooperative, app-driven board game of horror and mystery that takes place in the same universe as _Eldritch Horror_ and _Elder Sign_. Let the immersive app guide you through the veiled streets of Innsmouth and the haunted corridors of Arkham's cursed [_titular locations_] as you search for answers and respite.":
+- Mansions of Madness
 "**What additional device,** not included with the game, is required to play _Mansions of Madness_, _Chronicles of Crime_, and _XCOM: The Board Game_ (and strongly recommended for _Alchemists_)?":
 - a smartphone
 - (smart)?phone
@@ -1091,6 +1102,8 @@ AUTHOR: rngesus.wept
 - quid pro quo
 # -----------------------------------------------------------------------------------
 # Dynasties: Heirate, Symphony No 9, Irish Gauge, Riverboat, First Class
+"Despite not using components of the right shape, _Irish Gauge_ is still a member of **this game genre**, which abstracts away the directionality of train tracks in favor of using a simpler tracking method.":
+- cube rails
 # -----------------------------------------------------------------------------------
 # --- Broom Service, Millennium Blades, Minerva, Deus, Mottainai, Crusaders: Thy Will Be Done
 "**What card game**, also about making potions, was the predecessor to **Broom Service**?":
