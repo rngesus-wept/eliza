@@ -68,9 +68,7 @@ class TriviaSession:
 
     def __init__(self, ctx, question_list: dict, settings: dict):
         self.ctx = ctx
-        list_ = list(question_list.items())
-        random.shuffle(list_)
-        self.question_list = list_
+        self.question_list = list(question_list.items())
         self.settings = settings
         self.scores = Counter()
         self.count = 0
@@ -171,7 +169,8 @@ class TriviaSession:
             `str`).
 
         """
-        for question, answers in self.question_list:
+        while self.question_list:
+            question, answers = self.question_list.pop(random.randrange(len(self.question_list)))
             answers = _parse_answers(answers)
             yield question, answers
 
