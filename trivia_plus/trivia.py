@@ -250,7 +250,7 @@ class Trivia(commands.Cog):
         self.trivia_sessions.append(session)
         LOG.debug("New trivia session; #%s in %d", ctx.channel, ctx.guild.id)
 
-    @trivia.command(name="info"):
+    @trivia.command(name="info")
     async def trivia_info(self, ctx: commands.Context, category: str):
         """Show the description of a trivia category."""
         try:
