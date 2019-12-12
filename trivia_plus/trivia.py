@@ -22,8 +22,10 @@ _ = Translator("Trivia", __file__)
 
 class InvalidListError(Exception):
     """A Trivia list file is in invalid format."""
-
     pass
+
+
+METADATA_KEYS = ['AUTHOR', 'CONFIG', 'DESC']
 
 
 @cog_i18n(_)
@@ -231,7 +233,7 @@ class Trivia(commands.Cog):
                 )
             else:
                 trivia_dict.update(dict_)
-                authors.insert(0, (trivia_dict.pop("AUTHOR", None), len(dict_) - 1))
+                authors.insert(0, (trivia_dict.pop("AUTHOR", None), get_trivia_list_size(dict_)))
                 continue
             return
         if not trivia_dict:
@@ -247,6 +249,38 @@ class Trivia(commands.Cog):
         session = TriviaSession.start(ctx, trivia_dict, settings)
         self.trivia_sessions.append(session)
         LOG.debug("New trivia session; #%s in %d", ctx.channel, ctx.guild.id)
+
+    @trivia.command(name="info")
+    async def trivia_info(self, ctx: commands.Context, category: str):
+        """Show the description of a trivia category."""
+        try:
+            dict_ = self.get_trivia_list(category.lower())
+        except FileNotFoundError:
+            await ctx.send(
+                f"Invalid category `{category.lower()}`. See `{ctx.prefix}trivia list` for"
+                " a list of trivia categories.")
+        except InvalidListError:
+            await ctx.send(
+                f"There was an error parsing the trivia list for `{category.lower()}`."
+                " It may be formatted incorrectly.")
+        else:
+            title = f"{category.lower()}"
+            count = f"({get_trivia_list_size(dict_)} questions"
+            if 'AUTHOR' in dict_:
+                count += f" by {dict_['AUTHOR']})"
+            else:
+                count += ")"
+            desc = dict_.get('DESC', None)
+            if await ctx.embed_requested():
+                await ctx.send(
+                    embed=discord.Embed(
+                        title=f"{title} {count}",
+                        colour=await ctx.embed_colour(),
+                        description=desc))
+            else:
+                msg = bold(f"{title} {count}")
+                msg += ("\n\n{desc}" if desc else "")
+                await ctx.send(box(msg))
 
     @trivia.command(name="stop", aliases=["cancel"])
     async def trivia_stop(self, ctx: commands.Context):
@@ -553,3 +587,9 @@ def get_core_lists() -> List[pathlib.Path]:
     """Return a list of paths for all trivia lists packaged with the bot."""
     core_lists_path = pathlib.Path(__file__).parent.resolve() / "data/lists"
     return list(core_lists_path.glob("*.yaml"))
+
+
+def get_trivia_list_size(trivia_dict: dict) -> int:
+    """Return the number of questions in a trivia dict."""
+    return len(trivia_dict) - sum(metadata in trivia_dict
+                                  for metadata in METADATA_KEYS)

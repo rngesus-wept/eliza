@@ -73,7 +73,8 @@ database."""
       return await ctx.send('Please don\'t mention Discord members in your question.')
 
     await ctx.send(
-        "Okay {}, waiting on your response to ```{}``` (or `!cancel`)".format(
+        f"Okay {ctx.author.mention}, waiting on your response to"
+        f"```{question}``` (or `{ctx.prefix}cancel`)".format(
             ctx.author.mention, question))
 
     try:
@@ -87,7 +88,7 @@ database."""
 
     if answer.mentions or answer.mention_everyone:
       return await ctx.send('Please don\'t mention Discord members in your response.')
-    elif answer.content.lower() == '!cancel':
+    elif answer.content.lower() == f'{ctx.prefix}cancel':
       return await ctx.send('Okay %s, cancelling FAQ creation.' % ctx.author.mention)
 
     async with self.config.guild(ctx.guild)._faqs() as faqs:
@@ -102,9 +103,9 @@ database."""
           'tags': []}
       faqs.append(new_faq)
     await ctx.send(
-        content=("Thanks for contributing to the FAQ, %s! Don't forget to use"
-                 " `!faq tag %d <tag1> [<tag2> <tag3>...]` to make your entry"
-                 " searchable.") % (ctx.author.mention, new_faq['id']),
+        content=(f"Thanks for contributing to the FAQ, {ctx.author.mention}! Don't"
+                 f" forget to use `{ctx.prefix}faq tag {new_faq['id']} <tag1> [<tag2> <tag3>...]`"
+                 f" to make your entry searchable."),
         embed=self.FaqEmbed(ctx.guild, **new_faq))
 
   async def GetFaqEntry(self, ctx: commands.Context, faq_id, verbose=True):
@@ -129,9 +130,9 @@ database."""
       return
 
     await ctx.send(
-        "Okay %s, waiting on your change to the question for FAQ %d (or `!cancel`)."
-        " Here's the raw value, for your convenience: ```%s```" % (
-            ctx.author.mention, faq_id, faq_entry['question']))
+        f"Okay {ctx.author.mention}, waiting on your change to the question for FAQ"
+        f" {faq_id} (or `{ctx.prefix}cancel`). Here's the raw value, for your convenience:"
+        f" ```{faq_entry['question']```")
 
     try:
       question = await ctx.bot.wait_for(
@@ -144,7 +145,7 @@ database."""
 
     if question.mentions or question.mention_everyone:
       return await ctx.send("Please don't mention Discord members in your question.")
-    elif question.content.lower() == '!cancel':
+    elif question.content.lower() == f'{ctx.prefix}cancel':
       return await ctx.send("Okay %s, cancelling edit on FAQ %d." % (ctx.author.mention, faq_id))
 
     async with self.config.guild(ctx.guild)._faqs() as faqs:
@@ -167,9 +168,9 @@ database."""
       return
 
     await ctx.send(
-        "Okay %s, waiting on your change to the answer for FAQ %d (or `!cancel`)."
-        " Here's the raw value, for your convenience: ```%s```" % (
-            ctx.author.mention, faq_id, faq_entry['answer']))
+        f"Okay {ctx.author.mention}, waiting on your change to the answer for FAQ"
+        f" {faq_id} (or `{ctx.prefix}cancel`). Here's the raw value, for your convenience:"
+        f" ```{faq_entry['answer']}```")
 
     try:
       answer = await ctx.bot.wait_for(
@@ -182,7 +183,7 @@ database."""
 
     if answer.mentions or answer.mention_everyone:
       return await ctx.send("Please don't mention Discord members in your answer.")
-    elif answer.content.lower() == '!cancel':
+    elif answer.content.lower() == f'{ctx.prefix}cancel':
       return await ctx.send("Okay %s, cancelling edit on FAQ %d." % (ctx.author.mention, faq_id))
 
     async with self.config.guild(ctx.guild)._faqs() as faqs:
@@ -209,7 +210,7 @@ instead be removed from the FAQ entry."""
       return await ctx.send('`_faqs` is not a valid tag.')
     elif set(['_deleted', '-_deleted']) & set(tags):
       return await ctx.send('`_deleted` is a reserved tag; please use'
-                            ' `!faq delete` or `!faq undelete` instead.')
+                            f' `{ctx.prefix}faq delete` or `{ctx.prefix}faq undelete` instead.')
 
     async with self.config.guild(ctx.guild)._faqs() as faqs:
       faq_tags = set(faqs[faq_id]['tags'])
