@@ -23,3 +23,8 @@ class Battlecon(commands.Cog):
 
     Practice your BattleCON under timed conditions! For full details, type `[p]spar rules`."""
     pass
+
+  @spar.command(name='rules', aliases=['info'])
+  async def spar_rules(self, ctx: commands.Context):
+    """Sparring rules."""
+    rules_text = ""
