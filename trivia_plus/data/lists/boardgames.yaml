@@ -601,6 +601,10 @@ DESC: "Trivia questions about or inspired by board games. Around half require kn
 - Galactic Trendsetters
 "_Puerto Rico_ is considered to be the grandparent of _Race for the Galaxy_; **what game** is considered _Race_'s parent?":
 - San Juan
+"Despite depicting space-faring civilizations, _Race for the Galaxy_'s scoring tokens use **what rudimentary counting system**?":
+- tally marks
+- tally(ing)?
+- base[ -]1
 "From 2017, **what game** is a reskin of filler game _The City_ into the _Race for the Galaxy_ universe?":
 - Jump Drive
 "From 2018, **what game** is a reimplementation of _Race for the Galaxy_ with chipboard discs serving as planets (and no dice)?":
@@ -630,6 +634,17 @@ DESC: "Trivia questions about or inspired by board games. Around half require kn
 - Pleistocene
 "**What country** is Caylus in?":
 - France
+"The events of _Caylus_ nominally take place in 1289, during **which French king's reign**?":
+- King Philip the Fair
+- Phill?ip( the Fair)?
+"In _Caylus_, the last building that will activate during a round is determined by **what magisterial token**, whose title is more closely associated with academia or the clergy in modern times?":
+- provost
+"In _Caylus_, the action associated with **what athletic activity** exchanges one unit of currency and one unit of currency for a royal favor?":
+- jousting
+- jousts?
+"**What medieval French currency** is used in _Caylus_ and _Troyes_?":
+- deniers
+- denier
 "**What official D&D campaign setting** contains the city of Waterdeep?":
 - Forgotten Realms
 "**Identify the game**: You take on the role of one of the masked [_game title_], secret rulers of the city. Through your agents, you recruit adventurers to go on quests on your behalf, earning rewards and increasing your influence over the city. Purchase new buildings that open up new actions on the board, and hinder – or help – the other players by playing Intrigue cards to enact your carefully laid plans.":
@@ -1258,6 +1273,19 @@ DESC: "Trivia questions about or inspired by board games. Around half require kn
 - Minecraft
 
 ##### "Classics"
+"**Identify the game**: This 1954 game, whose name is worth 22 points in Scrabble, would be described in modern terms as a roll-and-write with a push-your-luck mechanism. It's a Milton Bradley publication that differs from its public domain predecessor by adding bonuses, Jokers, and a Three of a Kind scoring; and changing the value of Full Houses.":
+- Yahtzee
+- yac?h?tz(ee?|i)
+"**Identify the game**: This variant of a well known abstract strategy game requires twice as many boards and components, and is played in two teams of two. Pieces are never removed permanently from the game; instead, the capturer gives the captured piece to their partner, who may use their turn to place it into an empty space on their board.":
+- Bughouse Chess
+- bughouse
+"**Identify the game**: In _American Gods_, Shadow plays two sittings of this game with Czernobog. In _The Murders in the Rue Morgue_, Dupin asserts that it is better than chess at exercising \"the higher powers of the reflective intellect\". In 2007, one version was pronounced weakly solved for an 8x8 board (the outcome being a draw).":
+- Checkers
+- Draughts
+- Chequers
+"**Identify the game**: Neither part of its two-word name is true; it is from Germany rather than the nation advertised by its first word, and is derived from the American game _Halma_ rather than the game advertised by its second. In it, two, three, four, or six players attempt to get all ten of their marbles across the star-shaped board, usually through a series of jumps.":
+- Chinese Checkers
+- Chinese Chequers
 "Before they were rechristened 'Looney Pyramids' and published as a game system, **what name** did the pyramid pieces in the image go by? https://i.imgur.com/Yn1UxZ7.png":
 - "\"Icehouse pieces\""
 - icehouse
