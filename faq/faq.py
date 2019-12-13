@@ -132,7 +132,7 @@ database."""
     await ctx.send(
         f"Okay {ctx.author.mention}, waiting on your change to the question for FAQ"
         f" {faq_id} (or `{ctx.prefix}cancel`). Here's the raw value, for your convenience:"
-        f" ```{faq_entry['question']```")
+        f" ```{faq_entry['question']}```")
 
     try:
       question = await ctx.bot.wait_for(
