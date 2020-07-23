@@ -13,7 +13,7 @@ from redbot.core import Config
 from redbot.core.bot import Red
 
 
-log = logging.getLogger("remindme")
+log = logging.getLogger("red.eliza.remindme")
 log.setLevel(logging.INFO)
 
 
@@ -65,6 +65,9 @@ class RemindMe(commands.Cog):
       data = await self.config.all_users()
       for user_id in data:
         user = self.bot.get_user(user_id)
+        if not user:
+          log.warn(f'Unable to find user with user_id {user_id}')
+          continue
         async with self.config.user(user).reminders() as reminders:
           to_remove = []
           for timestamp, message in reminders.items():
