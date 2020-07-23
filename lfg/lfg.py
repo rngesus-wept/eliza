@@ -16,7 +16,7 @@ from redbot.core import checks
 from redbot.core.bot import Red
 
 
-log = logging.getLogger('lfg')
+log = logging.getLogger('red.eliza.lfg')
 
 
 ## TODO: Create a default empty-string group for use cases where one LFG queue
