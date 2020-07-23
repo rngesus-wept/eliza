@@ -429,7 +429,7 @@ queue for you at random. You may optionally append a number (e.g. `!play empyrea
 to challange that many random opponents (or up to that many, if not enough people are \
 in queue."""
     if targets and targets[0].lower() in self.guild_queues[ctx.guild.id]:
-      queue = self.guild_queues[ctx.guild.id][targets[0]]
+      queue = self.guild_queues[ctx.guild.id][targets[0].lower()]
       try:
         if len(targets) > 2:
           raise ValueError
