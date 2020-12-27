@@ -66,8 +66,9 @@ class RemindMe(commands.Cog):
       for user_id in data:
         user = self.bot.get_user(user_id)
         if not user:
-          log.warn(f'Unable to find user with user_id {user_id}; removing them from list')
-          self.config.user_from_id(user_id).clear_raw()
+          log.warning(
+              f'Unable to find user with user_id {user_id}; removing them from list')
+          await self.config.user_from_id(user_id).clear_raw()
           continue
         async with self.config.user(user).reminders() as reminders:
           to_remove = []
