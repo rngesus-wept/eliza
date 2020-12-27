@@ -303,8 +303,8 @@ the search will instead suggest close matches for the missed tags."""
         icon = guild.get_member(last_editor).avatar_url
     except AttributeError:
       # 'NoneType' object has no attribute $FOO
-      author = '???'
-      icon = None
+      author = '?????'
+      icon = discord.Embed.Empty
     embed.set_author(name=author, icon_url=icon)
     embed.set_footer(text=', '.join(tags))
     return embed
