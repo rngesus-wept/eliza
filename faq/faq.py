@@ -295,11 +295,16 @@ the search will instead suggest close matches for the missed tags."""
                           description=answer,
                           timestamp=datetime.strptime(last_edit or created,
                                                       '%Y-%m-%dT%H:%M:%S.%fZ'))
-    author = guild.get_member(creator).display_name
-    icon = guild.get_member(creator).avatar_url
-    if last_editor:
-      author += ' (last edited by %s)' % guild.get_member(last_editor).display_name
-      icon = guild.get_member(last_editor).avatar_url
+    try:
+      author = guild.get_member(creator).display_name
+      icon = guild.get_member(creator).avatar_url
+      if last_editor:
+        author += ' (last edited by %s)' % guild.get_member(last_editor).display_name
+        icon = guild.get_member(last_editor).avatar_url
+    except AttributeError:
+      # 'NoneType' object has no attribute $FOO
+      author = '???'
+      icon = None
     embed.set_author(name=author, icon_url=icon)
     embed.set_footer(text=', '.join(tags))
     return embed
