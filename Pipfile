@@ -6,13 +6,14 @@ name = "pypi"
 [packages]
 pytest = "*"
 pylint = "*"
-yarl = "<1.2"
+yarl = "*"
 fuzzywuzzy = "*"
 python-levenshtein = "*"
 numpy = "*"
 scikit-image = "*"
 pillow = "*"
 matplotlib = "*"
+red-discordbot = "*"
 
 [dev-packages]
 
