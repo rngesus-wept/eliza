@@ -10,6 +10,8 @@ This cog uses the [p]team command group.
 Admin/Mod:
   [p]enable          Enables the cog in the current server.
   [p]disable         Disables the cog in the current server.
+  [p]channel [chnl]  Sets admin messages to go to the designated channel.
+                     All admin messages go to all admin channels.
   [p]roles [state]   Manages whether roles are used to indicate teams.
                      The command alone returns the state of the setting;
                      providing a `state` argument with a bool-like value

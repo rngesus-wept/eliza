@@ -7,8 +7,9 @@ from redbot.core import commands
 from redbot.core import Config
 from redbot.core import checks
 from redbot.core.bot import Red
+from redbot.core.utils import mod
 
-import .nl
+from . import nl
 
 
 CONFIG_ID = 0x51C6FD2FD8E37013
@@ -27,11 +28,13 @@ DEFAULT_USER_SETTINGS = {
     'display_name': '',  # Is this necessary?
     'team_id': -1,
     'secret': None,  # salt for transmitting user ID
+    'last_update': 0,  # time.time()
 }
 
 
 def registration_url(user_id, token=None):
-  return f'http://localhost:8000/register/{user_id}'
+  return 'https://bts.hidden.institute/register_discord/%s/' % (
+      user_id,)
 
 
 def get_team_url(user_id, token=None):
@@ -55,6 +58,14 @@ class TeamTracker(commands.Cog):
   async def initialize(self):
     # Load config information to internal memory
     self.token = await self.config.secret()
+    self.teams = {}
+    async with self.config.teams() as teams:
+      for key, value in teams.items():
+        if type(key) is not int:
+          continue
+        data = TeamData.read(self.bot, value)
+        self.teams[data.team_id] = data
+        self.teams[data.username] = data
 
     self.guilds = {}  # guild_id integer -> Guild object
     self.admin_channels = {}  # guild_id integer -> TextChannel object
@@ -70,24 +81,86 @@ class TeamTracker(commands.Cog):
 
   ######### General stuff
 
-  @commands.group(name='team', invoke_with_command=True)
+  @commands.group(name='team', invoke_without_command=True)
   async def _team(self, ctx: commands.Context):
     """Team affiliation tracking."""
     # Top-level group
     await ctx.send_help()
 
+  @_team.command(name='whoami')
+  async def team_whoami(self, ctx: commands.Context):
+    """Show which team you belong to."""
+    team_id = await self.config.user(ctx.author).team_id()
+
+    if team_id == -1:
+      await ctx.send('You are not affiliated with any team.')
+      return
+    if team_id not in self.teams:
+      await ctx.send('You are affiliated with a team whose ID I do not'
+                     f'recognize. ({team_id})')
+      return
+    await ctx.send('You are affiliated with Team **%s**.' % (
+        self.teams[team_id]['display_name']),)
+
+  @_team.command(name='whois')
+  async def team_whois(self, ctx: commands.Context, user: discord.User):
+    """Show which team some user belongs to."""
+    team_id = await self.config.user(user).team_id()
+
+    if team_id == -1:
+      await ctx.send(f'{user.display_name} not affiliated with any team.')
+      return
+    if team_id not in self.teams:
+      await ctx.send(f'{user.display_name} is affiliated with a team'
+                     f' whose ID I do not recognize. ({team_id})')
+      return
+    await ctx.send('%s is affiliated with Team **%s**.' % (
+        user.display_name, self.teams[team_id]['display_name']))
+
+  @_team.command(name='register')
+  async def team_register(self, ctx: commands.Context, user: discord.User = None):
+    """Manually initiate registration, possibly for another user.
+
+    Any user may call this command on themself (with no argument). Only admins
+    may call this command on others."""
+    ## TODO: Send in DM to user instead of in context
+    if user is None:
+      await ctx.send(registration_url(ctx.author.id))
+    else:
+      if not mod.is_mod_or_superior(ctx.author):
+        await ctx.add_reaction(u'🙅')
+      else:
+        await ctx.send(registration_url(user.id))
+
   ######### Admin stuff
 
-  @_team.group(name='admin')
+  @_team.group(name='admin', invoke_without_command=True)
   @checks.mod_or_permissions(administrator=True)
   async def _admin(self, ctx: commands.Context):
     """Team affiliation administrator functions."""
-    pass
+    await ctx.send_help()
+
+  @_admin.command(name='reset')
+  @checks.mod_or_permissions(administrator=True)
+  async def admin_reset(self, ctx: commands.Context):
+    """Resets all team management data, GLOBALLY."""
+    await self.config.set_raw(value=DEFAULT_GLOBAL_SETTINGS)
+
+    for guild_id in await self.config.all_guilds():
+      await self._unload_guild(guild_id=guild_id)
+      await self.config.guild_from_id(guild_id).set_raw(
+          value=DEFAULT_GUILD_SETTINGS)
+
+    for user_id in await self.config.all_users():
+      await self.config.user_from_id(user_id).set_raw(
+          value=DEFAULT_USER_SETTINGS)
+    await ctx.send('Global team management factory reset complete.')
 
   @_admin.command(name='enable')
   @commands.guild_only()
   @checks.mod_or_permissions(administrator=True)
   async def admin_enable(self, ctx: commands.Context):
+    """Enable team management in this server."""
     if ctx.guild.id in self.guilds:
       await ctx.send('Team management is already enabled in this guild.')
       return
@@ -98,6 +171,7 @@ class TeamTracker(commands.Cog):
   @commands.guild_only()
   @checks.mod_or_permissions(administrator=True)
   async def admin_disable(self, ctx: commands.Context):
+    """Disable team management in this server."""
     if ctx.guild.id not in self.guilds:
       await ctx.send('Team management is already disabled in this guild.')
       return
@@ -247,8 +321,44 @@ class TeamTracker(commands.Cog):
     if guild is None:
       guild = self.bot.get_guild(guild_id)
     await self.config.guild(guild).admin_channel.set(0)
-    self.admin_channels(guild.id) = None
+    self.admin_channels[guild.id] = None
 
   async def _set_secret(self, token):
     await self.config.secret.set(token)
     self.token = token
+
+
+class TeamData(object):
+  """Structured data collected about teams."""
+  team_id = -1
+  display_name = None
+  username = None
+  channels = []  # list of objects, but serializes as a list of ids
+  users = []  # list of objects, but serializes as a list of ids
+  last_updated = 0  # time.time()
+
+  @staticmethod
+  async def read(bot: Red, data: dict):
+    obj = TeamData()
+    obj.team_id = data['team_id']
+    obj.display_name = data['display_name']
+    obj.username = data['username']
+    obj.channels = [await bot.get_channel(channel_id)
+                     for channel_id in data['channels']]
+    obj.users = [await bot.get_user(user_id)
+                  for user_id in data['users']]
+    obj.last_updated = data['last_updated']
+    return obj
+
+  async def write(self, config: Config):
+    serialized = {
+        'team_id': self.team_id,
+        'display_name': self.display_name,
+        'username': self.username,
+        'channels': [channel.id for channel in self.channels],
+        'users': [user.id for user in self.users],
+        'last_updated': time.time(),
+    }
+    async with config.teams() as teams:
+      teams[self.team_id] = serialized
+      teams[self.username] = serialized
