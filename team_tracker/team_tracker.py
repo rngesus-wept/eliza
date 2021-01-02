@@ -281,14 +281,30 @@ class TeamTracker(commands.Cog):
 
     Any user may call this command on themself (with no argument). Only admins
     may call this command on others."""
-    ## TODO: Send in DM to user instead of in context
-    if user is None:
-      await self.registration_prompt(ctx.author, bypass_ignore=True)
-    else:
+    if user is not None:
       if not mod.is_mod_or_superior(ctx.author):
         await ctx.add_reaction(u'🙅')
-      else:
-        await self.registration_prompt(user, bypass_ignore=True)
+        return
+    else:
+      user = ctx.author
+    await self.registration_prompt(user, bypass_ignore=True)
+
+  @_team.command(name='forget')
+  async def team_forget(self, ctx: commands.Context, user: discord.User = None):
+    """Remove team affiliation from target user (or self).
+
+    Any user may call this command on themself (with no argument). Only admins
+    may call this command on others."""
+    if user is not None:
+      if not mod.is_mod_or_superior(ctx.author):
+        await ctx.add_reaction(u'🙅')
+        return
+    else:
+      user = ctx.author
+    team = self.teams.get(await self.config.user(user).team_id(), None)
+    if team is not None:
+      await self._remove_user_from_team(user, team)
+    await ctx.send(f'Okay, I have forgotten all about {display(user)}.')
 
   @_team.command(name='ignore')
   async def team_ignore(self, ctx: command.Context):
