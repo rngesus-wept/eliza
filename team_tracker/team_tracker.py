@@ -791,7 +791,7 @@ class TeamTracker(commands.Cog):
     if member is None:
       # User is not in the guild containing the channel
       return
-    await self._forbit_member_in_channel(member, channel, reason=reason)
+    await self._forbid_member_in_channel(member, channel, reason=reason)
 
   async def _forbid_member_in_channel(self, member: discord.Member,
                                       channel: discord.abc.GuildChannel,
