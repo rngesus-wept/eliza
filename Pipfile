@@ -13,6 +13,7 @@ numpy = "*"
 scikit-image = "*"
 pillow = "*"
 matplotlib = "*"
+requests = "*"
 
 [dev-packages]
 

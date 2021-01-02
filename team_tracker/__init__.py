@@ -12,12 +12,8 @@ Admin/Mod:
   [p]disable         Disables the cog in the current server.
   [p]channel [chnl]  Sets admin messages to go to the designated channel.
                      All admin messages go to all admin channels.
-  [p]roles [state]   Manages whether roles are used to indicate teams.
-                     The command alone returns the state of the setting;
-                     providing a `state` argument with a bool-like value
-                     sets it to that value.
-  [p]search [foo]    Searches for all teams whose names contain regex `foo`.
-  [p]ping [team] [msg]   DMs all members of `team` with `msg`.
+!  [p]search [foo]    Searches for all teams whose names contain regex `foo`.
+!  [p]ping [team] [msg]   DMs all members of `team` with `msg`.
   [p]reset           Resets all memory for all users, globally.
 
 User:

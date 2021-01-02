@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import requests
 import time
 
 import discord
@@ -21,6 +22,7 @@ CONFIG_ID = 0x51C6FD2FD8E37013
 
 DEFAULT_GLOBAL_SETTINGS = {
     'teams': {},
+    'lookup_url': None,
     'secret': None,
     ## TODO: Make registration URL a setting?
 }
@@ -43,16 +45,17 @@ FORBID_OVERWRITE = discord.PermissionOverwrite(view_channel=False)
 
 
 def registration_url(user_id, token=None):
-  return 'https://bts.hidden.institute/register_discord/%s/' % (
+  return 'http://localhost:8000/register_discord/%s/' % (
       user_id,)
+  # return 'https://bts.hidden.institute/register_discord/%s/' % (
+  #     user_id,)
 
 
-def get_team_url(user_id, token=None):
-  pass
-
-
-def display_user_full(user):
-  return f'{user.display_name} ({user.name}#{user.discriminator})'
+def display(user):
+  if getattr(user, 'guild', None):
+    return f'{user.display_name} ({user.name}#{user.discriminator})'
+  else:
+    return f'{user.name}#{user.discriminator}'
 
 
 class TeamData(object):
@@ -70,11 +73,11 @@ class TeamData(object):
     obj.team_id = data['team_id']
     obj.display_name = data['display_name']
     obj.username = data['username']
-    obj.channels = [await bot.get_channel(channel_id)
-                     for channel_id in data['channels']]
-    obj.users = [await bot.get_user(user_id)
-                  for user_id in data['users']]
-    obj.last_updated = data['last_updated']
+    obj.channels = [bot.get_channel(channel_id)
+                    for channel_id in data.get('channels', [])]
+    obj.users = [bot.get_user(user_id)
+                 for user_id in data.get('users', [])]
+    obj.last_updated = data.get('last_updated', time.time())
     return obj
 
   async def reload(self):
@@ -94,10 +97,6 @@ class TeamData(object):
         'last_updated': self.last_updated,
     }
     await config.set_raw('teams', self.team_id, value=serialized)
-    await config.set_raw('teams', self.username, value=serialized)
-    # async with config.teams() as teams:
-    #   teams[self.team_id] = serialized
-    #   teams[self.username] = serialized
 
 
 class TeamTracker(commands.Cog):
@@ -112,15 +111,11 @@ class TeamTracker(commands.Cog):
 
   async def initialize(self):
     # Load config information to internal memory
-    self.token = await self.config.secret()
     self.teams = {}
     async with self.config.teams() as teams:
       for key, value in teams.items():
-        if type(key) is not int:
-          continue
-        data = TeamData.read(self.bot, value)
+        data = await TeamData.read(self.bot, value)
         self.teams[data.team_id] = data
-        self.teams[data.username] = data
 
     self.guilds = {}  # guild_id integer -> Guild object
     self.admin_channels = {}  # guild_id integer -> TextChannel object
@@ -143,14 +138,14 @@ class TeamTracker(commands.Cog):
         if channel.guild == member.guild:
           await self._permit_member_in_channel(
               member, channel,
-              f'Adding registered user {display_user_full(member)}')
+              f'Adding registered user {display(member)}')
 
   async def registration_prompt(self, user, bypass_ignore=False):
     do_not_message = await self.config.user(user).do_not_message()
     if do_not_message and not bypass_ignore:
       return
 
-    my_prefix = (await self.bot._prefix_cache.get_prefixes())[0]
+    my_prefix = await self._prefix()
     await user.send(
         'Hello! You\'re receiving this message because you joined the server'
         f' **{user.guild.name}** and are not associated with any particular'
@@ -161,6 +156,86 @@ class TeamTracker(commands.Cog):
         '    * To never receive team-related messages from me again, respond'
         f' with `{my_prefix}team ignore`. (Opt back in with `{my_prefix}team'
         ' unignore`.)')
+
+  async def update_user(self, user: discord.User = None, user_id: int = None):
+    if user is None:
+      user = self.bot.get_user(user_id)
+    url = await self._update_url()
+    params = {
+        'auth': await self.config.secret(),
+        'user_id': user_id or user.id,
+    }
+
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+      await self.admin_msg(
+          'Attempt to refresh user data failed with error'
+          f' {response.status_code}: {response.text}')
+      return
+    data = response.json()
+
+    team_id = data['team'][0]
+    if team_id not in self.teams:
+      team_data = await TeamData.read(self.bot, {
+          'team_id': data['team'][0],
+          'display_name': data['team'][2],
+          'username': data['team'][3]
+      })
+      await team_data.write(self.config)
+      self.teams[team_id] = team_data
+    else:
+      team_data = self.teams[team_id]
+
+    old_team = self.teams.get(await self.config.user(user).team_id(), None)
+    if old_team:
+      await self._remove_user_from_team(user, old_team)
+
+    await self._add_user_to_team(user, team_data)
+
+  async def update_team(self, team: TeamData = None, team_id: int = None):
+    if team is None:
+      team = self.teams[team_id]
+    url = await self.config.lookup_url()
+    params = {
+        'auth': await self.config.secret(),
+        'team_id': team_id or team['team_id'],
+    }
+
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+      await self.admin_msg(
+          'Attempt to refresh team data failed with error'
+          f' {response.status_code}: {response.text}')
+      return
+    data = response.json()
+
+    original_users = set(user.id for user in team.users)
+    updated_users = set(int(user_id) for user_id in data['user_ids'])
+    ids_to_add = list(updated_users - original_users)
+    users_to_add = [self.bot.get_user(user_id) for user_id in ids_to_add]
+    ids_to_remove = list(original_users - updated_users)
+    users_to_remove = [self.bot.get_user(user_id) for user_id in ids_to_remove]
+
+    remove_results = await asyncio.gather(
+        *[self._remove_user_from_team(user, team) for user in users_to_remove],
+        return_exceptions=True)
+    remove_errors = [user_id for user_id, result in zip(ids_to_remove, remove_results)
+                     if result is not None]
+
+    add_results = await asyncio.gather(
+        *[self._add_user_to_team(user, team) for user in users_to_add],
+        return_exceptions=True)
+    add_errors = [user_id for user_id, result in zip(ids_to_add, add_results)
+                  if result is not None]
+
+    if add_errors or remove_errors:
+      message = [f'Encountered unexpected errors while updating {team.username}:']
+      if add_errors:
+        message.append(f'    adding user ids {add_errors}')
+      if remove_errors:
+        message.append(f'    removing user ids {remove_errors}')
+      await self.admin_msg('\n'.join(message))
+
 
   ######### General stuff
 
@@ -183,7 +258,7 @@ class TeamTracker(commands.Cog):
                      f'recognize. ({team_id})')
       return
     await ctx.send('You are affiliated with Team **%s**.' % (
-        self.teams[team_id]['display_name']),)
+        self.teams[team_id].display_name),)
 
   @_team.command(name='whois')
   async def team_whois(self, ctx: commands.Context, user: discord.User):
@@ -191,14 +266,14 @@ class TeamTracker(commands.Cog):
     team_id = await self.config.user(user).team_id()
 
     if team_id == -1:
-      await ctx.send(f'{user.display_name} not affiliated with any team.')
+      await ctx.send(f'{display(user)} not affiliated with any team.')
       return
     if team_id not in self.teams:
-      await ctx.send(f'{user.display_name} is affiliated with a team'
+      await ctx.send(f'{display(user)} is affiliated with a team'
                      f' whose ID I do not recognize. ({team_id})')
       return
     await ctx.send('%s is affiliated with Team **%s**.' % (
-        user.display_name, self.teams[team_id]['display_name']))
+        display(user), self.teams[team_id].display_name))
 
   @_team.command(name='register')
   async def team_register(self, ctx: commands.Context, user: discord.User = None):
@@ -208,12 +283,24 @@ class TeamTracker(commands.Cog):
     may call this command on others."""
     ## TODO: Send in DM to user instead of in context
     if user is None:
-      await ctx.send(registration_url(ctx.author.id))
+      await self.registration_prompt(ctx.author, bypass_ignore=True)
     else:
       if not mod.is_mod_or_superior(ctx.author):
         await ctx.add_reaction(u'🙅')
       else:
-        await ctx.send(registration_url(user.id))
+        await self.registration_prompt(user, bypass_ignore=True)
+
+  @_team.command(name='ignore')
+  async def team_ignore(self, ctx: command.Context):
+    """Opt out of automated messages from the team management cog."""
+    await self.config.user(ctx.author).do_not_message.set(True)
+    await ctx.send('Okay, I won\'t DM about this anymore.')
+
+  @_team.command(name='unignore')
+  async def team_unignore(self, ctx: command.Context):
+    """Opt (back) in to automated messages from the team management cog."""
+    await self.config.user(ctx.author).do_not_message.set(False)
+    await ctx.send('Okay, I\'ll include you back in team-wide DMs.')
 
   ######### Admin stuff
 
@@ -295,7 +382,6 @@ class TeamTracker(commands.Cog):
         await ctx.send(''.join(message))
     else:
       await self._set_admin_channel(guild=ctx.guild, channel=channel)
-
       message = ['Team management admin messages are now routed to',
                  f' {channel.mention}.']
       await ctx.send(''.join(message))
@@ -303,23 +389,57 @@ class TeamTracker(commands.Cog):
   @_admin.command(name='ping')
   @commands.guild_only()
   @checks.mod_or_permissions(administrator=True)
-  async def admin_local_ping(self, ctx: commands.Context, team_identifier):
+  async def admin_local_ping(self, ctx: commands.Context,
+                             team_identifier: str, *message):
+    """Ping all members of the indicated team, locally.
+
+    This directly replaces the `[p]team admin ping <team>` portion of the
+    triggering message with mentions of all members of the named team in the
+    current guild. It's kind of messy; maybe at-here is good enough?
+    """
+    pass
+
+  @_admin.command(name='ping-all')
+  @checks.mod_or_permissions(administrator=True)
+  async def admin_global_ping(self, ctx: commands.Context,
+                              team_identifier: str, *message):
+    """Ping all members of the indicated team, globally.
+
+    This issues pings to the indicated members *via DM*. Team members that have
+    opted out using `[p]team ignore` will not receive the ping.
+    """
     pass
 
   @_admin.command(name='secret')
   @checks.mod_or_permissions(administrator=True)
-  async def admin_secret(self, ctx: commands.Context, token: str=None):
+  async def admin_secret(self, ctx: commands.Context, *token: str):
     """Sets or displays the token used for talking to silenda."""
-    the_token = self.token
-    if token is None:
+    the_token = await self.config.secret()
+    token = ' '.join(token)
+    if not token:
       await ctx.author.send(f'Team management secret: {the_token}')
     else:
-      await self._set_secret(token)
-      message = [display_user_full(ctx.author),
-                 'set the team management secret to',
-                 f'`{self.token}`.']
+      await self.config.secret.set(token)
+      message = [display(ctx.author),
+                 f'set the team management secret to {token}.']
       if the_token:
         message.append(f'(was `{the_token}`)')
+      await self.admin_msg(' '.join(message))
+
+  @_admin.command(name='lookup_url')
+  @checks.mod_or_permissions(administrator=True)
+  async def admin_lookup_url(self, ctx: commands.Context, *url: str):
+    """Sets or displays the URL used for retrieving details from silenda."""
+    the_url = await self.config.lookup_url()
+    url = ' '.join(url)
+    if not url:
+      await ctx.author.send(f'Team management lookup url: {the_url}')
+    else:
+      await self.config.lookup_url.set(url)
+      message = [display(ctx.author),
+                 f'set the team management lookup url to {url}.']
+      if the_url:
+        message.append(f'(was `{the_url}`)')
       await self.admin_msg(' '.join(message))
 
   async def admin_msg(self, message):
@@ -333,6 +453,19 @@ class TeamTracker(commands.Cog):
   ## These are here to make sure that writes to the cog's internal memory are
   ## reflected to the datastore, and the reads from the cog's datastore are
   ## reflected to its internal memory.
+
+  async def _prefix(self):
+    return (await self.bot._prefix_cache.get_prefixes())[0]
+
+  async def _update_url(self):
+    url = await self.config.lookup_url()
+    if not url:
+      prefix = await self._prefix()
+      await self.admin_msg(
+          'Team lookup URL is not set. Use '
+          f'`{prefix}team admin lookup_url <url>` to set it.')
+      raise MissingCogSettingException('lookup_url is unset')
+    return url
 
   async def _load_guild(self,
                         guild: discord.Guild = None,
@@ -413,17 +546,13 @@ class TeamTracker(commands.Cog):
     await self.config.guild(guild).admin_channel.set(0)
     self.admin_channels[guild.id] = None
 
-  async def _set_secret(self, token):
-    await self.config.secret.set(token)
-    self.token = token
-
   async def _get_team_data(self, identifier):
     data = await self.config.get_raw('teams', identifier)
     return await TeamData.read(self.bot, data)
 
   async def _add_user_to_team(self, user: discord.User, team: TeamData):
     if user in team.users:
-      log.debug(f'User {display_user_full(user)} is already on {team.username}.')
+      log.debug(f'User {display(user)} is already on {team.username}.')
       return
     team.users.append(user)
     await team.write(self.config)
@@ -437,7 +566,7 @@ class TeamTracker(commands.Cog):
 
   async def _remove_user_from_team(self, user: discord.User, team: TeamData):
     if user not in team.users:
-      log.debug(f'User {display_user_full(user)} is not on {team.username}.')
+      log.debug(f'User {display(user)} is not on {team.username}.')
       return
     team.users.remove(user)
     await team.write(self.config)
@@ -506,7 +635,7 @@ class TeamTracker(commands.Cog):
       await self._forbid_user_in_channel(
           user, channel, f'Removing {team.username}')
 
-  ## DEBUG
+  ## DEBUG, delete before final deploy
 
   @commands.command(name='testjoin')
   async def simulate_join(self, ctx: commands.Context,
@@ -518,13 +647,9 @@ class TeamTracker(commands.Cog):
 
   @commands.command(name='tt')
   async def my_debug(self, ctx: commands.Context):
-    # team_data = TeamData()
-    # team_data.team_id = 1
-    # team_data.display_name = 'Test team'
-    # team_data.username = 'test'
-    # await team_data.write(self.config)
-    # await self._add_user_to_team(ctx.author, team_data)
+    # await ctx.send(await self.config.teams())
+    await ctx.send([user.display_name for user in self.teams[3].users])
 
-    await self.config.user(ctx.author).team_id.set(2)
-    data = await self.config.user(ctx.author)()
-    await ctx.send(repr(data))
+
+class MissingCogSettingException(Exception):
+  pass
