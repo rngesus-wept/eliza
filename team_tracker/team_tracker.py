@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import random
 import requests
 import time
 
@@ -31,6 +32,7 @@ DEFAULT_GLOBAL_SETTINGS = {
 DEFAULT_GUILD_SETTINGS = {
     'enabled': False,
     'admin_channel': None,
+    'teams_category': None,
 }
 
 DEFAULT_USER_SETTINGS = {
@@ -58,6 +60,8 @@ def display(user):
   else:
     return f'{user.name}#{user.discriminator}'
 
+def random_channel_name():
+  return f'room-{random.randint(0,9999)}'
 
 ## Menu utilities
 
@@ -99,9 +103,9 @@ class TeamData(object):
 
   async def reload(self):
     # Re-retrieves all Channel and User objects
-    self.channels = [await bot.get_channel(channel.id)
+    self.channels = [bot.get_channel(channel.id)
                      for channel in self.channels]
-    self.users = [await bot.get_user(user.id)
+    self.users = [bot.get_user(user.id)
                   for user in self.users]
 
   async def write(self, config: Config):
@@ -339,6 +343,91 @@ class TeamTracker(commands.Cog):
     await self.config.user(ctx.author).do_not_message.set(False)
     await ctx.send('Okay, I\'ll include you back in team-wide DMs.')
 
+  @_team.command(name='show')
+  @checks.mod_or_permissions(administrator=True)
+  async def admin_show(self, ctx: commands.Context, team_id: int):
+    try:
+      if team_id not in self.teams:
+        self.teams[team_id] = await self._get_team_data(team_id)
+      team = self.teams[team_id]
+    except KeyError:
+      await ctx.send(f'Unrecognized team ID {team_id}. If you think this is a '
+                     'valid team ID, perhaps no one from that team has '
+                     'registered a Discord account yet.')
+      return
+
+    if ctx.guild:
+      members, users = self._get_members_if_possible(
+          [user.id for user in team.users], ctx.guild)
+    else:
+      members, users = [], team.users
+
+    members_txt = [f'  {member.display_name} ({member.name}#{member.discriminator})'
+                   for member in members]
+    users_txt = [f'  {user.name}#{user.discriminator}'
+                 for user in users]
+    channels_txt = [f'  {channel.mention}' for channel in team.channels
+                    if channel.guild == ctx.guild]
+
+    # Naive pagination implementation
+    pages = []
+    current_page = [f'**{len(members_txt) + len(users_txt)}** Registered Members', '']
+    current_page_count = len(current_page[0]) + 2
+    if channels_txt:
+      current_page.append('**Channels**')
+      current_page_count += len(current_page[-1])
+      for line in channels_txt:
+        if current_page_count > 2000:
+          pages.append('\n'.join(current_page))
+          current_page = ['**Channels (cont\'d)**'],
+          current_page_count = len(current_page[0])
+        current_page.append(line)
+        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
+      if members_txt or users_txt:
+        current_page.append('')  # becomes a newline
+        current_page_count += 1
+    if members_txt:
+      if current_page_count > 1500:
+        pages.append('\n'.join(current_page))
+        current_page, current_page_count = [], 0
+      current_page.append(f'**Members in Server** (**{len(members_txt)}** total)')
+      current_page_count += len(current_page[-1])
+      for line in members_txt:
+        if current_page_count > 2000:
+          pages.append('\n'.join(current_page))
+          current_page = ['**Members in Server** (cont\'d)'],
+          current_page_count = len(current_page[0])
+        current_page.append(line)
+        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
+      if users_txt:
+        current_page.append('')  # becomes a newline
+        current_page_count += 1
+    if users_txt:
+      if current_page_count > 1500:
+        pages.append('\n'.join(current_page))
+        current_page, current_page_count = [], 0
+      current_page.append(f'**Members Elsewhere** (**{len(users_txt)}** total)')
+      current_page_count += len(current_page[-1])
+      for line in users_txt:
+        if current_page_count > 2000:
+          pages.append('\n'.join(current_page))
+          current_page = ['**Members Elsewhere** (cont\'d)'],
+          current_page_count = len(current_page[0])
+        current_page.append(line)
+        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
+    pages.append('\n'.join(current_page))
+    # pages is now a list of strings
+
+    embeds = [
+        discord.Embed(title=f'**{team.display_name} (ID: {team.team_id})**',
+                      color=discord.Color(0x22aaff),
+                      description=content)
+        for content in pages]
+    if len(embeds) == 1:
+      await ctx.send(embed=embeds[0])
+    else:
+      await menu(ctx, embeds, DEFAULT_CONTROLS, timeout=120)
+
   ######### Admin stuff
 
   @_team.group(name='admin', invoke_without_command=True)
@@ -385,6 +474,31 @@ class TeamTracker(commands.Cog):
     await self._disable_guild(guild=ctx.guild)
     await ctx.send('Team management disabled.')
 
+  @_team.command(name='channel', invoke_without_command=True)
+  @commands.guild_only()
+  @checks.mod_or_permissions(administrator=True)
+  async def _channel(self, ctx: commands.Context, channel_type: str, *team_ids: int):
+    """Create a text or voice channel only visible to certain teams."""
+    if set(team_ids) - set(self.teams):
+      await ctx.send('Missing data for the following team IDs: %s' % (
+          ', '.join(set(team_ids) - set(self.teams)),))
+      return
+
+    if channel_type is 'text':
+      channel = await self._create_team_text_channel(
+          random_channel_name(), ctx.guild)
+    elif channel_type is 'voice':
+      channel = await self._create_team_voice_channel(
+          random_channel_name(), ctx.guild)
+    else:
+      await ctx.send(f'Received unexpected channel type `{channel_type}`;'
+                     ' use `text` or `voice`.')
+      return
+
+    await asyncio.gather(*[
+        self._permit_team_in_channel(self.teams[team_id], channel)
+        for team_id in team_ids])
+
   @_admin.command(name='stderr')
   @commands.guild_only()
   @checks.mod_or_permissions(administrator=True)
@@ -422,91 +536,6 @@ class TeamTracker(commands.Cog):
       message = ['Team management admin messages are now routed to',
                  f' {channel.mention}.']
       await ctx.send(''.join(message))
-
-  @_admin.command(name='show')
-  @checks.mod_or_permissions(administrator=True)
-  async def admin_show(self, ctx: commands.Context, team_id: int):
-    try:
-      if team_id not in self.teams:
-        self.teams[team_id] = await self._get_team_data(team_id)
-      team = self.teams[team_id]
-    except KeyError:
-      await ctx.send(f'Unrecognized team ID {team_id}. If you think this is a '
-                     'valid team ID, perhaps no one from that team has '
-                     'registered a Discord account yet.')
-      return
-
-    if ctx.guild:
-      members, users = self._get_members_if_possible(
-          [user.id for user in team.users], ctx.guild)
-    else:
-      members, users = [], team.users
-
-    members_txt = [f'  {member.display_name} ({member.name}#{member.discriminator})'
-                   for member in members]
-    users_txt = [f'  {user.name}#{user.discriminator}'
-                 for user in users]
-    channels_txt = [f'  {channel.mention}' for channel in team.channels
-                    if channel.guild == ctx.guild]
-
-    # Naive pagination implementation
-    pages = []
-    current_page, current_page_count = [], 0
-    if channels_txt:
-      current_page.append('**Channels**')
-      current_page_count += len(current_page[-1])
-      for line in channels_txt:
-        if current_page_count > 2000:
-          pages.append('\n'.join(current_page))
-          current_page = ['**Channels (cont\'d)**'],
-          current_page_count = len(current_page[0])
-        current_page.append(line)
-        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
-      if members_txt or users_txt:
-        current_page.append('')  # becomes a newline
-        current_page_count += 1
-    if members_txt:
-      if current_page_count > 1500:
-        pages.append('\n'.join(current_page))
-        current_page, current_page_count = [], 0
-      current_page.append('**Members in Server**')
-      current_page_count += len(current_page[-1])
-      for line in members_txt:
-        if current_page_count > 2000:
-          pages.append('\n'.join(current_page))
-          current_page = ['**Members in Server (cont\'d)**'],
-          current_page_count = len(current_page[0])
-        current_page.append(line)
-        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
-      if users_txt:
-        current_page.append('')  # becomes a newline
-        current_page_count += 1
-    if users_txt:
-      if current_page_count > 1500:
-        pages.append('\n'.join(current_page))
-        current_page, current_page_count = [], 0
-      current_page.append('**Members Elsewhere**')
-      current_page_count += len(current_page[-1])
-      for line in users_txt:
-        if current_page_count > 2000:
-          pages.append('\n'.join(current_page))
-          current_page = ['**Members Elsewhere (cont\'d)**'],
-          current_page_count = len(current_page[0])
-        current_page.append(line)
-        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
-    pages.append('\n'.join(current_page))
-    # pages is now a list of strings
-
-    embeds = [
-        discord.Embed(title=f'**{team.display_name} (ID: {team.team_id})**',
-                      color=discord.Color(0x22aaff),
-                      description=content)
-        for content in pages]
-    if len(embeds) == 1:
-      await ctx.send(embed=embeds[0])
-    else:
-      await menu(ctx, embeds, DEFAULT_CONTROLS, timeout=120)
-
 
   @_admin.command(name='ping')
   @commands.guild_only()
@@ -702,6 +731,23 @@ class TeamTracker(commands.Cog):
       await self._forbid_user_in_channel(
           user, channel, f'Removing {user.name} from {team.username}')
 
+  async def _get_or_create_team_category(self, guild: discord.Guild):
+    category_id = await self.config.guild(guild).teams_category()
+    if category_id is None or guild.get_channel(category_id) is None:
+      category = await guild.create_category('Team Channels')
+      await self.config.guild(guild).teams_category.set(category.id)
+    else:
+      category = guild.get_channel(category_id)
+    return category
+
+  async def _create_team_text_channel(self, name: str, guild: discord.Guild):
+    team_category = await self._get_or_create_team_category(guild)
+    return await team_category.create_text_channel(name)
+
+  async def _create_team_voice_channel(self, name: str, guild: discord.Guild):
+    team_category = await self._get_or_create_team_category(guild)
+    return await team_category.create_voice_channel(name)
+
   ## NOTE: Channels will be created such that users have all the necessary
   ## permissions EXCEPT being able to see the channel. This means that
   ## general user permissions on all channels is to be gated solely on
@@ -723,7 +769,7 @@ class TeamTracker(commands.Cog):
                                     channel: discord.abc.GuildChannel,
                                     reason: str = None):
     guild = channel.guild
-    member = await guild.get_member(user.id)
+    member = guild.get_member(user.id)
     if member is None:
       # User is not in the guild containing the channel
       return
@@ -741,7 +787,7 @@ class TeamTracker(commands.Cog):
                                     channel: discord.abc.GuildChannel,
                                     reason: str = None):
     guild = channel.guild
-    member = await guild.get_member(user.id)
+    member = guild.get_member(user.id)
     if member is None:
       # User is not in the guild containing the channel
       return
@@ -758,18 +804,18 @@ class TeamTracker(commands.Cog):
     team.channels.append(channel)
     await team.write(self.config)
 
-    for user in team.users:
-      await self._permit_user_in_channel(
-          user, channel, f'Adding {team.username}')
+    await asyncio.gather(*[
+        self._permit_user_in_channel(user, channel, f'Adding {team.username}')
+        for user in team.users])
 
   async def _forbid_team_in_channel(self, team: TeamData,
                                     channel: discord.abc.GuildChannel):
     team.channels.remove(channel)
     await team.write(self.config)
 
-    for user in team.users:
-      await self._forbid_user_in_channel(
-          user, channel, f'Removing {team.username}')
+    await asyncio.gather(*[
+        self._forbid_user_in_channel(user, channel, f'Removing {team.username}')
+        for user in team.users])
 
   ## DEBUG, delete before final deploy
 
