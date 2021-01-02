@@ -12,6 +12,7 @@ from redbot.core import Config
 from redbot.core import checks
 from redbot.core.bot import Red
 from redbot.core.utils import mod
+from redbot.core.utils.menus import menu, prev_page, next_page
 
 from . import nl
 
@@ -56,6 +57,22 @@ def display(user):
     return f'{user.display_name} ({user.name}#{user.discriminator})'
   else:
     return f'{user.name}#{user.discriminator}'
+
+
+## Menu utilities
+
+async def close_menu(ctx: commands.Context, pages: list, controls: dict,
+                     message: discord.Message, page: int, timeout: float, emoji: str):
+  ## This overrides the normal "close" behavior in redbot.core.utils.menus in
+  ## that it clears reactions instead of deleting the search results.
+  try:
+    await message.clear_reactions()
+  except discord.Forbidden:
+    for key in controls.keys():
+      await message.remove_reaction(key, ctx.bot.user)
+  return None
+
+DEFAULT_CONTROLS = {"⬅": prev_page, "❌": close_menu, "➡": next_page}
 
 
 class TeamData(object):
@@ -129,6 +146,8 @@ class TeamTracker(commands.Cog):
     # in two different guilds will be represented by two different members!
     if member.bot:
       return
+    if not await self.config.guild(member.guild).enabled():
+      return
     team_id = await self.config.user(member).team_id()
     if team_id == -1:
       await self.registration_prompt(member)
@@ -194,6 +213,8 @@ class TeamTracker(commands.Cog):
 
   async def update_team(self, team: TeamData = None, team_id: int = None):
     if team is None:
+      if team_id not in self.teams:
+        self.teams[team_id] = await self._get_team_data(team_id)
       team = self.teams[team_id]
     url = await self.config.lookup_url()
     params = {
@@ -307,13 +328,13 @@ class TeamTracker(commands.Cog):
     await ctx.send(f'Okay, I have forgotten all about {display(user)}.')
 
   @_team.command(name='ignore')
-  async def team_ignore(self, ctx: command.Context):
+  async def team_ignore(self, ctx: commands.Context):
     """Opt out of automated messages from the team management cog."""
     await self.config.user(ctx.author).do_not_message.set(True)
     await ctx.send('Okay, I won\'t DM about this anymore.')
 
   @_team.command(name='unignore')
-  async def team_unignore(self, ctx: command.Context):
+  async def team_unignore(self, ctx: commands.Context):
     """Opt (back) in to automated messages from the team management cog."""
     await self.config.user(ctx.author).do_not_message.set(False)
     await ctx.send('Okay, I\'ll include you back in team-wide DMs.')
@@ -364,10 +385,10 @@ class TeamTracker(commands.Cog):
     await self._disable_guild(guild=ctx.guild)
     await ctx.send('Team management disabled.')
 
-  @_admin.command(name='channel')
+  @_admin.command(name='stderr')
   @commands.guild_only()
   @checks.mod_or_permissions(administrator=True)
-  async def admin_channel(
+  async def admin_stderr(
       self, ctx: commands.Context, channel: discord.TextChannel=None):
     """Sets or displays the channel for admin message output.
 
@@ -402,6 +423,91 @@ class TeamTracker(commands.Cog):
                  f' {channel.mention}.']
       await ctx.send(''.join(message))
 
+  @_admin.command(name='show')
+  @checks.mod_or_permissions(administrator=True)
+  async def admin_show(self, ctx: commands.Context, team_id: int):
+    try:
+      if team_id not in self.teams:
+        self.teams[team_id] = await self._get_team_data(team_id)
+      team = self.teams[team_id]
+    except KeyError:
+      await ctx.send(f'Unrecognized team ID {team_id}. If you think this is a '
+                     'valid team ID, perhaps no one from that team has '
+                     'registered a Discord account yet.')
+      return
+
+    if ctx.guild:
+      members, users = self._get_members_if_possible(
+          [user.id for user in team.users], ctx.guild)
+    else:
+      members, users = [], team.users
+
+    members_txt = [f'  {member.display_name} ({member.name}#{member.discriminator})'
+                   for member in members]
+    users_txt = [f'  {user.name}#{user.discriminator}'
+                 for user in users]
+    channels_txt = [f'  {channel.mention}' for channel in team.channels
+                    if channel.guild == ctx.guild]
+
+    # Naive pagination implementation
+    pages = []
+    current_page, current_page_count = [], 0
+    if channels_txt:
+      current_page.append('**Channels**')
+      current_page_count += len(current_page[-1])
+      for line in channels_txt:
+        if current_page_count > 2000:
+          pages.append('\n'.join(current_page))
+          current_page = ['**Channels (cont\'d)**'],
+          current_page_count = len(current_page[0])
+        current_page.append(line)
+        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
+      if members_txt or users_txt:
+        current_page.append('')  # becomes a newline
+        current_page_count += 1
+    if members_txt:
+      if current_page_count > 1500:
+        pages.append('\n'.join(current_page))
+        current_page, current_page_count = [], 0
+      current_page.append('**Members in Server**')
+      current_page_count += len(current_page[-1])
+      for line in members_txt:
+        if current_page_count > 2000:
+          pages.append('\n'.join(current_page))
+          current_page = ['**Members in Server (cont\'d)**'],
+          current_page_count = len(current_page[0])
+        current_page.append(line)
+        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
+      if users_txt:
+        current_page.append('')  # becomes a newline
+        current_page_count += 1
+    if users_txt:
+      if current_page_count > 1500:
+        pages.append('\n'.join(current_page))
+        current_page, current_page_count = [], 0
+      current_page.append('**Members Elsewhere**')
+      current_page_count += len(current_page[-1])
+      for line in users_txt:
+        if current_page_count > 2000:
+          pages.append('\n'.join(current_page))
+          current_page = ['**Members Elsewhere (cont\'d)**'],
+          current_page_count = len(current_page[0])
+        current_page.append(line)
+        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
+    pages.append('\n'.join(current_page))
+    # pages is now a list of strings
+
+    embeds = [
+        discord.Embed(title=f'**{team.display_name} (ID: {team.team_id})**',
+                      color=discord.Color(0x22aaff),
+                      description=content)
+        for content in pages]
+    if len(embeds) == 1:
+      await ctx.send(embed=embeds[0])
+    else:
+      await menu(ctx, embeds, DEFAULT_CONTROLS, timeout=120)
+
+
   @_admin.command(name='ping')
   @commands.guild_only()
   @checks.mod_or_permissions(administrator=True)
@@ -413,6 +519,7 @@ class TeamTracker(commands.Cog):
     triggering message with mentions of all members of the named team in the
     current guild. It's kind of messy; maybe at-here is good enough?
     """
+
     pass
 
   @_admin.command(name='ping-all')
@@ -562,8 +669,9 @@ class TeamTracker(commands.Cog):
     await self.config.guild(guild).admin_channel.set(0)
     self.admin_channels[guild.id] = None
 
-  async def _get_team_data(self, identifier):
-    data = await self.config.get_raw('teams', identifier)
+  async def _get_team_data(self, team_id):
+    # Raises KeyError from get_raw if team_id is not a recognized team ID
+    data = await self.config.get_raw('teams', team_id)
     return await TeamData.read(self.bot, data)
 
   async def _add_user_to_team(self, user: discord.User, team: TeamData):
@@ -598,6 +706,18 @@ class TeamTracker(commands.Cog):
   ## permissions EXCEPT being able to see the channel. This means that
   ## general user permissions on all channels is to be gated solely on
   ## visibility and no other permission.
+
+  def _get_members_if_possible(self, user_ids, guild: discord.Guild):
+    """Given a list of user_ids, returns a list of Members for those users
+    present in the `guild`, and a list of Users for those users who aren't."""
+    members, users = [], []
+    for user_id in user_ids:
+      member = guild.get_member(user_id)
+      if member:
+        members.append(member)
+      else:
+        users.append(self.bot.get_user(user_id))
+    return members, users
 
   async def _permit_user_in_channel(self, user: discord.User,
                                     channel: discord.abc.GuildChannel,
@@ -664,7 +784,7 @@ class TeamTracker(commands.Cog):
   @commands.command(name='tt')
   async def my_debug(self, ctx: commands.Context):
     # await ctx.send(await self.config.teams())
-    await ctx.send([user.display_name for user in self.teams[3].users])
+    await ctx.send(await self.config.get_raw('teams', 'asdf'))
 
 
 class MissingCogSettingException(Exception):
