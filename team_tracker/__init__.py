@@ -10,8 +10,11 @@ This cog uses the [p]team command group.
 Admin/Mod:
   [p]enable          Enables the cog in the current server.
   [p]disable         Disables the cog in the current server.
-!  [p]channel [teams]  Creates a private channel visible to admins and the
+  [p]channel [teams]  Creates a private channel visible to admins and the
                       designated teams.
+  [p]channel add
+  [p]channel remove
+!  [p]update
   [p]stderr [chnl]   Sets admin messages to go to the designated channel.
                      All admin messages go to all admin channels.
 !  [p]search [foo]    Searches for all teams whose names contain regex `foo`.

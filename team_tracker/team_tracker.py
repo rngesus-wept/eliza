@@ -1,10 +1,13 @@
 """Cog for tracking team affiliations globally."""
 
 import asyncio
+import copy
 import logging
+import pathlib
 import random
 import requests
 import time
+from typing import List, Optional
 
 import discord
 from discord.ext import tasks
@@ -41,27 +44,31 @@ DEFAULT_USER_SETTINGS = {
     'secret': None,  # salt for transmitting user ID
     'last_updated': 0,  # time.time()
     'do_not_message': False,
+    # We use this to stagger automated user refreshes (to avoid spikyness). I
+    # would use the user ID but I do not believe those to be uniformly
+    # distributed.
+    'refresh_modulus': -1,
 }
 
 PERMIT_OVERWRITE = discord.PermissionOverwrite(view_channel=True)
 FORBID_OVERWRITE = discord.PermissionOverwrite(view_channel=False)
 
 
-def registration_url(user_id, token=None):
+def registration_url(user_id, token=None) -> str:
   return 'http://localhost:8000/register_discord/%s/' % (
       user_id,)
   # return 'https://bts.hidden.institute/register_discord/%s/' % (
   #     user_id,)
 
 
-def display(user):
+def display(user) -> str:
   if getattr(user, 'guild', None):
     return f'{user.display_name} ({user.name}#{user.discriminator})'
   else:
     return f'{user.name}#{user.discriminator}'
 
-def random_channel_name():
-  return f'room-{random.randint(0,9999)}'
+def random_channel_name() -> str:
+  return f'room-{random.randint(1,64)}-{str(random.randint(10,599)).zfill(3)}'
 
 ## Menu utilities
 
@@ -77,6 +84,62 @@ async def close_menu(ctx: commands.Context, pages: list, controls: dict,
   return None
 
 DEFAULT_CONTROLS = {"⬅": prev_page, "❌": close_menu, "➡": next_page}
+
+async def paginate_team_data(members: List[discord.Member],
+                             users: List[discord.User],
+                             channels: List[discord.abc.GuildChannel]) -> List[str]:
+  members_txt = [display(member) for member in members]
+  users_txt = [display(user) for user in users]
+  channels_txt = [channel.mention for channel in channels]
+
+  pages = []
+  current_page = [f'**{len(members_txt) + len(users_txt)}** Registered Members', '']
+  current_page_count = len(current_page[0]) + 2
+  if channels_txt:
+    current_page.append('**Channels**')
+    current_page_count += len(current_page[-1])
+    for line in channels_txt:
+      if current_page_count > 2000:
+        pages.append('\n'.join(current_page))
+        current_page = ['**Channels (cont\'d)**'],
+        current_page_count = len(current_page[0])
+      current_page.append(line)
+      current_page_count += len(line) + 1  # plus 1 for newline in eventual join
+    if members_txt or users_txt:
+      current_page.append('')  # becomes a newline
+      current_page_count += 1
+  if members_txt:
+    if current_page_count > 1500:
+      pages.append('\n'.join(current_page))
+      current_page, current_page_count = [], 0
+    current_page.append(f'**Members in Server** (**{len(members_txt)}** total)')
+    current_page_count += len(current_page[-1])
+    for line in members_txt:
+      if current_page_count > 2000:
+        pages.append('\n'.join(current_page))
+        current_page = ['**Members in Server** (cont\'d)'],
+        current_page_count = len(current_page[0])
+      current_page.append(line)
+      current_page_count += len(line) + 1  # plus 1 for newline in eventual join
+    if users_txt:
+      current_page.append('')  # becomes a newline
+      current_page_count += 1
+  if users_txt:
+    if current_page_count > 1500:
+      pages.append('\n'.join(current_page))
+      current_page, current_page_count = [], 0
+    current_page.append(f'**Members Elsewhere** (**{len(users_txt)}** total)')
+    current_page_count += len(current_page[-1])
+    for line in users_txt:
+      if current_page_count > 2000:
+        pages.append('\n'.join(current_page))
+        current_page = ['**Members Elsewhere** (cont\'d)'],
+        current_page_count = len(current_page[0])
+      current_page.append(line)
+      current_page_count += len(line) + 1  # plus 1 for newline in eventual join
+  pages.append('\n'.join(current_page))
+
+  return pages
 
 
 class TeamData(object):
@@ -109,6 +172,8 @@ class TeamData(object):
                   for user in self.users]
 
   async def write(self, config: Config):
+    self.channels = [ch for ch in self.channels if ch is not None]
+    self.users = [us for us in self.users if us is not None]
     serialized = {
         'team_id': self.team_id,
         'display_name': self.display_name,
@@ -144,6 +209,12 @@ class TeamTracker(commands.Cog):
       await self._load_guild(guild_id=guild_id)
 
     self.bot.add_listener(self.member_join, 'on_member_join')
+    self.cron_update_teams.start()
+    self.cron_update_users.start()
+
+  def cog_unload(self):
+    self.cron_update_teams.cancel()
+    self.cron_update_users.cancel()
 
   async def member_join(self, member):
     # Reminder: A member is a user x guild combination; that is, the same user
@@ -169,98 +240,58 @@ class TeamTracker(commands.Cog):
       return
 
     my_prefix = await self._prefix()
-    await user.send(
-        'Hello! You\'re receiving this message because you joined the server'
-        f' **{user.guild.name}** and are not associated with any particular'
-        ' team.\n'
-        f'    * To associate yourself with a team, visit <{registration_url(user.id)}>.\n'
-        '        Please do not share this link other players, nor click on'
-        ' links of this form sent to you by other players.\n'
-        '    * To never receive team-related messages from me again, respond'
-        f' with `{my_prefix}team ignore`. (Opt back in with `{my_prefix}team'
-        ' unignore`.)')
-
-  async def update_user(self, user: discord.User = None, user_id: int = None):
-    if user is None:
-      user = self.bot.get_user(user_id)
-    url = await self._update_url()
-    params = {
-        'auth': await self.config.secret(),
-        'user_id': user_id or user.id,
-    }
-
-    response = requests.get(url, params=params)
-    if response.status_code != 200:
-      await self.admin_msg(
-          'Attempt to refresh user data failed with error'
-          f' {response.status_code}: {response.text}')
-      return
-    data = response.json()
-
-    team_id = data['team'][0]
-    if team_id not in self.teams:
-      team_data = await TeamData.read(self.bot, {
-          'team_id': data['team'][0],
-          'display_name': data['team'][2],
-          'username': data['team'][3]
-      })
-      await team_data.write(self.config)
-      self.teams[team_id] = team_data
+    if getattr(user, 'guild', None):
+      intro = (
+          'Hello! You\'re receiving this message either because you or an event'
+          ' admin requested it, or because you joined the server **%s** and I'
+          ' don\'t know which team you\'re on.'
+      ) % (user.guild.name,)
     else:
-      team_data = self.teams[team_id]
+      intro = (
+          'Hello! You\'re receiving this message because you or an event admin'
+          ' requested it.'
+      )
+    register_instructions = (
+        '    * To let me know which team you\'re on, visit <%s>.\n'
+        '          Please do not share this link other players, nor click on'
+        ' links of this form sent to you by other players.'
+    ) % (registration_url(user.id),)
+    ignore_instructions = (
+        '    * To never receive team-related messages from me again, respond'
+        ' with `%steam ignore`. (Opt back in with `%steam unignore`.)\n'
+        '          I will ping you for: your team is scheduled for an'
+        ' imminent event or interaction (plus details), someone finds the coin.\n'
+        '          I will not ping you for: your team solves a puzzle, your'
+        ' team unlocks a puzzle round, errata is posted for a puzzle, memes.'
+    ) % (my_prefix, my_prefix)
+    await user.send('\n'.join([
+        intro, register_instructions, ignore_instructions]))
 
-    old_team = self.teams.get(await self.config.user(user).team_id(), None)
-    if old_team:
-      await self._remove_user_from_team(user, old_team)
+  @tasks.loop(minutes=1.0)  # Actual loop time for an individual team is 30 minutes
+  async def cron_update_teams(self):
+    wall_modulus = int(time.time() / 60) % 30
+    teams_to_update = [team_id for team_id in self.teams
+                       if team_id % 30 == wall_modulus]
+    if teams_to_update:
+      await asyncio.gather(
+          *[self._update_team(team=self.teams[team_id]) for team_id in teams_to_update],
+          return_exceptions=True)
 
-    await self._add_user_to_team(user, team_data)
-
-  async def update_team(self, team: TeamData = None, team_id: int = None):
-    if team is None:
-      if team_id not in self.teams:
-        self.teams[team_id] = await self._get_team_data(team_id)
-      team = self.teams[team_id]
-    url = await self.config.lookup_url()
-    params = {
-        'auth': await self.config.secret(),
-        'team_id': team_id or team['team_id'],
-    }
-
-    response = requests.get(url, params=params)
-    if response.status_code != 200:
-      await self.admin_msg(
-          'Attempt to refresh team data failed with error'
-          f' {response.status_code}: {response.text}')
-      return
-    data = response.json()
-
-    original_users = set(user.id for user in team.users)
-    updated_users = set(int(user_id) for user_id in data['user_ids'])
-    ids_to_add = list(updated_users - original_users)
-    users_to_add = [self.bot.get_user(user_id) for user_id in ids_to_add]
-    ids_to_remove = list(original_users - updated_users)
-    users_to_remove = [self.bot.get_user(user_id) for user_id in ids_to_remove]
-
-    remove_results = await asyncio.gather(
-        *[self._remove_user_from_team(user, team) for user in users_to_remove],
-        return_exceptions=True)
-    remove_errors = [user_id for user_id, result in zip(ids_to_remove, remove_results)
-                     if result is not None]
-
-    add_results = await asyncio.gather(
-        *[self._add_user_to_team(user, team) for user in users_to_add],
-        return_exceptions=True)
-    add_errors = [user_id for user_id, result in zip(ids_to_add, add_results)
-                  if result is not None]
-
-    if add_errors or remove_errors:
-      message = [f'Encountered unexpected errors while updating {team.username}:']
-      if add_errors:
-        message.append(f'    adding user ids {add_errors}')
-      if remove_errors:
-        message.append(f'    removing user ids {remove_errors}')
-      await self.admin_msg('\n'.join(message))
-
+  @tasks.loop(minutes=5.0)  # Actual loop time for an individual user is 20 minutes
+  async def cron_update_users(self):
+    wall_modulus = int(time.time() / 300) % 4
+    users = await self.config.all_users()
+    users_to_update = [user_id for user_id in users
+                       if users[user_id]['team_id'] == -1 or
+                       time.time() - users[user_id]['last_updated'] > 120]
+    moduli = await asyncio.gather(
+        *[self._modulus(user_id=user_id) for user_id in users_to_update])
+    users_to_update = [user_id for user_id, modulus in zip(users_to_update, moduli)
+                       if modulus == wall_modulus]
+    if users_to_update:
+      await asyncio.gather(
+          *[self._update_user(user_id=user_id) for user_id in users_to_update],
+          return_exceptions=True)
 
   ######### General stuff
 
@@ -297,12 +328,12 @@ class TeamTracker(commands.Cog):
       await ctx.send(f'{display(user)} is affiliated with a team'
                      f' whose ID I do not recognize. ({team_id})')
       return
-    await ctx.send('%s is affiliated with Team **%s**.' % (
-        display(user), self.teams[team_id].display_name))
+    await ctx.send('%s is affiliated with Team **%s** (%s).' % (
+        display(user), self.teams[team_id].display_name, team_id))
 
   @_team.command(name='register')
   async def team_register(self, ctx: commands.Context, user: discord.User = None):
-    """Manually initiate registration, possibly for another user.
+    """Initiate registration for target user (default: self).
 
     Any user may call this command on themself (with no argument). Only admins
     may call this command on others."""
@@ -312,11 +343,45 @@ class TeamTracker(commands.Cog):
         return
     else:
       user = ctx.author
+    await ctx.send(f'Sending registration prompt to {user.display_name}.')
     await self.registration_prompt(user, bypass_ignore=True)
+
+  @_team.command(name='update')
+  async def team_update(self, ctx: commands.Context, user: discord.User = None):
+    """Force update of target user's team affiliation (default: self).
+
+    Any user may call this command on themself (with no argument). Only admins
+    may call this command on others.
+
+    To force an update for an entire team, see `[p]team refresh`."""
+    if user is not None:
+      if not mod.is_mod_or_superior(ctx.author):
+        await ctx.add_reaction(u'🙅')
+        return
+    else:
+      user = ctx.author
+    await ctx.send(f'Updating team affiliation for {display(user)}')
+    await self._update_user(user=user)
+
+  @_team.command(name='refresh')
+  @checks.mod_or_permissions(administrator=True)
+  async def team_refresh(self, ctx: commands.Context, team_id: int):
+    """Force update of target team's information.
+
+    `[p]team search` may be useful for finding the number ID of a team.
+    """
+    if team_id in self.teams:
+      team_data = self.teams[team_id]
+      message = await ctx.send(f'Updating team info for team `{team_data.username}`')
+      await self._update_team(team=team_data)
+    else:
+      message = await ctx.send(f'Updating team info for team #{team_id}')
+      await self._update_team(team_id=team_id)
+    await message.edit(content=(message.content + ' ... done'))
 
   @_team.command(name='forget')
   async def team_forget(self, ctx: commands.Context, user: discord.User = None):
-    """Remove team affiliation from target user (or self).
+    """Remove team affiliation from target user (default: self).
 
     Any user may call this command on themself (with no argument). Only admins
     may call this command on others."""
@@ -346,6 +411,7 @@ class TeamTracker(commands.Cog):
   @_team.command(name='show')
   @checks.mod_or_permissions(administrator=True)
   async def admin_show(self, ctx: commands.Context, team_id: int):
+    """Show team channels and members."""
     try:
       if team_id not in self.teams:
         self.teams[team_id] = await self._get_team_data(team_id)
@@ -362,62 +428,11 @@ class TeamTracker(commands.Cog):
     else:
       members, users = [], team.users
 
-    members_txt = [f'  {member.display_name} ({member.name}#{member.discriminator})'
-                   for member in members]
-    users_txt = [f'  {user.name}#{user.discriminator}'
-                 for user in users]
-    channels_txt = [f'  {channel.mention}' for channel in team.channels
-                    if channel.guild == ctx.guild]
+    pages = paginate_team_data(members, users,
+                               [channel for channel in team.channels
+                                if channel.guild == ctx.guild])
 
-    # Naive pagination implementation
-    pages = []
-    current_page = [f'**{len(members_txt) + len(users_txt)}** Registered Members', '']
-    current_page_count = len(current_page[0]) + 2
-    if channels_txt:
-      current_page.append('**Channels**')
-      current_page_count += len(current_page[-1])
-      for line in channels_txt:
-        if current_page_count > 2000:
-          pages.append('\n'.join(current_page))
-          current_page = ['**Channels (cont\'d)**'],
-          current_page_count = len(current_page[0])
-        current_page.append(line)
-        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
-      if members_txt or users_txt:
-        current_page.append('')  # becomes a newline
-        current_page_count += 1
-    if members_txt:
-      if current_page_count > 1500:
-        pages.append('\n'.join(current_page))
-        current_page, current_page_count = [], 0
-      current_page.append(f'**Members in Server** (**{len(members_txt)}** total)')
-      current_page_count += len(current_page[-1])
-      for line in members_txt:
-        if current_page_count > 2000:
-          pages.append('\n'.join(current_page))
-          current_page = ['**Members in Server** (cont\'d)'],
-          current_page_count = len(current_page[0])
-        current_page.append(line)
-        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
-      if users_txt:
-        current_page.append('')  # becomes a newline
-        current_page_count += 1
-    if users_txt:
-      if current_page_count > 1500:
-        pages.append('\n'.join(current_page))
-        current_page, current_page_count = [], 0
-      current_page.append(f'**Members Elsewhere** (**{len(users_txt)}** total)')
-      current_page_count += len(current_page[-1])
-      for line in users_txt:
-        if current_page_count > 2000:
-          pages.append('\n'.join(current_page))
-          current_page = ['**Members Elsewhere** (cont\'d)'],
-          current_page_count = len(current_page[0])
-        current_page.append(line)
-        current_page_count += len(line) + 1  # plus 1 for newline in eventual join
-    pages.append('\n'.join(current_page))
-    # pages is now a list of strings
-
+    pages = paginate_team_data(members=members, users=users, channels=channels)
     embeds = [
         discord.Embed(title=f'**{team.display_name} (ID: {team.team_id})**',
                       color=discord.Color(0x22aaff),
@@ -474,30 +489,140 @@ class TeamTracker(commands.Cog):
     await self._disable_guild(guild=ctx.guild)
     await ctx.send('Team management disabled.')
 
-  @_team.command(name='channel', invoke_without_command=True)
+  @_team.group(name='channel', invoke_without_command=True)
   @commands.guild_only()
   @checks.mod_or_permissions(administrator=True)
   async def _channel(self, ctx: commands.Context, channel_type: str, *team_ids: int):
-    """Create a text or voice channel only visible to certain teams."""
+    """Create a text and/or voice channel only visible to certain teams.
+
+    `channel_type` should be one of `text`, `voice`, or `both`. `[p]team search`
+    may be useful for finding the number ID of a team.
+    """
     if set(team_ids) - set(self.teams):
       await ctx.send('Missing data for the following team IDs: %s' % (
-          ', '.join(set(team_ids) - set(self.teams)),))
+          ', '.join(map(str, set(team_ids) - set(self.teams))),))
       return
 
-    if channel_type is 'text':
-      channel = await self._create_team_text_channel(
-          random_channel_name(), ctx.guild)
-    elif channel_type is 'voice':
-      channel = await self._create_team_voice_channel(
-          random_channel_name(), ctx.guild)
-    else:
+    if channel_type not in ['text', 'voice', 'both']:
       await ctx.send(f'Received unexpected channel type `{channel_type}`;'
-                     ' use `text` or `voice`.')
+                     ' use `text`, `voice`, or `both`.')
+      return
+
+    channel_name = random_channel_name()
+    channels = []
+    if channel_type in ['text', 'both']:
+      channels.append(await self._create_team_text_channel(
+          channel_name, ctx.guild, *[self.teams[team_id] for team_id in team_ids]))
+    if channel_type in ['voice', 'both']:
+      channels.append(await self._create_team_voice_channel(
+          channel_name, ctx.guild, *[self.teams[team_id] for team_id in team_ids]))
+
+    await ctx.send('Created channel %s for team%s `%s`' % (
+        channels[0].mention,
+        nl.s(len(team_ids)),
+        '`, `'.join(self.teams[team_id].username for team_id in team_ids)))
+
+  @_channel.command(name='batch')
+  @commands.guild_only()
+  @checks.mod_or_permissions(administrator=True)
+  async def channel_batch(
+      self, ctx: commands.Context, channel_type: str, *args):
+    """Batch create text and/or voice channels for certain team groups.
+
+    `channel_type` should be one of `text`, `voice`, or `both`.
+
+    Format your arguments with spaces separating team IDs, and pipes `|`
+    separating groups of team IDs. Empty groups are valid. For example, the
+    command
+
+    `[p]team channel batch text | 3 5 | 1 | 2 | |`
+
+    will create 6 text channels, and the first, fifth, and sixth will not have
+    any teams assigned to them. It is equivalent to running
+
+    `[p]team channel text`
+    `[p]team channel text 3 5`
+    `[p]team channel text 1`
+    `[p]team channel text 2`
+    `[p]team channel text`
+    `[p]team channel text`
+    """
+    team_groups, bad_args = [[]], []
+    if channel_type not in ['text', 'voice', 'both']:
+      bad_args.append(channel_type)
+    for arg in args:
+      if arg == '|':
+        team_groups.append([])
+      elif not arg.isdigit() or int(arg) not in self.teams:
+        bad_args.append(arg)
+      else:
+        team_groups[-1].append(arg)
+
+    if bad_args:
+      await ctx.send(
+          f'Received invalid arguments for batch channel creation: {bad_args}')
+      return
+
+    fake_msg = copy.copy(ctx.message)
+    new_cmd = (await self._prefix()) + ctx.command.full_parent_name
+    for group in team_groups:
+      fake_msg.content = '%s %s %s' % (new_cmd, channel_type, ' '.join(group))
+      new_ctx = await self.bot.get_context(fake_msg)
+      await self.bot.invoke(new_ctx)
+
+  @_channel.command(name='add')
+  @commands.guild_only()
+  @checks.mod_or_permissions(administrator=True)
+  async def channel_add(
+      self, ctx: commands.Context, channel: discord.abc.GuildChannel, *team_ids: int):
+    """Add visibility to target channel for certain teams.
+
+    Note that voice channels must be identified by ID number. This can be
+    obtained by right clicking on the voice channel and selecting 'Copy ID'; you
+    may need to have developer options enabled.
+
+    `[p]team search` may be useful for finding the number ID of a team.
+    """
+    if set(team_ids) - set(self.teams):
+      await ctx.send('Missing data for the following team IDs: %s' % (
+          ', '.join(map(str, set(team_ids) - set(self.teams))),))
       return
 
     await asyncio.gather(*[
         self._permit_team_in_channel(self.teams[team_id], channel)
-        for team_id in team_ids])
+        for team_id in team_ids],
+                         return_exceptions=True)
+    await ctx.send('Added team%s `%s` to channel %s' % (
+        nl.s(len(team_ids)),
+        '`, `'.join(self.teams[team_id].username for team_id in team_ids),
+        channel.mention))
+
+  @_channel.command(name='remove')
+  @commands.guild_only()
+  @checks.mod_or_permissions(administrator=True)
+  async def channel_remove(
+      self, ctx: commands.Context, channel: discord.abc.GuildChannel, *team_ids: int):
+    """Remove visibility to target channel for certain teams.
+
+    Note that voice channels must be identified by ID number. This can be
+    obtained by right clicking on the voice channel and selecting 'Copy ID'; you
+    may need to have developer options enabled.
+
+    `[p]team search` may be useful for finding the number ID of a team.
+    """
+    if set(team_ids) - set(self.teams):
+      await ctx.send('Missing data for the following team IDs: %s' % (
+          ', '.join(map(str, set(team_ids) - set(self.teams))),))
+      return
+
+    await asyncio.gather(*[
+        self._forbid_team_in_channel(self.teams[team_id], channel)
+        for team_id in team_ids],
+                         return_exceptions=True)
+    await ctx.send('Removed team%s `%s` from channel %s' % (
+        nl.s(len(team_ids)),
+        '`, `'.join(self.teams[team_id].username for team_id in team_ids),
+        channel.mention))
 
   @_admin.command(name='stderr')
   @commands.guild_only()
@@ -525,7 +650,7 @@ class TeamTracker(commands.Cog):
       else:
         message = ['Admin messages for team management are routed to',
                    f' this guild\'s {the_channel.mention}']
-        others = len(ch for ch in self.admin_channels.values() if ch) - 1
+        others = len([ch for ch in self.admin_channels.values() if ch]) - 1
         if others:
           message.append(f' (and {others} other channel{nl.s(others)})')
         message.append('.')
@@ -542,11 +667,11 @@ class TeamTracker(commands.Cog):
   @checks.mod_or_permissions(administrator=True)
   async def admin_local_ping(self, ctx: commands.Context,
                              team_identifier: str, *message):
-    """Ping all members of the indicated team, locally.
+    """Ping all members of the indicated team, globally, via DM.
 
-    This directly replaces the `[p]team admin ping <team>` portion of the
-    triggering message with mentions of all members of the named team in the
-    current guild. It's kind of messy; maybe at-here is good enough?
+    If you need to only ping local members of a team, consider first setting up
+    a channel only they can see with `[p]team channel text <team_id>` and use
+    at-here to get their attention.
     """
 
     pass
@@ -600,7 +725,7 @@ class TeamTracker(commands.Cog):
       if channel:
         await channel.send(message)
 
-  ######## Data management helper functions
+  ######## Data management helper functions/utilities
 
   ## These are here to make sure that writes to the cog's internal memory are
   ## reflected to the datastore, and the reads from the cog's datastore are
@@ -608,6 +733,15 @@ class TeamTracker(commands.Cog):
 
   async def _prefix(self):
     return (await self.bot._prefix_cache.get_prefixes())[0]
+
+  async def _modulus(self, user: discord.User = None, user_id: int = None):
+    if not user:
+      user = self.bot.get_user(user_id)
+    modulus = await self.config.user(user).refresh_modulus()
+    if modulus == -1:
+      modulus = random.randint(0, 3)
+      await self.config.user(user).refresh_modulus.set(modulus)
+    return modulus
 
   async def _update_url(self):
     url = await self.config.lookup_url()
@@ -624,6 +758,10 @@ class TeamTracker(commands.Cog):
                         guild_id: int = None):
     if guild is None:
       guild = self.bot.get_guild(guild_id)
+      if guild is None:
+        log.warn(f'Invalid guild ID {guild_id}; removing from config.')
+        await self.config.guild_from_id(guild_id).clear_raw()
+        return
     if not await self.config.guild(guild).enabled():
       return
 
@@ -703,6 +841,107 @@ class TeamTracker(commands.Cog):
     data = await self.config.get_raw('teams', team_id)
     return await TeamData.read(self.bot, data)
 
+  async def _update_user(self, user: discord.User = None, user_id: int = None):
+    if user is None:
+      user = self.bot.get_user(user_id)
+    url = await self._update_url()
+    params = {
+        'auth': await self.config.secret(),
+        'user_id': user_id or user.id,
+    }
+
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+      await self.admin_msg(
+          'Attempt to refresh user data failed with error'
+          f' {response.status_code}: {response.text}')
+      return
+    data = response.json()
+
+    if not data['success']:
+      # User ID is completely unknown to hunt DB. Don't update last_updated so
+      # that this user might get picked on the next go
+      return
+
+    team_id = data['team'][0]
+    if team_id not in self.teams:
+      team_data = await TeamData.read(self.bot, {
+          'team_id': data['team'][0],
+          'display_name': data['team'][2],
+          'username': data['team'][3]
+      })
+      await team_data.write(self.config)
+      self.teams[team_id] = team_data
+    else:
+      team_data = self.teams[team_id]
+
+    original_team_id = await self.config.user(user).team_id()
+    if original_team_id != team_id:
+      old_team = self.teams.get(await self.config.user(user).team_id(), None)
+      if old_team:
+        await self._remove_user_from_team(user, old_team)
+      await self._add_user_to_team(user, team_data)
+    await self.config.user(user).last_updated.set(time.time())
+
+  async def _update_team(self, team: TeamData = None, team_id: int = None):
+    if team is None:
+      if team_id not in self.teams:
+        try:
+          self.teams[team_id] = await self._get_team_data(team_id)
+        except KeyError:
+          self.teams[team_id] = None
+      team = self.teams[team_id]
+    url = await self.config.lookup_url()
+    params = {
+        'auth': await self.config.secret(),
+        'team_id': team_id or team.team_id,
+    }
+
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+      await self.admin_msg(
+          f'Attempt to refresh team data for {params["team_id"]} failed with '
+          f'error {response.status_code}: {response.text}')
+      return
+    data = response.json()
+
+    if team is None:
+      team_data = await TeamData.read(self.bot, {
+          'team_id': data['team'][0],
+          'display_name': data['team'][2],
+          'username': data['team'][3]
+      })
+      await team_data.write(self.config)
+      self.teams[team_id] = team_data
+      team = team_data
+
+    original_users = set(user.id for user in team.users)
+    updated_users = set(int(user_id) for user_id in data['user_ids'])
+    ids_to_add = list(updated_users - original_users)
+    users_to_add = [self.bot.get_user(user_id) for user_id in ids_to_add]
+    ids_to_remove = list(original_users - updated_users)
+    users_to_remove = [self.bot.get_user(user_id) for user_id in ids_to_remove]
+
+    remove_results = await asyncio.gather(
+        *[self._remove_user_from_team(user, team) for user in users_to_remove],
+        return_exceptions=True)
+    remove_errors = [user_id for user_id, result in zip(ids_to_remove, remove_results)
+                     if result is not None]
+
+    add_results = await asyncio.gather(
+        *[self._add_user_to_team(user, team) for user in users_to_add],
+        return_exceptions=True)
+    add_errors = [user_id for user_id, result in zip(ids_to_add, add_results)
+                  if result is not None]
+
+    if add_errors or remove_errors:
+      message = [f'Encountered unexpected errors while updating {team.username}:']
+      if add_errors:
+        message.append(f'    adding user ids {add_errors}')
+      if remove_errors:
+        message.append(f'    removing user ids {remove_errors}')
+      await self.admin_msg('\n'.join(message))
+
   async def _add_user_to_team(self, user: discord.User, team: TeamData):
     if user in team.users:
       log.debug(f'User {display(user)} is already on {team.username}.')
@@ -740,13 +979,23 @@ class TeamTracker(commands.Cog):
       category = guild.get_channel(category_id)
     return category
 
-  async def _create_team_text_channel(self, name: str, guild: discord.Guild):
+  async def _create_team_text_channel(
+      self, name: str, guild: discord.Guild, *teams: TeamData):
     team_category = await self._get_or_create_team_category(guild)
-    return await team_category.create_text_channel(name)
+    channel = await team_category.create_text_channel(name)
+    await asyncio.gather(
+        *[self._permit_team_in_channel(team, channel) for team in teams],
+        return_exceptions=True)
+    return channel
 
-  async def _create_team_voice_channel(self, name: str, guild: discord.Guild):
+  async def _create_team_voice_channel(
+      self, name: str, guild: discord.Guild, *teams: TeamData):
     team_category = await self._get_or_create_team_category(guild)
-    return await team_category.create_voice_channel(name)
+    channel = await team_category.create_voice_channel(name)
+    await asyncio.gather(
+        *[self._permit_team_in_channel(team, channel) for team in teams],
+        return_exceptions=True)
+    return channel
 
   ## NOTE: Channels will be created such that users have all the necessary
   ## permissions EXCEPT being able to see the channel. This means that
@@ -801,6 +1050,8 @@ class TeamTracker(commands.Cog):
 
   async def _permit_team_in_channel(self, team: TeamData,
                                     channel: discord.abc.GuildChannel):
+    if channel in team.channels:
+      return
     team.channels.append(channel)
     await team.write(self.config)
 
@@ -810,6 +1061,8 @@ class TeamTracker(commands.Cog):
 
   async def _forbid_team_in_channel(self, team: TeamData,
                                     channel: discord.abc.GuildChannel):
+    if channel not in team.channels:
+      return
     team.channels.remove(channel)
     await team.write(self.config)
 
@@ -829,8 +1082,10 @@ class TeamTracker(commands.Cog):
 
   @commands.command(name='tt')
   async def my_debug(self, ctx: commands.Context):
-    # await ctx.send(await self.config.teams())
-    await ctx.send(await self.config.get_raw('teams', 'asdf'))
+    users = await self.config.all_users()
+    for user_id in users:
+      await self.config.user_from_id(user_id).last_updated.set(0)
+    await ctx.send(await self.config.user(ctx.author).last_updated())
 
 
 class MissingCogSettingException(Exception):
