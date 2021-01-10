@@ -36,6 +36,7 @@ DEFAULT_GUILD_SETTINGS = {
     'enabled': False,
     'admin_channel': None,
     'teams_category': None,
+    'participant_role': None,
 }
 
 DEFAULT_USER_SETTINGS = {
@@ -978,6 +979,9 @@ class TeamTracker(commands.Cog):
     else:
       category = guild.get_channel(category_id)
     return category
+
+  async def _get_or_create_participant_role(self, guild: discord.Guild):
+    pass
 
   async def _create_team_text_channel(
       self, name: str, guild: discord.Guild, *teams: TeamData):
