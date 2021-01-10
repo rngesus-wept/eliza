@@ -431,7 +431,7 @@ class TeamTracker(commands.Cog):
 
     pages = paginate_team_data(members, users,
                                [channel for channel in team.channels
-                                if channel.guild == ctx.guild])
+                                if channel and channel.guild == ctx.guild])
 
     pages = paginate_team_data(members=members, users=users, channels=channels)
     embeds = [
