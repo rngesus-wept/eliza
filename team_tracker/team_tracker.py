@@ -3,6 +3,7 @@
 import asyncio
 import copy
 import logging
+import os
 import pathlib
 import random
 import requests
@@ -27,6 +28,7 @@ CONFIG_ID = 0x51C6FD2FD8E37013
 
 DEFAULT_GLOBAL_SETTINGS = {
     'teams': {},
+    'server_url': None,
     'lookup_url': None,
     'secret': None,
     ## TODO: Make registration URL a setting?
@@ -51,15 +53,9 @@ DEFAULT_USER_SETTINGS = {
     'refresh_modulus': -1,
 }
 
+PARTICIPANT_ROLE_NAME = 'Participant'
 PERMIT_OVERWRITE = discord.PermissionOverwrite(view_channel=True)
 FORBID_OVERWRITE = discord.PermissionOverwrite(view_channel=False)
-
-
-def registration_url(user_id, token=None) -> str:
-  return 'http://localhost:8000/register_discord/%s/' % (
-      user_id,)
-  # return 'https://bts.hidden.institute/register_discord/%s/' % (
-  #     user_id,)
 
 
 def display(user) -> str:
@@ -86,7 +82,7 @@ async def close_menu(ctx: commands.Context, pages: list, controls: dict,
 
 DEFAULT_CONTROLS = {"⬅": prev_page, "❌": close_menu, "➡": next_page}
 
-async def paginate_team_data(members: List[discord.Member],
+def paginate_team_data(members: List[discord.Member],
                              users: List[discord.User],
                              channels: List[discord.abc.GuildChannel]) -> List[str]:
   members_txt = [display(member) for member in members]
@@ -142,6 +138,23 @@ async def paginate_team_data(members: List[discord.Member],
 
   return pages
 
+def paginate_table(lines):
+  pages = []
+  current_page, current_count = [], 0
+  current_page.append("```")
+  current_count += len(current_page[0]) + 1
+  for line in lines:
+    current_page.append(line)
+    current_count += len(line) + 1
+    if current_count > 1500:
+      current_page.append("```")
+      pages.append('\n'.join(current_page))
+      current_page = "```"
+      current_count = len(current_page[0]) + 1
+  current_page.append("```")
+  pages.append('\n'.join(current_page))
+  return pages
+
 
 class TeamData(object):
   """Structured data collected about teams."""
@@ -185,6 +198,22 @@ class TeamData(object):
     }
     await config.set_raw('teams', self.team_id, value=serialized)
 
+  def users_here(self, guild: discord.Guild):
+    members = [guild.get_member(user.id) for user in self.users]
+    return [member for member in members if member is not None]
+
+  def table_line(self, guild: discord.Guild, count: int=1):
+    data = [f'{self.team_id:3d}',
+            f'{self.username:24}']
+    users_here = self.users_here(guild)
+    members = [f'@{user.name}#{user.discriminator}'
+               for user in self.users_here(guild)[:count]]
+    data.append(', '.join(members))
+    if members:
+      return '  '.join(data)
+    else:
+      return ''
+
 
 class TeamTracker(commands.Cog):
   """Global team affiliation tracking."""
@@ -226,7 +255,10 @@ class TeamTracker(commands.Cog):
       return
     team_id = await self.config.user(member).team_id()
     if team_id == -1:
-      await self.registration_prompt(member)
+      if not await self.registration_prompt(member):
+        await self.admin_msg(f'Discord registration for {member.name}#{member.discriminator}'
+                             ' failed; user may have the bot blocked, or have DMs from non-'
+                             'friends disabled.')
     else:
       team_data = self.teams[team_id]
       for channel in team_data.channels:
@@ -235,10 +267,10 @@ class TeamTracker(commands.Cog):
               member, channel,
               f'Adding registered user {display(member)}')
 
-  async def registration_prompt(self, user, bypass_ignore=False):
+  async def registration_prompt(self, user, bypass_ignore=False) -> bool:
     do_not_message = await self.config.user(user).do_not_message()
     if do_not_message and not bypass_ignore:
-      return
+      return True  # message fails silently as intended
 
     my_prefix = await self._prefix()
     if getattr(user, 'guild', None):
@@ -256,7 +288,7 @@ class TeamTracker(commands.Cog):
         '    * To let me know which team you\'re on, visit <%s>.\n'
         '          Please do not share this link other players, nor click on'
         ' links of this form sent to you by other players.'
-    ) % (registration_url(user.id),)
+    ) % (os.path.join(await self._register_url(), str(user.id)),)
     ignore_instructions = (
         '    * To never receive team-related messages from me again, respond'
         ' with `%steam ignore`. (Opt back in with `%steam unignore`.)\n'
@@ -265,8 +297,13 @@ class TeamTracker(commands.Cog):
         '          I will not ping you for: your team solves a puzzle, your'
         ' team unlocks a puzzle round, errata is posted for a puzzle, memes.'
     ) % (my_prefix, my_prefix)
-    await user.send('\n'.join([
-        intro, register_instructions, ignore_instructions]))
+    try:
+      await user.send('\n'.join([
+          intro, register_instructions, ignore_instructions]))
+      await self.config.user(user).last_updated.set(5 * 60)
+      return True
+    except discord.http.Forbidden:
+      return False
 
   @tasks.loop(minutes=1.0)  # Actual loop time for an individual team is 30 minutes
   async def cron_update_teams(self):
@@ -274,6 +311,8 @@ class TeamTracker(commands.Cog):
     teams_to_update = [team_id for team_id in self.teams
                        if team_id % 30 == wall_modulus]
     if teams_to_update:
+      log.info(f'Running automated update for {len(teams_to_update)}'
+               f' team{nl.s(len(teams_to_update))}.')
       await asyncio.gather(
           *[self._update_team(team=self.teams[team_id]) for team_id in teams_to_update],
           return_exceptions=True)
@@ -284,12 +323,14 @@ class TeamTracker(commands.Cog):
     users = await self.config.all_users()
     users_to_update = [user_id for user_id in users
                        if users[user_id]['team_id'] == -1 or
-                       time.time() - users[user_id]['last_updated'] > 120]
+                       time.time() - users[user_id]['last_updated'] > 2 * 60 * 60]
     moduli = await asyncio.gather(
         *[self._modulus(user_id=user_id) for user_id in users_to_update])
     users_to_update = [user_id for user_id, modulus in zip(users_to_update, moduli)
                        if modulus == wall_modulus]
     if users_to_update:
+      log.info(f'Running automated update for {len(users_to_update)}'
+               f' user{nl.s(len(users_to_update))}.')
       await asyncio.gather(
           *[self._update_user(user_id=user_id) for user_id in users_to_update],
           return_exceptions=True)
@@ -339,13 +380,16 @@ class TeamTracker(commands.Cog):
     Any user may call this command on themself (with no argument). Only admins
     may call this command on others."""
     if user is not None:
-      if not mod.is_mod_or_superior(ctx.author):
+      if not mod.is_mod_or_superior(self.bot, ctx.author):
         await ctx.add_reaction(u'🙅')
         return
     else:
       user = ctx.author
     await ctx.send(f'Sending registration prompt to {user.display_name}.')
-    await self.registration_prompt(user, bypass_ignore=True)
+    if not await self.registration_prompt(user, bypass_ignore=True):
+      await self.admin_msg(f'Discord registration for {user.name}#{user.discriminator}'
+                           ' failed; user may have the bot blocked, or have DMs from non-'
+                           'friends disabled.')
 
   @_team.command(name='update')
   async def team_update(self, ctx: commands.Context, user: discord.User = None):
@@ -356,7 +400,7 @@ class TeamTracker(commands.Cog):
 
     To force an update for an entire team, see `[p]team refresh`."""
     if user is not None:
-      if not mod.is_mod_or_superior(ctx.author):
+      if not mod.is_mod_or_superior(self.bot, ctx.author):
         await ctx.add_reaction(u'🙅')
         return
     else:
@@ -371,7 +415,7 @@ class TeamTracker(commands.Cog):
 
     `[p]team search` may be useful for finding the number ID of a team.
     """
-    if team_id in self.teams:
+    if team_id in self.teams and self.teams[team_id] is not None:
       team_data = self.teams[team_id]
       message = await ctx.send(f'Updating team info for team `{team_data.username}`')
       await self._update_team(team=team_data)
@@ -387,7 +431,7 @@ class TeamTracker(commands.Cog):
     Any user may call this command on themself (with no argument). Only admins
     may call this command on others."""
     if user is not None:
-      if not mod.is_mod_or_superior(ctx.author):
+      if not mod.is_mod_or_superior(self.bot, ctx.author):
         await ctx.add_reaction(u'🙅')
         return
     else:
@@ -411,7 +455,7 @@ class TeamTracker(commands.Cog):
 
   @_team.command(name='show')
   @checks.mod_or_permissions(administrator=True)
-  async def admin_show(self, ctx: commands.Context, team_id: int):
+  async def team_show(self, ctx: commands.Context, team_id: int):
     """Show team channels and members."""
     try:
       if team_id not in self.teams:
@@ -433,7 +477,6 @@ class TeamTracker(commands.Cog):
                                [channel for channel in team.channels
                                 if channel and channel.guild == ctx.guild])
 
-    pages = paginate_team_data(members=members, users=users, channels=channels)
     embeds = [
         discord.Embed(title=f'**{team.display_name} (ID: {team.team_id})**',
                       color=discord.Color(0x22aaff),
@@ -443,6 +486,18 @@ class TeamTracker(commands.Cog):
       await ctx.send(embed=embeds[0])
     else:
       await menu(ctx, embeds, DEFAULT_CONTROLS, timeout=120)
+
+  @_team.command(name='show-all')
+  @checks.mod_or_permissions(administrator=True)
+  async def team_show_all(self, ctx: commands.Context, n: int=1):
+    """Show tabulated information on all teams along with up to `n` members from each.
+
+    Team members not in this guild are excluded from consideration. Teams
+    with no members in this guild will not show up at all."""
+    lines = [team.table_line(ctx.guild, n) for team in self.teams.values()]
+    lines = [line for line in lines if line]
+    for page in paginate_table(lines):
+      await ctx.send(page)
 
   ######### Admin stuff
 
@@ -467,6 +522,33 @@ class TeamTracker(commands.Cog):
       await self.config.user_from_id(user_id).set_raw(
           value=DEFAULT_USER_SETTINGS)
     await ctx.send('Global team management factory reset complete.')
+
+  @_admin.command(name='select')
+  @checks.mod_or_permissions(administrator=True)
+  async def admin_select(self, ctx: commands.Context, count: int=1):
+    """Selects up to `count` members from each team to be Participants.
+
+    Note that this also deselects other members from being Participants. That
+    is, running this command twice will not result in more than the desired
+    number of participants per team.
+    """
+    participant = await self._get_or_create_participant_role(ctx.guild)
+    user_count, team_count = 0, 0
+    for team in self.teams.values():
+      users_here = team.users_here(ctx.guild)
+      if not users_here:
+        continue
+      users_here = random.sample(users_here, len(users_here))  # shuffle
+      role_calls = [
+          member.add_roles(participant) for member in users_here[:count]
+      ] + [
+          member.remove_roles(participant) for member in users_here[count:]
+      ]
+      await asyncio.gather(*role_calls, return_exceptions=True)
+      team_count += 1
+      user_count += min(count, len(users_here))
+    await ctx.send(f'Selected {user_count} participant{nl.s(user_count)}'
+                   f' across {team_count} team{nl.s(team_count)}.')
 
   @_admin.command(name='enable')
   @commands.guild_only()
@@ -704,18 +786,18 @@ class TeamTracker(commands.Cog):
         message.append(f'(was `{the_token}`)')
       await self.admin_msg(' '.join(message))
 
-  @_admin.command(name='lookup_url')
+  @_admin.command(name='server_url')
   @checks.mod_or_permissions(administrator=True)
-  async def admin_lookup_url(self, ctx: commands.Context, *url: str):
+  async def admin_server_url(self, ctx: commands.Context, *url: str):
     """Sets or displays the URL used for retrieving details from silenda."""
-    the_url = await self.config.lookup_url()
+    the_url = await self.config.server_url()
     url = ' '.join(url)
     if not url:
-      await ctx.author.send(f'Team management lookup url: {the_url}')
+      await ctx.author.send(f'Team management server url: {the_url}')
     else:
-      await self.config.lookup_url.set(url)
+      await self.config.server_url.set(url)
       message = [display(ctx.author),
-                 f'set the team management lookup url to {url}.']
+                 f'set the team management server url to {url}.']
       if the_url:
         message.append(f'(was `{the_url}`)')
       await self.admin_msg(' '.join(message))
@@ -744,15 +826,25 @@ class TeamTracker(commands.Cog):
       await self.config.user(user).refresh_modulus.set(modulus)
     return modulus
 
-  async def _update_url(self):
-    url = await self.config.lookup_url()
+  async def _register_url(self):
+    url = await self.config.server_url()
     if not url:
       prefix = await self._prefix()
       await self.admin_msg(
-          'Team lookup URL is not set. Use '
-          f'`{prefix}team admin lookup_url <url>` to set it.')
-      raise MissingCogSettingException('lookup_url is unset')
-    return url
+          'Team server URL is not set. Use '
+          f'`{prefix}team admin server_url <url>` to set it.')
+      raise MissingCogSettingException('server_url is unset')
+    return os.path.join(url, 'register_discord')
+
+  async def _update_url(self):
+    url = await self.config.server_url()
+    if not url:
+      prefix = await self._prefix()
+      await self.admin_msg(
+          'Team server URL is not set. Use '
+          f'`{prefix}team admin server_url <url>` to set it.')
+      raise MissingCogSettingException('server_url is unset')
+    return os.path.join(url, 'lookup_discord')
 
   async def _load_guild(self,
                         guild: discord.Guild = None,
@@ -840,6 +932,8 @@ class TeamTracker(commands.Cog):
   async def _get_team_data(self, team_id):
     # Raises KeyError from get_raw if team_id is not a recognized team ID
     data = await self.config.get_raw('teams', team_id)
+    if data is None:
+      return None
     return await TeamData.read(self.bot, data)
 
   async def _update_user(self, user: discord.User = None, user_id: int = None):
@@ -892,19 +986,26 @@ class TeamTracker(commands.Cog):
         except KeyError:
           self.teams[team_id] = None
       team = self.teams[team_id]
-    url = await self.config.lookup_url()
     params = {
         'auth': await self.config.secret(),
         'team_id': team_id or team.team_id,
     }
 
-    response = requests.get(url, params=params)
+    response = requests.get(await self._update_url(), params=params)
     if response.status_code != 200:
       await self.admin_msg(
           f'Attempt to refresh team data for {params["team_id"]} failed with '
           f'error {response.status_code}: {response.text}')
+      del self.teams[params['team_id']]
       return
     data = response.json()
+    log.info(f'Got data for team {params["team_id"]}: {data}')
+    if not data['success']:
+      await self.admin_msg(
+          f'Attempt to refresh team data for {params["team_id"]} failed;'
+          ' there might not be any Discord accounts bound to it.')
+      del self.teams[params['team_id']]
+      return
 
     if team is None:
       team_data = await TeamData.read(self.bot, {
@@ -981,7 +1082,24 @@ class TeamTracker(commands.Cog):
     return category
 
   async def _get_or_create_participant_role(self, guild: discord.Guild):
-    pass
+    all_roles = await guild.fetch_roles()
+    for role in all_roles:
+      if role.name == PARTICIPANT_ROLE_NAME:
+        return role
+        break
+    else:
+      try:
+        return await guild.create_role(
+            name=PARTICIPANT_ROLE_NAME,
+            color=discord.Color.gold(),
+            mentionable=True,
+            reason='Automated role creation for Participant labelling')
+      except discord.Forbidden:
+        await self.admin_msg(
+            f'Could not automatically create **{PARTICIPANT_ROLE_NAME}**'
+            f'role in {guild.name}.')
+        raise
+
 
   async def _create_team_text_channel(
       self, name: str, guild: discord.Guild, *teams: TeamData):
