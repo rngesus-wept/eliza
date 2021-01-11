@@ -54,8 +54,17 @@ DEFAULT_USER_SETTINGS = {
 }
 
 PARTICIPANT_ROLE_NAME = 'Participant'
-PERMIT_OVERWRITE = discord.PermissionOverwrite(view_channel=True)
-FORBID_OVERWRITE = discord.PermissionOverwrite(view_channel=False)
+
+MOD_PERM = discord.PermissionOverwrite.from_pair(
+    discord.Permissions.all(), discord.Permissions.none())
+PARTICIPANT_PERM = discord.PermissionOverwrite(
+    send_messages=True, add_reactions=True, use_external_emojis=True,
+    speak=True, stream=True, use_voice_activation=True)
+TEAMMATE_PERM = discord.PermissionOverwrite(
+    view_channel=True, read_message_history=True, connect=True)
+DEFAULT_PERM= discord.PermissionOverwrite(
+    view_channel=False, send_messages=False, add_reactions=False,
+    read_message_history=False, connect=False, speak=False, stream=False)
 
 
 def display(user) -> str:
@@ -409,7 +418,7 @@ class TeamTracker(commands.Cog):
     await self._update_user(user=user)
 
   @_team.command(name='refresh')
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def team_refresh(self, ctx: commands.Context, team_id: int):
     """Force update of target team's information.
 
@@ -454,7 +463,7 @@ class TeamTracker(commands.Cog):
     await ctx.send('Okay, I\'ll include you back in team-wide DMs.')
 
   @_team.command(name='show')
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def team_show(self, ctx: commands.Context, team_id: int):
     """Show team channels and members."""
     try:
@@ -488,7 +497,7 @@ class TeamTracker(commands.Cog):
       await menu(ctx, embeds, DEFAULT_CONTROLS, timeout=120)
 
   @_team.command(name='show-all')
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def team_show_all(self, ctx: commands.Context, n: int=1):
     """Show tabulated information on all teams along with up to `n` members from each.
 
@@ -502,13 +511,13 @@ class TeamTracker(commands.Cog):
   ######### Admin stuff
 
   @_team.group(name='admin', invoke_without_command=True)
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def _admin(self, ctx: commands.Context):
     """Team affiliation administrator functions."""
     await ctx.send_help()
 
   @_admin.command(name='reset')
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def admin_reset(self, ctx: commands.Context):
     """Resets all team management data, GLOBALLY."""
     await self.config.set_raw(value=DEFAULT_GLOBAL_SETTINGS)
@@ -524,7 +533,7 @@ class TeamTracker(commands.Cog):
     await ctx.send('Global team management factory reset complete.')
 
   @_admin.command(name='select')
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def admin_select(self, ctx: commands.Context, count: int=1):
     """Selects up to `count` members from each team to be Participants.
 
@@ -538,7 +547,7 @@ class TeamTracker(commands.Cog):
       users_here = team.users_here(ctx.guild)
       if not users_here:
         continue
-      users_here = random.sample(users_here, len(users_here))  # shuffle
+      random.shuffle(users_here)
       role_calls = [
           member.add_roles(participant) for member in users_here[:count]
       ] + [
@@ -552,7 +561,7 @@ class TeamTracker(commands.Cog):
 
   @_admin.command(name='enable')
   @commands.guild_only()
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def admin_enable(self, ctx: commands.Context):
     """Enable team management in this server."""
     if ctx.guild.id in self.guilds:
@@ -563,7 +572,7 @@ class TeamTracker(commands.Cog):
 
   @_admin.command(name='disable')
   @commands.guild_only()
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def admin_disable(self, ctx: commands.Context):
     """Disable team management in this server."""
     if ctx.guild.id not in self.guilds:
@@ -574,7 +583,7 @@ class TeamTracker(commands.Cog):
 
   @_team.group(name='channel', invoke_without_command=True)
   @commands.guild_only()
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def _channel(self, ctx: commands.Context, channel_type: str, *team_ids: int):
     """Create a text and/or voice channel only visible to certain teams.
 
@@ -607,7 +616,7 @@ class TeamTracker(commands.Cog):
 
   @_channel.command(name='batch')
   @commands.guild_only()
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def channel_batch(
       self, ctx: commands.Context, channel_type: str, *args):
     """Batch create text and/or voice channels for certain team groups.
@@ -653,9 +662,46 @@ class TeamTracker(commands.Cog):
       new_ctx = await self.bot.get_context(fake_msg)
       await self.bot.invoke(new_ctx)
 
+  @_channel.command(name='auto-batch')
+  @commands.guild_only()
+  @checks.mod_or_permissions(manage_channels=True)
+  async def channel_auto_batch(
+      self, ctx: commands.Context, channel_type: str, group_size: int=1):
+    """Automatically batch create channels with about `group_size` teams per channel.
+
+    Determines the number of desired channels based on `group_size`, then
+    partitions teams into that many channels in a balanced way. For example, if
+    there are 78 teams and a `group_size` of 50, the result is two channels with
+    39 teams each, *not* a channel with 50 teams and a channel with 28.
+
+    This is equivalent to running a very long `[p]team channel batch`
+    command except you don't need to figure out what the arguments are."""
+    if channel_type not in ['text', 'voice', 'both']:
+      await ctx.send(f'`{channel_type}` is not a valid channel type.')
+      return
+
+    teams = [team_data for team_data in self.teams.values()
+             if team_data.users_here(ctx.guild)]
+    random.shuffle(teams)
+    num_channels = round(len(teams) / group_size + .4999)
+    groups = []
+    for i in range(0, num_channels):
+      groups.append([
+          team.team_id for team in
+          teams[round(i * len(teams) / num_channels):
+                round((i + 1) * len(teams) / num_channels)]])
+
+    fake_msg = copy.copy(ctx.message)
+    new_cmd = (await self._prefix()) + ctx.command.full_parent_name
+    for group in groups:
+      fake_msg.content = '%s %s %s' % (
+          new_cmd, channel_type, ' '.join(map(str, group)))
+      new_ctx = await self.bot.get_context(fake_msg)
+      await self.bot.invoke(new_ctx)
+
   @_channel.command(name='add')
   @commands.guild_only()
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def channel_add(
       self, ctx: commands.Context, channel: discord.abc.GuildChannel, *team_ids: int):
     """Add visibility to target channel for certain teams.
@@ -682,7 +728,7 @@ class TeamTracker(commands.Cog):
 
   @_channel.command(name='remove')
   @commands.guild_only()
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def channel_remove(
       self, ctx: commands.Context, channel: discord.abc.GuildChannel, *team_ids: int):
     """Remove visibility to target channel for certain teams.
@@ -709,7 +755,7 @@ class TeamTracker(commands.Cog):
 
   @_admin.command(name='stderr')
   @commands.guild_only()
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def admin_stderr(
       self, ctx: commands.Context, channel: discord.TextChannel=None):
     """Sets or displays the channel for admin message output.
@@ -747,7 +793,7 @@ class TeamTracker(commands.Cog):
 
   @_admin.command(name='ping')
   @commands.guild_only()
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def admin_local_ping(self, ctx: commands.Context,
                              team_identifier: str, *message):
     """Ping all members of the indicated team, globally, via DM.
@@ -760,7 +806,7 @@ class TeamTracker(commands.Cog):
     pass
 
   @_admin.command(name='ping-all')
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def admin_global_ping(self, ctx: commands.Context,
                               team_identifier: str, *message):
     """Ping all members of the indicated team, globally.
@@ -771,7 +817,7 @@ class TeamTracker(commands.Cog):
     pass
 
   @_admin.command(name='secret')
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def admin_secret(self, ctx: commands.Context, *token: str):
     """Sets or displays the token used for talking to silenda."""
     the_token = await self.config.secret()
@@ -787,7 +833,7 @@ class TeamTracker(commands.Cog):
       await self.admin_msg(' '.join(message))
 
   @_admin.command(name='server_url')
-  @checks.mod_or_permissions(administrator=True)
+  @checks.mod_or_permissions(manage_channels=True)
   async def admin_server_url(self, ctx: commands.Context, *url: str):
     """Sets or displays the URL used for retrieving details from silenda."""
     the_url = await self.config.server_url()
@@ -1104,7 +1150,18 @@ class TeamTracker(commands.Cog):
   async def _create_team_text_channel(
       self, name: str, guild: discord.Guild, *teams: TeamData):
     team_category = await self._get_or_create_team_category(guild)
-    channel = await team_category.create_text_channel(name)
+    participant_role = await self._get_or_create_participant_role(guild)
+    permission_overwrites = {
+        guild.default_role: DEFAULT_PERM,  # none
+        participant_role: PARTICIPANT_PERM,
+    }
+    mod_roles = [guild.get_role(role_id)
+                 for role_id in await self.bot._config.guild(guild).mod_role()]
+    for role in mod_roles:
+      permission_overwrites[role] = MOD_PERM
+
+    channel = await team_category.create_text_channel(
+        name, overwrites=permission_overwrites)
     await asyncio.gather(
         *[self._permit_team_in_channel(team, channel) for team in teams],
         return_exceptions=True)
@@ -1113,7 +1170,18 @@ class TeamTracker(commands.Cog):
   async def _create_team_voice_channel(
       self, name: str, guild: discord.Guild, *teams: TeamData):
     team_category = await self._get_or_create_team_category(guild)
-    channel = await team_category.create_voice_channel(name)
+    participant_role = await self._get_or_create_participant_role(guild)
+    permission_overwrites = {
+        guild.default_role: DEFAULT_PERM,  # none
+        participant_role: PARTICIPANT_PERM,
+    }
+    mod_roles = [guild.get_role(role_id)
+                 for role_id in await self.config.guild(guild).mod_role()]
+    for role in mod_roles:
+      permission_overwrites[role] = MOD_PERM
+
+    channel = await team_category.create_voice_channel(
+        name, overwrites=permission_overwrites)
     await asyncio.gather(
         *[self._permit_team_in_channel(team, channel) for team in teams],
         return_exceptions=True)
@@ -1150,7 +1218,7 @@ class TeamTracker(commands.Cog):
   async def _permit_member_in_channel(self, member: discord.Member,
                                       channel: discord.abc.GuildChannel,
                                       reason: str = None):
-    await channel.set_permissions(member, overwrite=PERMIT_OVERWRITE,
+    await channel.set_permissions(member, overwrite=TEAMMATE_PERM,
                                   reason=reason)
 
 
@@ -1167,7 +1235,7 @@ class TeamTracker(commands.Cog):
   async def _forbid_member_in_channel(self, member: discord.Member,
                                       channel: discord.abc.GuildChannel,
                                       reason: str = None):
-    await channel.set_permissions(member, overwrite=FORBID_OVERWRITE,
+    await channel.set_permissions(member, overwrite=DEFAULT_PERM,
                                   reason=reason)
 
   async def _permit_team_in_channel(self, team: TeamData,
