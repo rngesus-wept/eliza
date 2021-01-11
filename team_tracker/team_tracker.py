@@ -516,7 +516,7 @@ class TeamTracker(commands.Cog):
     """Team affiliation administrator functions."""
     await ctx.send_help()
 
-  @_admin.command(name='reset')
+  @_admin.command(name='omg-omg-wtf-reset')
   @checks.mod_or_permissions(manage_channels=True)
   async def admin_reset(self, ctx: commands.Context):
     """Resets all team management data, GLOBALLY."""
