@@ -515,20 +515,11 @@ class TeamTracker(commands.Cog):
   async def _admin(self, ctx: commands.Context):
     """Team affiliation administrator functions.
 
-    **Global setup**: Use `[p]team admin server_url <url>` and
-    `[p]team admin secret <token>` to set parameters for reading team data. Set
-    `[p]team admin stderr <channel>` to determine where admin-level stderr
-    messages go; all such messages are transmitted to every stderr channel in
-    every server.
+    **Global setup**: Use `[p]team admin server_url <url>` and `[p]team admin secret <token>` to set parameters for reading team data. Set `[p]team admin stderr <channel>` to determine where admin-level stderr messages go; all such messages are transmitted to every stderr channel in every server.
 
-    **Per-server setup**: After adding the bot to a server, set
-    `[p]set addmodrole <role name>` to allow that role to use `team admin`-level
-    commands. `[p]team admin enable` to begin watching for incoming team members.
+    **Per-server setup**: After adding the bot to a server, set `[p]set addmodrole <role name>` to allow that role to use `team admin`-level commands. `[p]team admin enable` to begin watching for incoming team members.
 
-    **Running an event**: Run `[p]team admin select <n>` to select `n` people
-    from each team as Participant. Then
-    `[p]team channel auto-batch <channel_type> <k>` to create channels containing
-    `k` teams each. `channel_type` is `text`, `voice`, or `both`.
+    **Running an event**: Run `[p]team admin select <n>` to select `n` people from each team as Participant. Then `[p]team channel auto-batch <channel_type> <k>` to create channels containing `k` teams each. `channel_type` is `text`, `voice`, or `both`.
     """
     await ctx.send_help()
 
