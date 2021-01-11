@@ -14,6 +14,7 @@ scikit-image = "*"
 pillow = "*"
 matplotlib = "*"
 red-discordbot = "*"
+requests = "*"
 
 [dev-packages]
 
