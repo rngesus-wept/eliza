@@ -33,6 +33,7 @@ DEFAULT_GLOBAL_SETTINGS = {
     'lookup_url': None,
     'secret': None,
     ## TODO: Make registration URL a setting?
+    'undigest': {},  # digest -> user_id
 }
 
 DEFAULT_GUILD_SETTINGS = {
@@ -890,6 +891,27 @@ class TeamTracker(commands.Cog):
       modulus = random.randint(0, 3)
       await self.config.user(user).refresh_modulus.set(modulus)
     return modulus
+
+  async def _token(self, user: discord.User = None, user_id: int = None):
+    """Get a secret token for the user."""
+    # This is to be used with the registration URL so that it doesn't contain
+    # the user's ID in cleartext. This is so that person A cannot trivially
+    # generate person B's URL and assign them to person A's team.
+    if not user:
+      user = self.bot.get_user(user_id)
+    hashh = await self.config.user(user).digest()
+    if digest is None:
+      salt = await self.config.user(user).secret()
+      if salt is None:
+        salt = random_salt()
+        await self.config.user(user).secret.set(salt)
+      hashh = digest(user.id, salt)
+      await self.config.user(user).digest.set(hashh)
+      await self.config.set_raw('undigest', hashh, value=user.id)
+    return hashh
+
+  async def _user_id_from_digest(self, hashh):
+    return await self.config.get_raw('undigest', hashh)
 
   async def _register_url(self):
     url = await self.config.server_url()
