@@ -213,13 +213,14 @@ class TeamData(object):
         'display_name': self.display_name,
         'username': self.username,
         'channels': [channel.id for channel in self.channels],
-        'users': [user.id for user in self.users],
+        'users': [user.id for user in self.users if user is not None],
         'last_updated': self.last_updated,
     }
     await config.set_raw('teams', self.team_id, value=serialized)
 
   def users_here(self, guild: discord.Guild):
-    members = [guild.get_member(user.id) for user in self.users]
+    members = [guild.get_member(user.id)
+               for user in self.users if user is not None]
     return [member for member in members if member is not None]
 
   def table_line(self, guild: discord.Guild, count: int=1):
