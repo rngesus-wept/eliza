@@ -82,10 +82,10 @@ def random_channel_name() -> str:
   return f'room-{random.randint(1,64)}-{str(random.randint(10,599)).zfill(3)}'
 
 def random_salt() -> str:
-  return random.choices(CHARS, k=12)
+  return ''.join(random.choices(CHARS, k=12))
 
 def digest(user_id, salt) -> str:
-  return hashlib.sha224(f'{salt[:4]}{user_id}{salt[4:]}').hexdigest()
+  return hashlib.sha224(f'{salt[:4]}{user_id}{salt[4:]}'.encode('utf-8')).hexdigest()
 
 
 ## Menu utilities
@@ -428,8 +428,9 @@ class TeamTracker(commands.Cog):
         return
     else:
       user = ctx.author
-    await ctx.send(f'Updating team affiliation for {display(user)}')
+    message = await ctx.send(f'Updating team affiliation for {display(user)}')
     await self._update_user(user=user)
+    await message.edit(content=(message.content + ' ... done'))
 
   @_team.command(name='refresh')
   @checks.mod_or_permissions(manage_channels=True)
@@ -544,7 +545,6 @@ class TeamTracker(commands.Cog):
     await self.config.set_raw(value=DEFAULT_GLOBAL_SETTINGS)
 
     for guild_id in await self.config.all_guilds():
-      await self._unload_guild(guild_id=guild_id)
       await self.config.guild_from_id(guild_id).set_raw(
           value=DEFAULT_GUILD_SETTINGS)
 
@@ -1037,14 +1037,14 @@ class TeamTracker(commands.Cog):
     if response.status_code != 200:
       await self.admin_msg(
           'Attempt to refresh user data failed with error'
-          f' {response.status_code}: {response.text}\n'
-          f'{response.url}')
+          f' {response.status_code}: {response.text}')
       return
     data = response.json()
 
     if not data['success']:
       # User ID is completely unknown to hunt DB. Don't update last_updated so
       # that this user might get picked on the next go
+      log.warning(f'Attempt to get team affiliation failed at URL {response.url}')
       return
 
     team_id = data['team'][0]
