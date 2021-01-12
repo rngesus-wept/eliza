@@ -2,6 +2,7 @@
 
 import asyncio
 import copy
+import hashlib
 import logging
 import os
 import pathlib
@@ -45,6 +46,7 @@ DEFAULT_USER_SETTINGS = {
     'display_name': '',  # Is this necessary?
     'team_id': -1,
     'secret': None,  # salt for transmitting user ID
+    'digest': None,  # This is a digest of user ID + secret somehow
     'last_updated': 0,  # time.time()
     'do_not_message': False,
     # We use this to stagger automated user refreshes (to avoid spikyness). I
@@ -54,6 +56,8 @@ DEFAULT_USER_SETTINGS = {
 }
 
 PARTICIPANT_ROLE_NAME = 'Participant'
+
+CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
 
 MOD_PERM = discord.PermissionOverwrite.from_pair(
     discord.Permissions.all(), discord.Permissions.none())
@@ -75,6 +79,13 @@ def display(user) -> str:
 
 def random_channel_name() -> str:
   return f'room-{random.randint(1,64)}-{str(random.randint(10,599)).zfill(3)}'
+
+def random_salt() -> str:
+  return random.choices(CHARS, k=12)
+
+def digest(user_id, salt) -> str:
+  return hashlib.sha224(f'{salt[:4]}{user_id}{salt[4:]}').hexdigest()
+
 
 ## Menu utilities
 
