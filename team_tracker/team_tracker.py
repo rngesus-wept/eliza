@@ -310,7 +310,8 @@ class TeamTracker(commands.Cog):
         '    * To let me know which team you\'re on, visit <%s>.\n'
         '          Please do not share this link other players, nor click on'
         ' links of this form sent to you by other players.'
-    ) % (os.path.join(await self._register_url(), str(user.id)),)
+    ) % (os.path.join(await self._register_url(),
+                      await self._token(user=user)))
     ignore_instructions = (
         '    * To never receive team-related messages from me again, respond'
         ' with `%steam ignore`. (Opt back in with `%steam unignore`.)\n'
@@ -911,7 +912,7 @@ class TeamTracker(commands.Cog):
     return hashh
 
   async def _user_id_from_digest(self, hashh):
-    return await self.config.get_raw('undigest', hashh)
+    return await self.config.get_raw('undigest', hashh, default=None)
 
   async def _register_url(self):
     url = await self.config.server_url()
@@ -1029,7 +1030,7 @@ class TeamTracker(commands.Cog):
     url = await self._update_url()
     params = {
         'auth': await self.config.secret(),
-        'user_id': user_id or user.id,
+        'user_id': await self._token(user),
     }
 
     response = requests.get(url, params=params)
@@ -1105,7 +1106,9 @@ class TeamTracker(commands.Cog):
       team = team_data
 
     original_users = set(user.id for user in team.users)
-    updated_users = set(int(user_id) for user_id in data['user_ids'])
+    updated_users = set(await self._user_id_from_digest(user_hash)
+                        for user_hash in data['user_ids'])
+    updated_users.discard(None)
     ids_to_add = list(updated_users - original_users)
     users_to_add = [self.bot.get_user(user_id) for user_id in ids_to_add]
     ids_to_remove = list(original_users - updated_users)
@@ -1152,7 +1155,12 @@ class TeamTracker(commands.Cog):
     team.users.remove(user)
     await team.write(self.config)
 
+    old_digest = await self.config.user(user).digest()
+    async with self.config.undigest() as undigest:
+      del undigest[old_digest]
     await self.config.user(user).team_id.set(-1)
+    await self.config.user(user).secret.set(None)
+    await self.config.user(user).digest.set(None)
     await self.config.user(user).last_updated.set(time.time())
 
     for channel in team.channels:
