@@ -56,7 +56,7 @@ DEFAULT_USER_SETTINGS = {
     'refresh_modulus': -1,
 }
 
-PARTICIPANT_ROLE_NAME = 'Participant'
+PARTICIPANT_ROLE_NAME = 'participant'
 
 CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
 
@@ -901,7 +901,7 @@ class TeamTracker(commands.Cog):
     if not user:
       user = self.bot.get_user(user_id)
     hashh = await self.config.user(user).digest()
-    if digest is None:
+    if hashh is None:
       salt = await self.config.user(user).secret()
       if salt is None:
         salt = random_salt()
@@ -1037,7 +1037,8 @@ class TeamTracker(commands.Cog):
     if response.status_code != 200:
       await self.admin_msg(
           'Attempt to refresh user data failed with error'
-          f' {response.status_code}: {response.text}')
+          f' {response.status_code}: {response.text}\n'
+          f'{response.url}')
       return
     data = response.json()
 
@@ -1106,8 +1107,9 @@ class TeamTracker(commands.Cog):
       team = team_data
 
     original_users = set(user.id for user in team.users)
-    updated_users = set(await self._user_id_from_digest(user_hash)
-                        for user_hash in data['user_ids'])
+    updated_users = set()
+    for user_hash in data['user_ids']:
+      updated_users.add(await self._user_id_from_digest(user_hash))
     updated_users.discard(None)
     ids_to_add = list(updated_users - original_users)
     users_to_add = [self.bot.get_user(user_id) for user_id in ids_to_add]
@@ -1157,7 +1159,8 @@ class TeamTracker(commands.Cog):
 
     old_digest = await self.config.user(user).digest()
     async with self.config.undigest() as undigest:
-      del undigest[old_digest]
+      if old_digest in undigest:
+        del undigest[old_digest]
     await self.config.user(user).team_id.set(-1)
     await self.config.user(user).secret.set(None)
     await self.config.user(user).digest.set(None)
