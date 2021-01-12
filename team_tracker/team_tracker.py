@@ -905,7 +905,7 @@ class TeamTracker(commands.Cog):
     if guild is None:
       guild = self.bot.get_guild(guild_id)
       if guild is None:
-        log.warn(f'Invalid guild ID {guild_id}; removing from config.')
+        log.warning(f'Invalid guild ID {guild_id}; removing from config.')
         await self.config.guild_from_id(guild_id).clear_raw()
         return
     if not await self.config.guild(guild).enabled():
