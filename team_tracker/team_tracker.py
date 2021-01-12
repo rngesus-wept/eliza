@@ -2,6 +2,7 @@
 
 import asyncio
 import copy
+import fuzzywuzzy
 import hashlib
 import logging
 import os
@@ -476,6 +477,28 @@ class TeamTracker(commands.Cog):
     """Opt (back) in to automated messages from the team management cog."""
     await self.config.user(ctx.author).do_not_message.set(False)
     await ctx.send('Okay, I\'ll include you back in team-wide DMs.')
+
+  @_team.command(name='search')
+  @checks.mod_or_permissions(manage_channels=True)
+  async def team_search(self, ctx: commands.Context, username: str):
+    """Search for team by username."""
+    all_usernames = {team_id: team.username for team_id, team in self.teams.items()
+                     if team is not None}
+    suggestions = []
+    log.info(repr(fuzzywuzzy.process.extract(
+        username, all_usernames, limit=5)))
+    for fuzz_username, rating, fuzz_id in fuzzywuzzy.process.extract(
+        username, all_usernames, limit=5):
+      if rating < 50:
+        break
+      fuzz_team = self.teams[fuzz_id]
+      suggestions.append(
+          f'(ID: **{fuzz_team.team_id}**) **{fuzz_team.display_name[:40]}**'
+          f' -- {len(fuzz_team.users)} registered members')
+    if suggestions:
+      await ctx.send('\n'.join(suggestions))
+    else:
+      await ctx.send(f"Couldn't find any teams whose usernames resembled `{username}`")
 
   @_team.command(name='show')
   @checks.mod_or_permissions(manage_channels=True)
