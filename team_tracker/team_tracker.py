@@ -1259,7 +1259,7 @@ class TeamTracker(commands.Cog):
         participant_role: PARTICIPANT_PERM,
     }
     mod_roles = [guild.get_role(role_id)
-                 for role_id in await self.config.guild(guild).mod_role()]
+                 for role_id in await self.bot._config.guild(guild).mod_role()]
     for role in mod_roles:
       permission_overwrites[role] = MOD_PERM
 
