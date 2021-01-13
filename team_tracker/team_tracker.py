@@ -270,6 +270,7 @@ class TeamTracker(commands.Cog):
     self.cron_update_users.cancel()
 
   async def member_join(self, member):
+    log.info('member_join triggered')
     # Reminder: A member is a user x guild combination; that is, the same user
     # in two different guilds will be represented by two different members!
     if member.bot:
