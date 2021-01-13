@@ -424,7 +424,7 @@ class TeamTracker(commands.Cog):
 
     To force an update for an entire team, see `[p]team refresh`."""
     if user is not None:
-      if not mod.is_mod_or_superior(self.bot, ctx.author):
+      if not (await mod.is_mod_or_superior(self.bot, ctx.author)):
         await ctx.add_reaction(u'🙅')
         return
     else:
@@ -1315,11 +1315,13 @@ class TeamTracker(commands.Cog):
 
   async def _permit_team_in_channel(self, team: TeamData,
                                     channel: discord.abc.GuildChannel):
+    log.info('Attempting to permit team {team.username} in {channel.name}')
     if channel in team.channels:
       return
     team.channels.append(channel)
     await team.write(self.config)
 
+    log.info('Recursing to user level')
     await asyncio.gather(*[
         self._permit_user_in_channel(user, channel, f'Adding {team.username}')
         for user in team.users])
