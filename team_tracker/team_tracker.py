@@ -274,17 +274,21 @@ class TeamTracker(commands.Cog):
     # Reminder: A member is a user x guild combination; that is, the same user
     # in two different guilds will be represented by two different members!
     if member.bot:
+      log.info('member was a bot')
       return
     if not await self.config.guild(member.guild).enabled():
+      log.info('guild does not have team tracking enabled')
       return
     team_id = await self.config.user(member).team_id()
     if team_id == -1:
+      log.info('sending reg message')
       if not await self.registration_prompt(member):
         await self.admin_msg(f'Discord registration for {member.name}#{member.discriminator}'
                              ' failed; user may have the bot blocked, or have DMs from non-'
                              'friends disabled.')
     else:
       team_data = self.teams[team_id]
+      log.info(f'applying local config for team {team_data.display_name}')
       for channel in team_data.channels:
         if channel.guild == member.guild:
           await self._permit_member_in_channel(
