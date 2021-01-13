@@ -1294,8 +1294,11 @@ class TeamTracker(commands.Cog):
                                       channel: discord.abc.GuildChannel,
                                       reason: str = None):
     log.info(f'Attempting to permit {member.name} in {channel.name}')
-    await channel.set_permissions(member, overwrite=TEAMMATE_PERM,
-                                  reason=reason)
+    try:
+      await channel.set_permissions(member, overwrite=TEAMMATE_PERM,
+                                    reason=reason)
+    except Exception:
+      log.error("DEAD")
 
 
   async def _forbid_user_in_channel(self, user: discord.User,
