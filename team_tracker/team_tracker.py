@@ -1297,7 +1297,7 @@ class TeamTracker(commands.Cog):
     try:
       await channel.set_permissions(member, overwrite=TEAMMATE_PERM,
                                     reason=reason)
-    except Exception e:
+    except Exception as e:
       log.error(str(e))
       log.error("DEAD")
 
