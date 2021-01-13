@@ -1249,6 +1249,7 @@ class TeamTracker(commands.Cog):
     participant_role = await self._get_or_create_participant_role(guild)
     permission_overwrites = {
         guild.default_role: DEFAULT_PERM,  # none
+        guild.get_member(self.bot.user.id): MOD_PERM,  # all
         participant_role: PARTICIPANT_PERM,
     }
     mod_roles = [guild.get_role(role_id)
@@ -1294,7 +1295,6 @@ class TeamTracker(commands.Cog):
   async def _permit_member_in_channel(self, member: discord.Member,
                                       channel: discord.abc.GuildChannel,
                                       reason: str = None):
-    log.info(f'Attempting to permit {member.name} in {channel.name}')
     try:
       await channel.set_permissions(member, overwrite=TEAMMATE_PERM,
                                     reason=reason)
@@ -1321,13 +1321,11 @@ class TeamTracker(commands.Cog):
 
   async def _permit_team_in_channel(self, team: TeamData,
                                     channel: discord.abc.GuildChannel):
-    log.info(f'Attempting to permit team {team.username} in {channel.name}')
     if channel in team.channels:
       return
     team.channels.append(channel)
     await team.write(self.config)
 
-    log.info('Recursing to user level')
     await asyncio.gather(*[
         self._permit_user_in_channel(
             channel.guild.get_member(user.id),
