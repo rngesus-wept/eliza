@@ -54,6 +54,7 @@ DEFAULT_USER_SETTINGS = {
     # We use this to stagger automated user refreshes (to avoid spikyness). I
     # would use the user ID but I do not believe those to be uniformly
     # distributed.
+    'backoff_factor': 1,
     'refresh_modulus': -1,
 }
 
@@ -295,6 +296,7 @@ class TeamTracker(commands.Cog):
         await self.admin_msg(f'Discord registration for {member.name}#{member.discriminator}'
                              ' failed; user may have the bot blocked, or have DMs from non-'
                              'friends disabled.')
+      await self.config.user(member).backoff_factor.set(1)
     else:
       team_data = self.teams[team_id]
       log.info(f'applying local config for team {team_data.display_name}')
@@ -334,7 +336,6 @@ class TeamTracker(commands.Cog):
     try:
       await user.send('\n'.join([
           intro, register_instructions, ignore_instructions]))
-      await self.config.user(user).last_updated.set(5 * 60)
       return True
     except discord.http.Forbidden:
       return False
@@ -351,13 +352,13 @@ class TeamTracker(commands.Cog):
           *[self._update_team(team=self.teams[team_id]) for team_id in teams_to_update],
           return_exceptions=True)
 
-  @tasks.loop(minutes=5.0)  # Actual loop time for an individual user is 20 minutes
+  @tasks.loop(seconds=10.0)
   async def cron_update_users(self):
-    wall_modulus = int(time.time() / 300) % 4
+    wall_modulus = int(time.time() / 10) % 6
     users = await self.config.all_users()
     users_to_update = [user_id for user_id in users
-                       if users[user_id]['team_id'] == -1 or
-                       time.time() - users[user_id]['last_updated'] > 2 * 60 * 60]
+                       if (time.time() - users[user_id]['last_updated'] >=
+                           _user_update_threshold(users[user_id]))]
     moduli = await asyncio.gather(
         *[self._modulus(user_id=user_id) for user_id in users_to_update])
     users_to_update = [user_id for user_id, modulus in zip(users_to_update, moduli)
@@ -426,21 +427,27 @@ class TeamTracker(commands.Cog):
                            'friends disabled.')
 
   @_team.command(name='update')
-  async def team_update(self, ctx: commands.Context, user: discord.User = None):
-    """Force update of target user's team affiliation (default: self).
+  async def team_update(self, ctx: commands.Context, *users: discord.User):
+    """Force update of some users team affiliation (default: self).
 
-    Any user may call this command on themself (with no argument). Only admins
-    may call this command on others.
+    Any user may call this command on themself (with no argument). Mods may
+    call this targeting any number of users.
 
     To force an update for an entire team, see `[p]team refresh`."""
-    if user is not None:
+    if users:
       if not (await mod.is_mod_or_superior(self.bot, ctx.author)):
         await ctx.add_reaction(u'🙅')
         return
     else:
-      user = ctx.author
-    message = await ctx.send(f'Updating team affiliation for {display(user)}')
-    await self._update_user(user=user)
+      users = (ctx.author,)
+    if len(users) == 1:
+      msg = f'Updating team affiliation for {display(user)}'
+    else:
+      msg = f'Updating team affiliation for {len(users)} users'
+    message = await ctx.send(msg)
+    await asyncio.gather(
+        *[self._update_user(user=user) for user in users],
+        return_exceptions=True)
     await message.edit(content=(message.content + ' ... done'))
 
   @_team.command(name='refresh')
@@ -934,9 +941,24 @@ class TeamTracker(commands.Cog):
       user = self.bot.get_user(user_id)
     modulus = await self.config.user(user).refresh_modulus()
     if modulus == -1:
-      modulus = random.randint(0, 3)
+      modulus = random.randint(0, 6)
       await self.config.user(user).refresh_modulus.set(modulus)
     return modulus
+
+  async def _user_update_threshold(self, user_config: dict):
+    """Minimum number of seconds after which a user update should be requested."""
+    return 30.0 * user_config['backoff_factor']
+
+  async def _increment_user_backoff(self, user: discord.User):
+    team_id = await self.config.user(user).team_id()
+    backoff = await self.config.user(user).backoff_factor()
+
+    if team_id == -1:
+      await self.config.user(user).backoff_factor.set(
+          min(backoff_factor * 1.2, 10))
+    else:
+      await self.config.user(user).backoff_factor.set(
+          min(backoff_factor * 1.2, 40))
 
   async def _token(self, user: discord.User = None, user_id: int = None):
     """Get a secret token for the user."""
@@ -1072,6 +1094,9 @@ class TeamTracker(commands.Cog):
   async def _update_user(self, user: discord.User = None, user_id: int = None):
     if user is None:
       user = self.bot.get_user(user_id)
+    original_team_id = await self.config.user(user).team_id()
+    backoff_factor = await self.config.user(user).backoff_factor()
+
     url = await self._update_url()
     params = {
         'auth': await self.config.secret(),
@@ -1090,6 +1115,7 @@ class TeamTracker(commands.Cog):
       # User ID is completely unknown to hunt DB. Don't update last_updated so
       # that this user might get picked on the next go
       log.warning(f'Attempt to get team affiliation failed at URL {response.url}')
+      await self._increment_user_backoff(user)
       return
 
     team_id = data['team'][0]
@@ -1104,13 +1130,14 @@ class TeamTracker(commands.Cog):
     else:
       team_data = self.teams[team_id]
 
-    original_team_id = await self.config.user(user).team_id()
     if original_team_id != team_id:
       old_team = self.teams.get(await self.config.user(user).team_id(), None)
       if old_team:
         await self._remove_user_from_team(user, old_team)
       await self._add_user_to_team(user, team_data)
-    await self.config.user(user).last_updated.set(time.time())
+    else:
+      await self._increment_user_backoff(user)
+      await self.config.user(user).last_updated.set(time.time())
 
   async def _update_team(self, team: TeamData = None, team_id: int = None):
     if team is None:
@@ -1160,6 +1187,12 @@ class TeamTracker(commands.Cog):
     users_to_add = [self.bot.get_user(user_id) for user_id in ids_to_add]
     ids_to_remove = list(original_users - updated_users)
     users_to_remove = [self.bot.get_user(user_id) for user_id in ids_to_remove]
+    ids_to_backoff = list(original_users & updated_users)
+    users_to_backoff = [self.bot.get_user(user_id) for user_id in ids_to_backoff]
+
+    await asyncio.gather(
+        *[self._increment_user_backoff(user) for user in users_to_backoff],
+        return_exceptions=True)
 
     remove_results = await asyncio.gather(
         *[self._remove_user_from_team(user, team) for user in users_to_remove],
@@ -1189,6 +1222,7 @@ class TeamTracker(commands.Cog):
     await team.write(self.config)
 
     await self.config.user(user).team_id.set(team.team_id)
+    await self.config.user(user).backoff_factor.set(4.0)
     await self.config.user(user).last_updated.set(time.time())
 
     for channel in team.channels:
@@ -1209,6 +1243,7 @@ class TeamTracker(commands.Cog):
     await self.config.user(user).team_id.set(-1)
     await self.config.user(user).secret.set(None)
     await self.config.user(user).digest.set(None)
+    await self.config.user(user).backoff_factor.set(2.0)
     await self.config.user(user).last_updated.set(time.time())
 
     for channel in team.channels:
