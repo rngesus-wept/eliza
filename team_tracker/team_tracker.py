@@ -1293,6 +1293,7 @@ class TeamTracker(commands.Cog):
   async def _permit_member_in_channel(self, member: discord.Member,
                                       channel: discord.abc.GuildChannel,
                                       reason: str = None):
+    log.info(f'Attempting to permit team {member.name} in {channel.name}')
     await channel.set_permissions(member, overwrite=TEAMMATE_PERM,
                                   reason=reason)
 
@@ -1315,7 +1316,7 @@ class TeamTracker(commands.Cog):
 
   async def _permit_team_in_channel(self, team: TeamData,
                                     channel: discord.abc.GuildChannel):
-    log.info('Attempting to permit team {team.username} in {channel.name}')
+    log.info(f'Attempting to permit team {team.username} in {channel.name}')
     if channel in team.channels:
       return
     team.channels.append(channel)
