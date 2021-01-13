@@ -231,7 +231,15 @@ class TeamData(object):
     users_here = self.users_here(guild)
     members = [f'@{user.name}#{user.discriminator}'
                for user in self.users_here(guild)[:count]]
-    data.append(', '.join(members))
+    others = len(users_here) - len(members)
+    if others:
+      members.append(f'{others} more')
+    if len(members) > 2:
+      members[-1] = 'and ' + members[-1]
+    if len(members) == 2:
+      data.append(' and '.join(members))
+    else:
+      data.append(', '.join(members))
     if members:
       return '  '.join(data)
     else:
@@ -538,7 +546,7 @@ class TeamTracker(commands.Cog):
 
   @_team.command(name='show-all')
   @checks.mod_or_permissions(manage_channels=True)
-  async def team_show_all(self, ctx: commands.Context, n: int=1):
+  async def team_show_all(self, ctx: commands.Context, n: int=3):
     """Show tabulated information on all teams along with up to `n` members from each.
 
     Team members not in this guild are excluded from consideration. Teams
