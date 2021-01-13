@@ -1293,7 +1293,7 @@ class TeamTracker(commands.Cog):
   async def _permit_member_in_channel(self, member: discord.Member,
                                       channel: discord.abc.GuildChannel,
                                       reason: str = None):
-    log.info(f'Attempting to permit team {member.name} in {channel.name}')
+    log.info(f'Attempting to permit {member.name} in {channel.name}')
     await channel.set_permissions(member, overwrite=TEAMMATE_PERM,
                                   reason=reason)
 
@@ -1324,8 +1324,11 @@ class TeamTracker(commands.Cog):
 
     log.info('Recursing to user level')
     await asyncio.gather(*[
-        self._permit_user_in_channel(user, channel, f'Adding {team.username}')
-        for user in team.users])
+        self._permit_user_in_channel(
+            channel.guild.get_member(user.id),
+            channel, f'Adding {team.username}')
+        for user in team.users
+    ])
 
   async def _forbid_team_in_channel(self, team: TeamData,
                                     channel: discord.abc.GuildChannel):
