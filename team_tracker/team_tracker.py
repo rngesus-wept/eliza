@@ -276,7 +276,8 @@ class TeamTracker(commands.Cog):
     if member.bot:
       log.info('member was a bot')
       return
-    if not await self.config.guild(member.guild).enabled():
+    enabled = await self.config.guild(member.guild).enabled()
+    if not enabled:
       log.info('guild does not have team tracking enabled')
       return
     team_id = await self.config.user(member).team_id()
