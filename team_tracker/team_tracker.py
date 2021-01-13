@@ -321,11 +321,7 @@ class TeamTracker(commands.Cog):
                       await self._token(user=user)))
     ignore_instructions = (
         '    * To never receive team-related messages from me again, respond'
-        ' with `%steam ignore`. (Opt back in with `%steam unignore`.)\n'
-        '          I will ping you for: your team is scheduled for an'
-        ' imminent event or interaction (plus details), someone finds the coin.\n'
-        '          I will not ping you for: your team solves a puzzle, your'
-        ' team unlocks a puzzle round, errata is posted for a puzzle, memes.'
+        ' with `%steam ignore`. (Opt back in with `%steam unignore`.)'
     ) % (my_prefix, my_prefix)
     try:
       await user.send('\n'.join([
