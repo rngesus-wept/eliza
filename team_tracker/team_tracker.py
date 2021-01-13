@@ -589,19 +589,31 @@ class TeamTracker(commands.Cog):
     """
     participant = await self._get_or_create_participant_role(ctx.guild)
     user_count, team_count = 0, 0
+    p_removed, p_added = 0, 0
     for team in self.teams.values():
       users_here = team.users_here(ctx.guild)
       if not users_here:
         continue
-      random.shuffle(users_here)
-      role_calls = [
-          member.add_roles(participant) for member in users_here[:count]
-      ] + [
-          member.remove_roles(participant) for member in users_here[count:]
-      ]
-      await asyncio.gather(*role_calls, return_exceptions=True)
+      ps, qs = [], []
+      for member in users_here:
+        if participant in member.roles:
+          ps.append(member)
+        else:
+          qs.append(member)
+
+      if count < len(ps):
+        random.shuffle(ps)
+        await asyncio.gather(*[member.remove_roles(participant)
+                               for member in ps[count:]],
+                             return_exceptions=True)
+        p_removed += (len(ps) - count)
+      else if count > len(ps):
+        random.shuffle(qs)
+        await asyncio.gather(*[member.add_roles(participant)
+                               for member in qs[:(count - len(ps))]],
+                             return_exceptions=True)
+        p_added += min(len(qs), count - len(ps))
       team_count += 1
-      user_count += min(count, len(users_here))
     await ctx.send(f'Selected {user_count} participant{nl.s(user_count)}'
                    f' across {team_count} team{nl.s(team_count)}.')
 
