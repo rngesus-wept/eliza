@@ -258,6 +258,12 @@ class TeamTracker(commands.Cog):
     self.config.register_user(**DEFAULT_USER_SETTINGS)
 
   async def initialize(self):
+    await self.initialize_internals()
+    self.bot.add_listener(self.member_join, 'on_member_join')
+    self.cron_update_teams.start()
+    self.cron_update_users.start()
+
+  async def initialize_internals(self):
     # Load config information to internal memory
     self.teams = {}
     async with self.config.teams() as teams:
@@ -269,10 +275,6 @@ class TeamTracker(commands.Cog):
     self.admin_channels = {}  # guild_id integer -> TextChannel object
     for guild_id in await self.config.all_guilds():
       await self._load_guild(guild_id=guild_id)
-
-    self.bot.add_listener(self.member_join, 'on_member_join')
-    self.cron_update_teams.start()
-    self.cron_update_users.start()
 
   def cog_unload(self):
     self.cron_update_teams.cancel()
@@ -358,7 +360,7 @@ class TeamTracker(commands.Cog):
     users = await self.config.all_users()
     users_to_update = [user_id for user_id in users
                        if (time.time() - users[user_id]['last_updated'] >=
-                           _user_update_threshold(users[user_id]))]
+                           await self._user_update_threshold(users[user_id]))]
     moduli = await asyncio.gather(
         *[self._modulus(user_id=user_id) for user_id in users_to_update])
     users_to_update = [user_id for user_id, modulus in zip(users_to_update, moduli)
@@ -582,15 +584,8 @@ class TeamTracker(commands.Cog):
   @checks.mod_or_permissions(manage_channels=True)
   async def admin_reset(self, ctx: commands.Context):
     """Resets all team management data, GLOBALLY."""
-    await self.config.set_raw(value=DEFAULT_GLOBAL_SETTINGS)
-
-    for guild_id in await self.config.all_guilds():
-      await self.config.guild_from_id(guild_id).set_raw(
-          value=DEFAULT_GUILD_SETTINGS)
-
-    for user_id in await self.config.all_users():
-      await self.config.user_from_id(user_id).set_raw(
-          value=DEFAULT_USER_SETTINGS)
+    await self.config.clear_all()
+    await self.initialize_internals()
     await ctx.send('Global team management factory reset complete.')
 
   @_admin.command(name='select')
@@ -622,7 +617,7 @@ class TeamTracker(commands.Cog):
                                for member in ps[count:]],
                              return_exceptions=True)
         p_removed += (len(ps) - count)
-      else if count > len(ps):
+      elif count > len(ps):
         random.shuffle(qs)
         await asyncio.gather(*[member.add_roles(participant)
                                for member in qs[:(count - len(ps))]],
@@ -1114,7 +1109,8 @@ class TeamTracker(commands.Cog):
     if not data['success']:
       # User ID is completely unknown to hunt DB. Don't update last_updated so
       # that this user might get picked on the next go
-      log.warning(f'Attempt to get team affiliation failed at URL {response.url}')
+      log.warning(f'Attempt to get team affiliation for {display(user)}'
+                  f' failed at URL {response.url}')
       await self._increment_user_backoff(user)
       return
 
