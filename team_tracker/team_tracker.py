@@ -480,9 +480,7 @@ class TeamTracker(commands.Cog):
         return
     else:
       user = ctx.author
-    team = self.teams.get(await self.config.user(user).team_id(), None)
-    if team is not None:
-      await self._remove_user_from_team(user, team)
+    await self._forget_user(user)
     await ctx.send(f'Okay, I have forgotten all about {display(user)}.')
 
   @_team.command(name='ignore')
@@ -1134,6 +1132,37 @@ class TeamTracker(commands.Cog):
     else:
       await self._increment_user_backoff(user)
       await self.config.user(user).last_updated.set(time.time())
+
+  async def _forget_user(self, user: discord.User = None, user_id: int = None):
+    if user = None:
+      user = self.bot.get_user(user_id)
+
+    url = await self._removal_url()
+    params = {
+        'auth': await self.config.secret(),
+        'user_id': await self._token(user),
+    }
+
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+      await self.admin_msg(
+          'Attempt to refresh user data failed with error'
+          f' {response.status_code}: {response.text}')
+      return
+    data = response.json()
+
+    if not data['success']:
+      # User ID is completely unknown to hunt DB. Don't update last_updated so
+      # that this user might get picked on the next go
+      log.warning(f'Attempt to remove user data for {display(user)}'
+                  f' failed at URL {response.url}')
+      return
+
+    team = self.teams.get(await self.config.user(user).team_id(), None)
+    if team is not None:
+      await self._remove_user_from_team(user, team)
+    await self.config.user(user).clear()
+
 
   async def _update_team(self, team: TeamData = None, team_id: int = None):
     if team is None:
