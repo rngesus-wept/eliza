@@ -411,22 +411,29 @@ class TeamTracker(commands.Cog):
         display(user), self.teams[team_id].display_name, team_id))
 
   @_team.command(name='register')
-  async def team_register(self, ctx: commands.Context, user: discord.User = None):
+  async def team_register(self, ctx: commands.Context, *users: discord.User):
     """Initiate registration for target user (default: self).
 
     Any user may call this command on themself (with no argument). Only admins
     may call this command on others."""
-    if user is not None:
+    if users:
       if not mod.is_mod_or_superior(self.bot, ctx.author):
         await ctx.add_reaction(u'🙅')
         return
     else:
-      user = ctx.author
-    await ctx.send(f'Sending registration prompt to {user.display_name}.')
-    if not await self.registration_prompt(user, bypass_ignore=True):
-      await self.admin_msg(f'Discord registration for {user.name}#{user.discriminator}'
-                           ' failed; user may have the bot blocked, or have DMs from non-'
-                           'friends disabled.')
+      users = (ctx.author,)
+    if len(users) == 1:
+      msg = f'Sending registration prompt to {display(users[0])}'
+    else:
+      msg = f'Sending registration prompt to {len(users)} users'
+    await ctx.send(msg)
+    errors = await asyncio.gather(
+        *[self.registration_prompt(user, bypass_ignore=True) for user in users],
+        return_exceptions=True)
+    # if not await self.registration_prompt(user, bypass_ignore=True):
+    #   await self.admin_msg(f'Discord registration for {user.name}#{user.discriminator}'
+    #                        ' failed; user may have the bot blocked, or have DMs from non-'
+    #                        'friends disabled.')
 
   @_team.command(name='update')
   async def team_update(self, ctx: commands.Context, *users: discord.User):
