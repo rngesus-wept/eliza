@@ -945,13 +945,9 @@ class TeamTracker(commands.Cog):
   async def _increment_user_backoff(self, user: discord.User):
     team_id = await self.config.user(user).team_id()
     backoff = await self.config.user(user).backoff_factor()
-
-    if team_id == -1:
-      await self.config.user(user).backoff_factor.set(
-          min(backoff_factor * 1.2, 10))
-    else:
-      await self.config.user(user).backoff_factor.set(
-          min(backoff_factor * 1.2, 40))
+    new_backoff = min(backoff * 1.2, 10 if team_id == -1 else 40)
+    await self.config.user(user).backoff_factor.set(new_backoff)
+    return backoff, new_backoff
 
   async def _token(self, user: discord.User = None, user_id: int = None):
     """Get a secret token for the user."""
@@ -1125,12 +1121,13 @@ class TeamTracker(commands.Cog):
       team_data = self.teams[team_id]
 
     if original_team_id != team_id:
+      log.info(f'Changing team ID for {display(user)}')
       old_team = self.teams.get(await self.config.user(user).team_id(), None)
       if old_team:
         await self._remove_user_from_team(user, old_team)
       await self._add_user_to_team(user, team_data)
     else:
-      await self._increment_user_backoff(user)
+      old_backoff, new_backoff = await self._increment_user_backoff(user)
       await self.config.user(user).last_updated.set(time.time())
 
   async def _forget_user(self, user: discord.User = None, user_id: int = None):
@@ -1185,7 +1182,6 @@ class TeamTracker(commands.Cog):
       del self.teams[params['team_id']]
       return
     data = response.json()
-    log.info(f'Got data for team {params["team_id"]}: {data}')
     if not data['success']:
       await self.admin_msg(
           f'Attempt to refresh team data for {params["team_id"]} failed;'
@@ -1428,20 +1424,10 @@ class TeamTracker(commands.Cog):
 
   ## DEBUG, delete before final deploy
 
-  @commands.command(name='testjoin')
-  async def simulate_join(self, ctx: commands.Context,
-                          member: discord.Member = None):
-    if member is not None:
-      await self.member_join(member)
-    else:
-      await self.member_join(ctx.author)
-
-  @commands.command(name='tt')
-  async def my_debug(self, ctx: commands.Context):
-    users = await self.config.all_users()
-    for user_id in users:
-      await self.config.user_from_id(user_id).last_updated.set(0)
-    await ctx.send(await self.config.user(ctx.author).last_updated())
+  # @commands.command(name='tt')
+  # async def my_debug(self, ctx: commands.Context):
+  #   user_config = await self.config.user(ctx.author).get_raw()
+  #   await ctx.send(str(user_config))
 
 
 class MissingCogSettingException(Exception):
