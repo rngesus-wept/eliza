@@ -1134,7 +1134,7 @@ class TeamTracker(commands.Cog):
       await self.config.user(user).last_updated.set(time.time())
 
   async def _forget_user(self, user: discord.User = None, user_id: int = None):
-    if user = None:
+    if user is None:
       user = self.bot.get_user(user_id)
 
     url = await self._removal_url()
