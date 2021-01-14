@@ -997,6 +997,16 @@ class TeamTracker(commands.Cog):
       raise MissingCogSettingException('server_url is unset')
     return os.path.join(url, 'lookup_discord')
 
+  async def _removal_url(self):
+    url = await self.config.server_url()
+    if not url:
+      prefix = await self._prefix()
+      await self.admin_msg(
+          'Team server URL is not set. Use '
+          f'`{prefix}team admin server_url <url>` to set it.')
+      raise MissingCogSettingException('server_url is unset')
+    return os.path.join(url, 'remove_discord')
+
   async def _load_guild(self,
                         guild: discord.Guild = None,
                         guild_id: int = None):
