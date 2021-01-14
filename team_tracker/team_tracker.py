@@ -443,7 +443,7 @@ class TeamTracker(commands.Cog):
     else:
       users = (ctx.author,)
     if len(users) == 1:
-      msg = f'Updating team affiliation for {display(user[0])}'
+      msg = f'Updating team affiliation for {display(users[0])}'
     else:
       msg = f'Updating team affiliation for {len(users)} users'
     message = await ctx.send(msg)
