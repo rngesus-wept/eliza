@@ -1170,8 +1170,7 @@ class TeamTracker(commands.Cog):
       # User ID is completely unknown to hunt DB. Don't update last_updated so
       # that this user might get picked on the next go
       log.warning(f'Attempt to remove user data for {display(user)}'
-                  f' failed at URL {response.url}')
-      return
+                  f' failed at URL {response.url}; continuing anyway')
 
     team = self.teams.get(await self.config.user(user).team_id(), None)
     if team is not None:
