@@ -10,7 +10,7 @@ import pathlib
 import random
 import requests
 import time
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import discord
 from discord.ext import tasks
@@ -777,7 +777,7 @@ class TeamTracker(commands.Cog):
   @commands.guild_only()
   @checks.mod_or_permissions(manage_channels=True)
   async def channel_add(
-      self, ctx: commands.Context, channel: discord.abc.GuildChannel, *team_ids: int):
+      self, ctx: commands.Context, channel: Union[discord.TextChannel, discord.VoiceChannel], *team_ids: int):
     """Add visibility to target channel for certain teams.
 
     Note that voice channels must be identified by ID number. This can be
