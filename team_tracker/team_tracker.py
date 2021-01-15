@@ -629,7 +629,8 @@ class TeamTracker(commands.Cog):
                              return_exceptions=True)
         p_added += min(len(qs), count - len(ps))
       team_count += 1
-    await ctx.send(f'Selected {user_count} participant{nl.s(user_count)}'
+    report = []
+    await ctx.send(f'Selected +{p_added} and -{p_removed} participants'
                    f' across {team_count} team{nl.s(team_count)}.')
 
   @_admin.command(name='enable')
