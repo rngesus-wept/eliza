@@ -417,7 +417,7 @@ class TeamTracker(commands.Cog):
     Any user may call this command on themself (with no argument). Only admins
     may call this command on others."""
     if users:
-      if not mod.is_mod_or_superior(self.bot, ctx.author):
+      if not (await mod.is_mod_or_superior(self.bot, ctx.author)):
         await ctx.add_reaction(u'🙅')
         return
     else:
@@ -482,7 +482,7 @@ class TeamTracker(commands.Cog):
     Any user may call this command on themself (with no argument). Only admins
     may call this command on others."""
     if user is not None:
-      if not mod.is_mod_or_superior(self.bot, ctx.author):
+      if not (await mod.is_mod_or_superior(self.bot, ctx.author)):
         await ctx.add_reaction(u'🙅')
         return
     else:
