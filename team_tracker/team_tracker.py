@@ -227,7 +227,7 @@ class TeamData(object):
     return [member for member in members if member is not None]
 
   def table_line(self, guild: discord.Guild, count: int=1):
-    data = [f'{self.team_id:3d}',
+    data = [f'{self.team_id:4d}',
             f'{self.username:24}']
     users_here = self.users_here(guild)
     members = [f'@{user.name}#{user.discriminator}'
