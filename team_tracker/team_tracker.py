@@ -1216,6 +1216,8 @@ class TeamTracker(commands.Cog):
       self.teams[team_id] = team_data
       team = team_data
 
+    team.users = [user for user in team.users if user is not None]
+
     original_users = set(user.id for user in team.users)
     updated_users = set()
     for user_hash in data['user_ids']:
