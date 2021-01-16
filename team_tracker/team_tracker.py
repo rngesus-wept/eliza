@@ -1047,7 +1047,7 @@ class TeamTracker(commands.Cog):
                           guild: discord.Guild = None,
                           guild_id: int = None):
     if guild is None:
-      guild = self.bot.get_guild(guild_id)
+      guild = await self.bot.fetch_guild(guild_id)
     if guild.id in self.guilds:
       return
 
@@ -1060,7 +1060,7 @@ class TeamTracker(commands.Cog):
                            guild: discord.Guild = None,
                            guild_id: int = None):
     if guild is None:
-      guild = self.bot.get_guild(guild_id)
+      guild = await self.bot.fetch_guild(guild_id)
     if guild.id not in self.guilds:
       return
 
@@ -1072,7 +1072,7 @@ class TeamTracker(commands.Cog):
                                 guild: discord.Guild = None,
                                 guild_id: int = None):
     if guild is None:
-      guild = self.bot.get_guild(guild_id)
+      guild = await self.bot.fetch_guild(guild_id)
 
     admin_channel_id = await self.config.guild(guild).admin_channel()
     if not admin_channel_id:
@@ -1084,7 +1084,7 @@ class TeamTracker(commands.Cog):
                                   guild: discord.Guild = None,
                                   guild_id: int = None):
     if guild is None:
-      guild = self.bot.get_guild(guild_id)
+      guild = await self.bot.fetch_guild(guild_id)
     if guild.id in self.admin_channels:
       del self.admin_channels[guild.id]
 
@@ -1094,11 +1094,11 @@ class TeamTracker(commands.Cog):
                                channel: discord.TextChannel = None,
                                channel_id: int = None):
     if guild is None:
-      guild = self.bot.get_guild(guild_id)
+      guild = await self.bot.fetch_guild(guild_id)
     await self._enable_guild(guild=guild)
 
     if channel is None:
-      channel = self.bot.get_channel(channel_id)
+      channel = await self.bot.fetch_channel(channel_id)
 
     await self.config.guild(guild).admin_channel.set(channel.id)
     self.admin_channels[guild.id] = channel
@@ -1107,7 +1107,7 @@ class TeamTracker(commands.Cog):
                                  guild: discord.Guild = None,
                                  guild_id: int = None):
     if guild is None:
-      guild = self.bot.get_guild(guild_id)
+      guild = await self.bot.fetch_guild(guild_id)
     await self.config.guild(guild).admin_channel.set(0)
     self.admin_channels[guild.id] = None
 
@@ -1120,7 +1120,7 @@ class TeamTracker(commands.Cog):
 
   async def _update_user(self, user: discord.User = None, user_id: int = None):
     if user is None:
-      user = self.bot.get_user(user_id)
+      user = await self.bot.fetch_user(user_id)
     original_team_id = await self.config.user(user).team_id()
     backoff_factor = await self.config.user(user).backoff_factor()
 
@@ -1170,7 +1170,7 @@ class TeamTracker(commands.Cog):
 
   async def _forget_user(self, user: discord.User = None, user_id: int = None):
     if user is None:
-      user = self.bot.get_user(user_id)
+      user = await self.bot.fetch_user(user_id)
 
     url = await self._removal_url()
     params = {
@@ -1244,11 +1244,14 @@ class TeamTracker(commands.Cog):
       updated_users.add(await self._user_id_from_digest(user_hash))
     updated_users.discard(None)
     ids_to_add = list(updated_users - original_users)
-    users_to_add = [self.bot.get_user(user_id) for user_id in ids_to_add]
+    users_to_add = asyncio.gather(
+        *[self.bot.fetch_user(user_id) for user_id in ids_to_add])
     ids_to_remove = list(original_users - updated_users)
-    users_to_remove = [self.bot.get_user(user_id) for user_id in ids_to_remove]
+    users_to_remove = asyncio.gather(
+        *[self.bot.fetch_user(user_id) for user_id in ids_to_remove])
     ids_to_backoff = list(original_users & updated_users)
-    users_to_backoff = [self.bot.get_user(user_id) for user_id in ids_to_backoff]
+    users_to_backoff = asyncio.gather(
+        *[self.bot.fetch_user(user_id) for user_id in ids_to_backoff])
 
     await asyncio.gather(
         *[self._increment_user_backoff(user) for user in users_to_backoff],
