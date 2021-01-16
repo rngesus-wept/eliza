@@ -449,7 +449,8 @@ class TeamTracker(commands.Cog):
 
     tokens = await asyncio.gather(*[self._token(user=user) for user in users])
     base_url = await self._register_url()
-    urls = [os.path.join(base_url, token) for token in tokens]
+    urls = [f'{display(user)}: {os.path.join(base_url, token)}'
+            for user, token in zip(users, tokens)]
     await self.admin_msg('\n'.join(urls))
 
   @_team.command(name='update')
