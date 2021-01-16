@@ -295,9 +295,11 @@ class TeamTracker(commands.Cog):
     if team_id == -1:
       log.info('sending reg message')
       if not await self.registration_prompt(member):
-        await self.admin_msg(f'Discord registration for {member.name}#{member.discriminator}'
-                             ' failed; user may have the bot blocked, or have DMs from non-'
-                             'friends disabled.')
+        await self.admin_msg((
+            'Discord registration for %s#%s failed; user may have the bot blocked,'
+            ' or have DMs from non-friends disabled. URL: %s') % (
+                member.name, member.discriminator,
+                os.path.join(await self._register_url(), await self._token(user=user))))
       await self.config.user(member).backoff_factor.set(1)
     else:
       team_data = self.teams[team_id]
@@ -440,12 +442,6 @@ class TeamTracker(commands.Cog):
   async def team_url(self, ctx: commands.Context, *users: discord.User):
     """Send URLs for the users to admin."""
     await ctx.send(f'Sending {len(users)} registration URLs to admin stderr')
-
-    if len(users) == 1:
-      msg = f'Sending registration prompt to {display(users[0])}'
-    else:
-      msg = f'Sending registration prompt to {len(users)} users'
-    await ctx.send(msg)
 
     tokens = await asyncio.gather(*[self._token(user=user) for user in users])
     base_url = await self._register_url()
@@ -1244,13 +1240,13 @@ class TeamTracker(commands.Cog):
       updated_users.add(await self._user_id_from_digest(user_hash))
     updated_users.discard(None)
     ids_to_add = list(updated_users - original_users)
-    users_to_add = asyncio.gather(
+    users_to_add = await asyncio.gather(
         *[self.bot.fetch_user(user_id) for user_id in ids_to_add])
     ids_to_remove = list(original_users - updated_users)
-    users_to_remove = asyncio.gather(
+    users_to_remove = await asyncio.gather(
         *[self.bot.fetch_user(user_id) for user_id in ids_to_remove])
     ids_to_backoff = list(original_users & updated_users)
-    users_to_backoff = asyncio.gather(
+    users_to_backoff = await asyncio.gather(
         *[self.bot.fetch_user(user_id) for user_id in ids_to_backoff])
 
     await asyncio.gather(
