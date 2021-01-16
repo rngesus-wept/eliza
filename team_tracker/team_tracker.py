@@ -435,6 +435,23 @@ class TeamTracker(commands.Cog):
     #                        ' failed; user may have the bot blocked, or have DMs from non-'
     #                        'friends disabled.')
 
+  @_team.command(name='url')
+  @checks.mod_or_permissions(manage_channels=True)
+  async def team_url(self, ctx: commands.Context, *users: discord.User):
+    """Send URLs for the users to admin."""
+    await ctx.send(f'Sending {len(user)} registration URLs to admin stderr')
+
+    if len(users) == 1:
+      msg = f'Sending registration prompt to {display(users[0])}'
+    else:
+      msg = f'Sending registration prompt to {len(users)} users'
+    await ctx.send(msg)
+
+    tokens = await asyncio.gather(*[self._token(user=user) for user in users])
+    base_url = await self._register_url()
+    urls = [os.path.join(base_url, token) for token in tokens]
+    await self.admin_msg('\n'.join(urls))
+
   @_team.command(name='update')
   async def team_update(self, ctx: commands.Context, *users: discord.User):
     """Force update of some users team affiliation (default: self).
