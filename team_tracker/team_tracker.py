@@ -172,7 +172,7 @@ def paginate_table(lines):
     if current_count > 1500:
       current_page.append("```")
       pages.append('\n'.join(current_page))
-      current_page = "```"
+      current_page = ["```"]
       current_count = len(current_page[0]) + 1
   current_page.append("```")
   pages.append('\n'.join(current_page))
