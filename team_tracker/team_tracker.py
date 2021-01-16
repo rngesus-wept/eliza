@@ -1032,7 +1032,7 @@ class TeamTracker(commands.Cog):
                         guild: discord.Guild = None,
                         guild_id: int = None):
     if guild is None:
-      guild = self.bot.get_guild(guild_id)
+      guild = await self.bot.fetch_guild(guild_id)
       if guild is None:
         log.warning(f'Invalid guild ID {guild_id}; removing from config.')
         await self.config.guild_from_id(guild_id).clear_raw()
