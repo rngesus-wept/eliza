@@ -299,7 +299,7 @@ class TeamTracker(commands.Cog):
             'Discord registration for %s#%s failed; user may have the bot blocked,'
             ' or have DMs from non-friends disabled. URL: %s') % (
                 member.name, member.discriminator,
-                os.path.join(await self._register_url(), await self._token(user=user))))
+                os.path.join(await self._register_url(), await self._token(user=member))))
       await self.config.user(member).backoff_factor.set(1)
     else:
       team_data = self.teams[team_id]
