@@ -940,6 +940,8 @@ class TeamTracker(commands.Cog):
   async def _modulus(self, user: discord.User = None, user_id: int = None):
     if not user:
       user = self.bot.get_user(user_id)
+      if user is None:
+        return
     modulus = await self.config.user(user).refresh_modulus()
     if modulus == -1:
       modulus = random.randint(0, 6)
