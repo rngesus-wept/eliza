@@ -439,7 +439,7 @@ class TeamTracker(commands.Cog):
   @checks.mod_or_permissions(manage_channels=True)
   async def team_url(self, ctx: commands.Context, *users: discord.User):
     """Send URLs for the users to admin."""
-    await ctx.send(f'Sending {len(user)} registration URLs to admin stderr')
+    await ctx.send(f'Sending {len(users)} registration URLs to admin stderr')
 
     if len(users) == 1:
       msg = f'Sending registration prompt to {display(users[0])}'
