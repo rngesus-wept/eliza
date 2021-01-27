@@ -169,7 +169,7 @@ class Lfg(commands.Cog):
     return queues
 
   async def ping(self, person, *args, **kwargs):
-    if self.config.member(person).alert():
+    if await self.config.member(person).alert():
       return await person.send(*args, **kwargs)
 
   async def clear_role(self, queue):
