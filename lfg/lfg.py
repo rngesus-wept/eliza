@@ -131,7 +131,7 @@ class Lfg(commands.Cog):
 
   async def initialize(self):
     for guild_id in await self.config.all_guilds():
-      guild = self.bot.get_guild(guild_id)
+      guild = await self.bot.fetch_guild(guild_id)
       await self.load_guild_queues(guild)
       try:
         self.bot.loop.create_task(self.monitor_guild(guild))
@@ -203,7 +203,8 @@ class Lfg(commands.Cog):
   async def monitor_guild(self, guild: discord.Guild):
     channel_id = await self.config.guild(guild).lfg_channel()
     if channel_id is None:
-      raise ValueError("Cannot monitor a guild that doesn't have a LFG output channel set.")
+      raise ValueError(
+        f'Cannot monitor [{guild.name}]; it doesn\'t have a LFG output channel set.')
     self.monitoring[guild.id] = True
     while self.monitoring[guild.id]:
       for queue in self.guild_queues[guild.id].values():
