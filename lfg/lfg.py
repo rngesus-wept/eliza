@@ -136,7 +136,7 @@ class Lfg(commands.Cog):
       return_exceptions=True)
     successes = results.count(True)
     log.info(f'Monitoring LFG queues in {successes} guilds'
-             f' ({len(results) - successes} failures)')b
+             f' ({len(results) - successes} failures)')
 
   async def initialize_guild(self, guild_id: int):
     for retry in range(3):  # retry loop
