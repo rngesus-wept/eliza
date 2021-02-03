@@ -130,14 +130,34 @@ class Lfg(commands.Cog):
     self.watch_interval = 60  # seconds
 
   async def initialize(self):
-    for guild_id in await self.config.all_guilds():
-      guild = await self.bot.fetch_guild(guild_id)
-      await self.load_guild_queues(guild)
+    guild_ids = list(await self.config.all_guilds())
+    results = await asyncio.gather(
+      *[self.initialize_guild(guild_id) for guild_id in guild_ids],
+      return_exceptions=True)
+    successes = results.count(True)
+    log.info(f'Monitoring LFG queues in {successes} guilds'
+             f' ({len(results) - successes} failures)')b
+
+  async def initialize_guild(self, guild_id: int):
+    for retry in range(3):  # retry loop
       try:
-        self.bot.loop.create_task(self.monitor_guild(guild))
-      except ValueError:
-        log.error('Failed to automatically start monitoring for %s'
-                  ' due to lack of an LFG channel.' % guild.name)
+        guild = await self.bot.fetch_guild(guild_id)
+        break
+      except AttributeError:
+        # expecting 'NoneType' object has no attribute 'request'
+        if retry == 2:
+          log.error(f'Failed to retrieve Guild object for ID {guild_id} thrice')
+          raise
+        else:
+          await asyncio.sleep(3)
+    await self.load_guild_queues(guild)
+    try:
+      self.bot.loop.create_task(self.monitor_guild(guild))
+      return True
+    except ValueError:
+      log.error('Failed to automatically start monitoring for %s'
+                ' due to lack of an LFG channel.' % guild.name)
+      raise
 
   def __unload(self):
     for guild_id in self.monitoring:
