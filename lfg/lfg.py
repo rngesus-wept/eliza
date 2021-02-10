@@ -28,6 +28,9 @@ log = logging.getLogger('red.eliza.lfg')
 ## readability
 
 
+INIT_RETRY_COOLDOWN = 10  # seconds
+
+
 class NoSuchQueueError(Exception):
   pass
 
@@ -197,7 +200,7 @@ class Lfg(commands.Cog):
   async def cog_before_invoke(self, ctx):
     async with ctx.typing():
       await self._ready.wait()
-    if self._ready_raised and time.time() - self._ready_raised > 10:
+    if self._ready_raised and time.time() - self._ready_raised > INIT_RETRY_COOLDOWN:
       # Immediately update timestamp to prevent multiple calls during
       # the re-attempt
       self._ready_raised = time.time()
@@ -207,7 +210,7 @@ class Lfg(commands.Cog):
       else:
         log.info('Initialization is still incomplete.')
         self._ready_raised = time.time()
-    if self._ready_raised and time.time() - self._ready_raised < 10:
+    if self._ready_raised and time.time() - self._ready_raised < INIT_RETRY_COOLDOWN:
       # Catches both recent failures and failures on cooldown
       await ctx.send(
           "Something's not quite right. Please wait %d seconds and try again." % (
