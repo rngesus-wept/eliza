@@ -167,14 +167,14 @@ class Lfg(commands.Cog):
 
   async def initialize_guild(self, guild_id: int):
     if self.guild_queues.get(guild_id, None):
-      log.info(f'Skipping re-initialization for guild {guild_id}')
+      log.info(f'Skipping re-initialization for guild ID {guild_id}.')
       return True
     try:
       guild = await self.bot.fetch_guild(guild_id)
       break
     except AttributeError:
       # expecting 'NoneType' object has no attribute 'request'
-      log.error(f'Failed to retrieve Guild object for ID {guild_id} thrice')
+      log.error(f'Failed to retrieve Guild object for ID {guild_id}.')
       raise
     await self.load_guild_queues(guild)
     try:
