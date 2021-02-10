@@ -171,7 +171,6 @@ class Lfg(commands.Cog):
       return True
     try:
       guild = await self.bot.fetch_guild(guild_id)
-      break
     except AttributeError:
       # expecting 'NoneType' object has no attribute 'request'
       log.error(f'Failed to retrieve Guild object for ID {guild_id}.')
