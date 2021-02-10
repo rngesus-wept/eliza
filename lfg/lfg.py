@@ -129,7 +129,30 @@ class Lfg(commands.Cog):
     self.monitoring = {}
     self.watch_interval = 60  # seconds
 
+    # Attributes for delaying other initialization until after cog load
+    self._ready = asyncio.Event()
+    self._init_task = None
+
+    # False if everything is okay
+    # Otherwise, the time.time() at which initalization last failed
+    self._ready_raised = False
+
+
+  def create_init_task(self):
+    def _done_callback(task):
+      exc = task.exception()
+      if exc is not None:
+        log.error(
+          'An unexpected error occurred during Lfg initialization.',
+          exc_info=exc)
+        self._ready_raised = time.time()
+      self._ready.set()
+
+    self._init_task = asyncio.create_task(self.initialize())
+    self._init_task.add_done_callback(_done_callback)
+
   async def initialize(self):
+    await self.bot.wait_until_ready()
     guild_ids = list(await self.config.all_guilds())
     results = await asyncio.gather(
       *[self.initialize_guild(guild_id) for guild_id in guild_ids],
@@ -137,8 +160,12 @@ class Lfg(commands.Cog):
     successes = results.count(True)
     log.info(f'Monitoring LFG queues in {successes} guilds'
              f' ({len(results) - successes} failures)')
+    return all(results)
 
   async def initialize_guild(self, guild_id: int):
+    if self.guild_queues.get(guild_id, None):
+      log.info(f'Skipping re-initialization for guild {guild_id}')
+      return True
     for retry in range(3):  # retry loop
       try:
         guild = await self.bot.fetch_guild(guild_id)
@@ -160,10 +187,32 @@ class Lfg(commands.Cog):
       raise
 
   def __unload(self):
+    if self._init_task is not None:
+      self._init_task.cancel()
     for guild_id in self.monitoring:
       self.monitoring[guild_id] = False
       self.bot.loop.create_task(
           self.clear_all_roles(self.bot.get_guild(guild_id)))
+
+  async def cog_before_invoke(self, ctx):
+    async with ctx.typing():
+      await self._ready.wait()
+    if self._ready_raised and time.time() - self._ready_raised > 10:
+      # Immediately update timestamp to prevent multiple calls during
+      # the re-attempt
+      self._ready_raised = time.time()
+      init_success = await self.initialize()
+      if init_success:
+        self._ready_raised = False
+      else:
+        log.info('Initialization is still incomplete.')
+        self._ready_raised = time.time()
+    if self._ready_raised and time.time() - self._ready_raised < 10:
+      # Catches both recent failures and failures on cooldown
+      await ctx.send(
+          "Something's not quite right. Please wait %d seconds and try again." % (
+              int(time.time() - self._ready_raised) + 3,))
+      raise commands.CheckFailure()
 
   ####### Internal accessors
 
