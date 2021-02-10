@@ -169,17 +169,13 @@ class Lfg(commands.Cog):
     if self.guild_queues.get(guild_id, None):
       log.info(f'Skipping re-initialization for guild {guild_id}')
       return True
-    for retry in range(3):  # retry loop
-      try:
-        guild = await self.bot.fetch_guild(guild_id)
-        break
-      except AttributeError:
-        # expecting 'NoneType' object has no attribute 'request'
-        if retry == 2:
-          log.error(f'Failed to retrieve Guild object for ID {guild_id} thrice')
-          raise
-        else:
-          await asyncio.sleep(3)
+    try:
+      guild = await self.bot.fetch_guild(guild_id)
+      break
+    except AttributeError:
+      # expecting 'NoneType' object has no attribute 'request'
+      log.error(f'Failed to retrieve Guild object for ID {guild_id} thrice')
+      raise
     await self.load_guild_queues(guild)
     try:
       self.bot.loop.create_task(self.monitor_guild(guild))
