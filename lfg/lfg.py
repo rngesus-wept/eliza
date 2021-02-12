@@ -283,7 +283,7 @@ class Lfg(commands.Cog):
             await self.ping(
                 member, "You've dropped out of the queue for %s due to timeout." % queue.dname)
             channel = await self.bot.fetch_channel(channel_id)
-            channel.send(
+            await channel.send(
               "%s has stopped waiting in the `%s` queue due to timeout." % (
                   member.mention, queue.name))
         await asyncio.sleep(self.watch_interval)
