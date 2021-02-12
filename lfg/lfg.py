@@ -273,19 +273,21 @@ class Lfg(commands.Cog):
       raise ValueError(
         f'Cannot monitor [{guild.name}]; it doesn\'t have a LFG output channel set.')
     self.monitoring[guild.id] = True
-    while self.monitoring[guild.id]:
-      for queue in self.guild_queues[guild.id].values():
-        ## TODO :: Refactor duplication of say_to_guild logic here; it's being
-        ## used this way for now because there's no Context object around.
-        while queue.Overdue():
-          member = await self.pop_from_queue(queue)
-          await self.ping(
-              member, "You've dropped out of the queue for %s due to timeout." % queue.dname)
-          await guild.fetch_channel(channel_id).send(
-              "%s has stopped waiting in the `%s` queue due to timeout." % (
-                  member.mention, queue.name))
-      await asyncio.sleep(self.watch_interval)
-    log.info(f'Queue monitoring in {guild.name} has stopped.')
+    try:
+      while self.monitoring[guild.id]:
+        for queue in self.guild_queues[guild.id].values():
+          ## TODO :: Refactor duplication of say_to_guild logic here; it's being
+          ## used this way for now because there's no Context object around.
+          while queue.Overdue():
+            member = await self.pop_from_queue(queue)
+            await self.ping(
+                member, "You've dropped out of the queue for %s due to timeout." % queue.dname)
+            await self.bot.fetch_channel(channel_id).send(
+                "%s has stopped waiting in the `%s` queue due to timeout." % (
+                    member.mention, queue.name))
+        await asyncio.sleep(self.watch_interval)
+    finally:
+      log.info(f'Queue monitoring in {guild.name} has stopped.')
 
   ####### Commands
 
