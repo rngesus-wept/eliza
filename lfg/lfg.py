@@ -285,6 +285,7 @@ class Lfg(commands.Cog):
               "%s has stopped waiting in the `%s` queue due to timeout." % (
                   member.mention, queue.name))
       await asyncio.sleep(self.watch_interval)
+    log.info(f'Queue monitoring in {guild.name} has stopped.')
 
   ####### Commands
 
