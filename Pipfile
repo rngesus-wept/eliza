@@ -6,14 +6,17 @@ name = "pypi"
 [packages]
 pytest = "*"
 pylint = "*"
-yarl = "<1.2"
+yarl = "*"
 fuzzywuzzy = "*"
 python-levenshtein = "*"
 numpy = "*"
 scikit-image = "*"
-pillow = "6.2.1"
+pillow = "*"
+matplotlib = "*"
+red-discordbot = "*"
+requests = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
