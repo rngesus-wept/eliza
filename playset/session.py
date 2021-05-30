@@ -75,9 +75,10 @@ class SetSession:
             self.ctx.bot.wait_for("message", check=self.check_set),
             self._wrong_handler())
         guess = message[0].content.upper()
+        guess_unique = sorted(set(guess))
         cards = []
         for i in range(3):
-            cards.append(self.board[_LETTER_MAP[guess[i]]])
+            cards.append(self.board[_LETTER_MAP[guess_unique[i]]])
         self.scores[message[0].author] += 1
         await self.ctx.send(f"{message[0].author.display_name}: Set! +1 point")
 
