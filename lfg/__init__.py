@@ -4,5 +4,5 @@ from .lfg import GuildQueue, Lfg  # GuildQueue import for debugging access via !
 
 async def setup(bot: Red):
   lfg_module = Lfg(bot)
-  await lfg_module.initialize()
   bot.add_cog(lfg_module)
+  lfg_module.create_init_task()

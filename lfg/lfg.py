@@ -16,7 +16,7 @@ from redbot.core import checks
 from redbot.core.bot import Red
 
 
-log = logging.getLogger('lfg')
+log = logging.getLogger('red.eliza.lfg')
 
 
 ## TODO: Create a default empty-string group for use cases where one LFG queue
@@ -26,6 +26,9 @@ log = logging.getLogger('lfg')
 
 ## TODO: Refactor queue-not-found errors to return early to improve nesting
 ## readability
+
+
+INIT_RETRY_COOLDOWN = 10  # seconds
 
 
 class NoSuchQueueError(Exception):
@@ -129,21 +132,85 @@ class Lfg(commands.Cog):
     self.monitoring = {}
     self.watch_interval = 60  # seconds
 
+    # Attributes for delaying other initialization until after cog load
+    self._ready = asyncio.Event()
+    self._init_task = None
+
+    # False if everything is okay
+    # Otherwise, the time.time() at which initalization last failed
+    self._ready_raised = False
+
+
+  def create_init_task(self):
+    def _done_callback(task):
+      exc = task.exception()
+      if exc is not None:
+        log.error(
+          'An unexpected error occurred during Lfg initialization.',
+          exc_info=exc)
+        self._ready_raised = time.time()
+      self._ready.set()
+
+    self._init_task = asyncio.create_task(self.initialize())
+    self._init_task.add_done_callback(_done_callback)
+
   async def initialize(self):
-    for guild_id in await self.config.all_guilds():
-      guild = self.bot.get_guild(guild_id)
-      await self.load_guild_queues(guild)
-      try:
-        self.bot.loop.create_task(self.monitor_guild(guild))
-      except ValueError:
-        log.error('Failed to automatically start monitoring for %s'
-                  ' due to lack of an LFG channel.' % guild.name)
+    await self.bot.wait_until_ready()
+    guild_ids = list(await self.config.all_guilds())
+    results = await asyncio.gather(
+      *[self.initialize_guild(guild_id) for guild_id in guild_ids],
+      return_exceptions=True)
+    successes = results.count(True)
+    log.info(f'Monitoring LFG queues in {successes} guilds'
+             f' ({len(results) - successes} failures)')
+    return all(results)
+
+  async def initialize_guild(self, guild_id: int):
+    if self.guild_queues.get(guild_id, None):
+      log.info(f'Skipping re-initialization for guild ID {guild_id}.')
+      return True
+    try:
+      guild = await self.bot.fetch_guild(guild_id)
+    except AttributeError:
+      # expecting 'NoneType' object has no attribute 'request'
+      log.error(f'Failed to retrieve Guild object for ID {guild_id}.')
+      raise
+    await self.load_guild_queues(guild)
+    try:
+      self.bot.loop.create_task(self.monitor_guild(guild))
+      return True
+    except ValueError:
+      log.error('Failed to automatically start monitoring for %s'
+                ' due to lack of an LFG channel.' % guild.name)
+      raise
 
   def __unload(self):
+    if self._init_task is not None:
+      self._init_task.cancel()
     for guild_id in self.monitoring:
       self.monitoring[guild_id] = False
       self.bot.loop.create_task(
           self.clear_all_roles(self.bot.get_guild(guild_id)))
+
+  async def cog_before_invoke(self, ctx):
+    async with ctx.typing():
+      await self._ready.wait()
+    if self._ready_raised and time.time() - self._ready_raised > INIT_RETRY_COOLDOWN:
+      # Immediately update timestamp to prevent multiple calls during
+      # the re-attempt
+      self._ready_raised = time.time()
+      init_success = await self.initialize()
+      if init_success:
+        self._ready_raised = False
+      else:
+        log.info('Initialization is still incomplete.')
+        self._ready_raised = time.time()
+    if self._ready_raised and time.time() - self._ready_raised < INIT_RETRY_COOLDOWN:
+      # Catches both recent failures and failures on cooldown
+      await ctx.send(
+          "Something's not quite right. Please wait %d seconds and try again." % (
+              int(time.time() - self._ready_raised) + 3,))
+      raise commands.CheckFailure()
 
   ####### Internal accessors
 
@@ -169,7 +236,7 @@ class Lfg(commands.Cog):
     return queues
 
   async def ping(self, person, *args, **kwargs):
-    if self.config.member(person).alert():
+    if await self.config.member(person).alert():
       return await person.send(*args, **kwargs)
 
   async def clear_role(self, queue):
@@ -203,20 +270,25 @@ class Lfg(commands.Cog):
   async def monitor_guild(self, guild: discord.Guild):
     channel_id = await self.config.guild(guild).lfg_channel()
     if channel_id is None:
-      raise ValueError("Cannot monitor a guild that doesn't have a LFG output channel set.")
+      raise ValueError(
+        f'Cannot monitor [{guild.name}]; it doesn\'t have a LFG output channel set.')
     self.monitoring[guild.id] = True
-    while self.monitoring[guild.id]:
-      for queue in self.guild_queues[guild.id].values():
-        ## TODO :: Refactor duplication of say_to_guild logic here; it's being
-        ## used this way for now because there's no Context object around.
-        while queue.Overdue():
-          member = await self.pop_from_queue(queue)
-          await self.ping(
-              member, "You've dropped out of the queue for %s due to timeout." % queue.dname)
-          await guild.get_channel(channel_id).send(
+    try:
+      while self.monitoring[guild.id]:
+        for queue in self.guild_queues[guild.id].values():
+          ## TODO :: Refactor duplication of say_to_guild logic here; it's being
+          ## used this way for now because there's no Context object around.
+          while queue.Overdue():
+            member = await self.pop_from_queue(queue)
+            await self.ping(
+                member, "You've dropped out of the queue for %s due to timeout." % queue.dname)
+            channel = await self.bot.fetch_channel(channel_id)
+            await channel.send(
               "%s has stopped waiting in the `%s` queue due to timeout." % (
                   member.mention, queue.name))
-      await asyncio.sleep(self.watch_interval)
+        await asyncio.sleep(self.watch_interval)
+    finally:
+      log.info(f'Queue monitoring in {guild.name} has stopped.')
 
   ####### Commands
 
@@ -429,7 +501,7 @@ queue for you at random. You may optionally append a number (e.g. `!play empyrea
 to challange that many random opponents (or up to that many, if not enough people are \
 in queue."""
     if targets and targets[0].lower() in self.guild_queues[ctx.guild.id]:
-      queue = self.guild_queues[ctx.guild.id][targets[0]]
+      queue = self.guild_queues[ctx.guild.id][targets[0].lower()]
       try:
         if len(targets) > 2:
           raise ValueError

@@ -28,7 +28,7 @@ from redbot.core.bot import Red
 
 from . import utils
 
-log = logging.getLogger('secretkeeper')
+log = logging.getLogger('red.eliza.secretkeeper')
 
 
 class SecretKeeper:
