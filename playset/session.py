@@ -134,8 +134,8 @@ class SetSession:
                 [[self.deck.pop(0)], [self.deck.pop(0)],[self.deck.pop(0)]],
                 axis=1)
         numCardsLeft = len(self.deck)
-        if numCardsLeft <= 3:
-            await self.ctx.send(str(numCardsLeft) + " cards left in deck!")
+        if numCardsLeft == 0:
+            await self.ctx.send("No more cards!")
 
     async def end_game(self):
         """End the Set game and display scrores."""
