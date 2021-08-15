@@ -35,8 +35,18 @@ class NoSuchQueueError(Exception):
   pass
 
 
+class RoleCreationError(Exception):
+  pass
+
+
 class GuildQueue:
-  """Timeout-based priority queue."""
+  """Timeout-based priority queue.
+
+  The internal representation holds the actual priority queue of (deadline, id,
+  member), where deadline is a time.time() timestamp indicating when membership
+  in the queue should expire; id is a int unique across entries in this queue
+  for this session; and member is a discord.Member.
+  """
 
   REMOVED = '<removed-member>'
 
@@ -215,17 +225,20 @@ class Lfg(commands.Cog):
   ####### Internal accessors
 
   async def add_to_queue(self, queue, person, minutes):
-    await person.add_roles(queue.role)
+    if queue.role:
+      await person.add_roles(queue.role)
     return queue.AddMember(person, minutes)
 
   async def pop_from_queue(self, queue):
     person = queue.PopMember()
-    await person.remove_roles(queue.role)
+    if queue.role:
+      await person.remove_roles(queue.role)
     return person
 
   async def remove_from_queue(self, queue, person):
     queue.RemoveMember(person)
-    await person.remove_roles(queue.role)
+    if queue.role:
+      await person.remove_roles(queue.role)
 
   async def remove_from_all_queues(self, person, guild):
     queues = []
@@ -240,8 +253,9 @@ class Lfg(commands.Cog):
       return await person.send(*args, **kwargs)
 
   async def clear_role(self, queue):
-    for member in queue.role.members:
-      await member.remove_roles(queue.role)
+    if queue.role:
+      for member in queue.role.members:
+        await member.remove_roles(queue.role)
 
   async def clear_all_roles(self, guild: discord.Guild):
     for queue in self.guild_queues[guild.id].values():
@@ -317,7 +331,18 @@ To actually join or leave queues, see the `lfg` command group."""
     if name.lower() in self.guild_queues[ctx.guild.id]:
       await ctx.send('Sorry, it looks like there\'s already a queue in place for %s.' % name)
     else:
-      new_role = await ctx.guild.create_role(name='LFG %s' % name)
+      # Try to create a new role, with more failure noises
+      try:
+        new_role = await ctx.guild.create_role(name='LFG %s' % name)
+        if not new_role:
+          raise RoleCreationError(
+              f'Unknown error occurred while trying to create role LFG {name}')
+      except (Forbidden, HTTPException, RoleCreationError) as e:
+        log.warn(f'Role creation for {name} failed:')
+        for line in traceback.format_exc():
+          log.warn(line)
+        log.warn('...proceeding with queue creation anyway.')
+
       self.guild_queues[ctx.guild.id][name.lower()] = GuildQueue(
           name=name, role=new_role, default_time=60)
       config_datum = {
@@ -373,7 +398,9 @@ To actually join or leave queues, see the `lfg` command group."""
     if name.lower() not in self.guild_queues[ctx.guild.id]:
       await ctx.send('Sorry, there doesn\'t appear to be a queue by that name.')
     else:
-      await self.guild_queues[ctx.guild.id][name.lower()].role.delete()
+      queue_role = self.guild_queues[ctx.guild.id][name.lower()].role
+      if queue_role:
+        await queue_role.delete()
       await self.config.guild(ctx.guild).set_raw('queues', name.lower(), value=None)
       del self.guild_queues[ctx.guild.id][name.lower()]
       await ctx.send('OK, removed the queue for `%s` and its role.' % name.lower())
