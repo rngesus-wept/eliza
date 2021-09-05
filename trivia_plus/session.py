@@ -331,8 +331,9 @@ class TriviaSession:
             guess = re.sub(r'\s+', ' ', message.content.strip().lower())
             guess = normalize_smartquotes(guess)
             for answer in answers:
-                if answer.search(guess):
-                    return True
+                if the_match := answer.search(guess):
+                    if len(the_match.group(0)) >= .6 * len(guess):
+                        return True
             return False
 
         return _pred
