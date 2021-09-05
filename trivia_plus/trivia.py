@@ -41,6 +41,7 @@ TRIVIA_LIST_SCHEMA = Schema(
             Optional("bot_plays"): bool,
             Optional("reveal_answer"): bool,
             Optional("payout_multiplier"): Or(int, float),
+            Optional("quizbowl_interval"): Or(int, float),
         },
         str: [str, int, bool, float],
     }
@@ -376,13 +377,14 @@ class Trivia(commands.Cog):
                         "trivia categories."
                     ).format(name=category, prefix=ctx.clean_prefix)
                 )
-            except InvalidListError:
+            except InvalidListError as exc:
                 await ctx.send(
                     _(
                         "There was an error parsing the trivia list for the `{name}` category. It "
                         "may be formatted incorrectly."
                     ).format(name=category)
                 )
+                LOG.exception(f"Failed to parse triviai [{category.lower()}]: {exc}")
             else:
                 trivia_dict.update(dict_)
                 authors.insert(0, (trivia_dict.pop("AUTHOR", None), get_trivia_list_size(dict_)))
@@ -411,10 +413,11 @@ class Trivia(commands.Cog):
             await ctx.send(
                 f"Invalid category `{category.lower()}`. See `{ctx.prefix}trivia list` for"
                 " a list of trivia categories.")
-        except InvalidListError:
+        except InvalidListError as exc:
             await ctx.send(
                 f"There was an error parsing the trivia list for `{category.lower()}`."
                 " It may be formatted incorrectly.")
+            LOG.exception(f"Failed to parse triviai [{category.lower()}]: {exc}")
         else:
             title = f"{category.lower()}"
             count = f"({get_trivia_list_size(dict_)} questions"

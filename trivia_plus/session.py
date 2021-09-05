@@ -10,6 +10,8 @@ from redbot.core import bank, errors
 from redbot.core.i18n import Translator
 from redbot.core.utils.chat_formatting import box, bold, humanize_list, humanize_number
 from redbot.core.utils.common_filters import normalize_smartquotes
+from typing import List, Optional
+
 from .log import LOG
 
 __all__ = ["TriviaSession"]
@@ -137,13 +139,14 @@ class TriviaSession:
         timeout = self.settings["timeout"]
         slow_reveal = self.settings["slow_reveal"]
         half_reveal = self.settings["half_reveal"]
+        quizbowl_interval = self.settings.get("quizbowl_interval", 0)
         for question, answers in self._iter_questions():
             async with self.ctx.typing():
                 await asyncio.sleep(3)
             self.count += 1
 
             # Allow for subentries of questions to also specify certain settings
-            delay_factor, reveal_s, reveal_h = 1.0, slow_reveal, half_reveal
+            delay_factor, reveal_s, reveal_h, qb_interval = 1.0, slow_reveal, half_reveal, quizbowl_interval
             for entry in answers:
                 if isinstance(entry, dict):
                     # delay_factor: Multiply the amount of time given for this question by this amount
@@ -152,11 +155,19 @@ class TriviaSession:
                     reveal_s = entry.get('slow_reveal', reveal_s)
                     # half_reveal: Reveal half the letters in this many seconds, capped by slow_reveal
                     reveal_h = entry.get('half_reveal', reveal_h)
+                    # quizbowl_interval: Output the question, split at "##" tokens, across multiple
+                    #     messages, emitting one message every this many seconds. Delay time doesn't
+                    #     start until the final message is output.
+                    qb_interval = entry.get('quizbowl_interval', qb_interval)
             answers = list(filter(lambda x: isinstance(x, str), answers))
+            question_pieces = question.split('##') if qb_interval else [question]
 
-            msg = bold(_("Question number {num}!").format(num=self.count)) + "\n\n" + question
+            msg = '%s\n\n%s' % (
+                bold(_("Question number {num}!").format(num=self.count)),
+                question_pieces[0])
             await self.ctx.send(msg)
             continue_ = await self.wait_for_answer(answers, delay * delay_factor, timeout,
+                                                   remains = question_pieces[1:],
                                                    slow_reveal=reveal_s, half_reveal=reveal_h)
             if continue_ is False:
                 break
@@ -196,8 +207,10 @@ class TriviaSession:
             answers = _parse_answers(answers)
             yield question, answers
 
-    async def wait_for_answer(self, answers, delay: float, timeout: float,
-                              slow_reveal: float = 0.0, half_reveal: float = 0.0):
+    async def wait_for_answer(self, answers: List[str], delay: float, timeout: float,
+                              remains: Optional[List[str]] = None,
+                              slow_reveal: float = 0.0, half_reveal: float = 0.0,
+                              quizbowl_interval: float = 0.0):
         """Wait for a correct answer, and then respond.
 
         Scores are also updated in this method.
@@ -213,11 +226,15 @@ class TriviaSession:
             How long users have to respond (in seconds).
         timeout : float
             How long before the session ends due to no responses (in seconds).
+        remains : List[str]
+            Additional parts of the question prompt
         slow_reveal : float
             Every [this many] seconds, reveal a random letter from the answer. (default = 0.0 for no reveals)
         half_reveal : float
             Over [this many] seconds, half of the letters of the answer will be revealed one
             letter at a time (but never any faster than one every `slow_reveal` seconds).
+        quizbowl_interval: float
+            Emit an additional element of `remains` every [this many] seconds.
 
         Returns
         -------
@@ -225,12 +242,16 @@ class TriviaSession:
             :code:`True` if the session wasn't interrupted.
 
         """
+        if remains:
+            quizbowl_interval = quizbowl_interval or 5.0
         try:
             if half_reveal:
                 letter_count = len(re.findall(r'\w', answers[0]))
                 slow_reveal = max(slow_reveal, 2.0 * half_reveal / letter_count)
             if slow_reveal:
                 reveal_task = self.ctx.bot.loop.create_task(self.reveal_answer(answers[0], slow_reveal))
+            if quizbowl_interval:
+                prompt_task = self.ctx.bot.loop.create_task(self.extra_prompts(remains, quizbowl_interval))
             message = await self.ctx.bot.wait_for(
                 "message", check=self.check_answer(answers), timeout=delay
             )
@@ -254,6 +275,8 @@ class TriviaSession:
         finally:
             if slow_reveal:
                 reveal_task.cancel()
+            if quizbowl_interval:
+                prompt_task.cancel()
         return True
 
     async def reveal_answer(self, answer, interval):
@@ -268,6 +291,15 @@ class TriviaSession:
             next_reveal = positions.pop()
             current_reveal[next_reveal] = full_answer[next_reveal]
             await self.ctx.send(f'`{"".join(current_reveal)}`')
+
+    async def extra_prompts(self, prompts, interval):
+        """Slowly show additional question parts."""
+        for idx, prompt in enumerate(prompts, start=1):
+            await asyncio.sleep(interval)
+            if idx == len(prompts):
+                await self.ctx.send(f'...{prompt.strip()}')
+            else:
+                await self.ctx.send(f'...{prompt.strip()}')
 
     def check_answer(self, answers):
         """Get a predicate to check for correct answers.
