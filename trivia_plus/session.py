@@ -164,7 +164,7 @@ class TriviaSession:
 
             msg = '%s\n\n%s' % (
                 bold(_("Question number {num}!").format(num=self.count)),
-                question_pieces[0])
+                question_pieces[0].strip() + (' ...' if len(question_pieces) > 1 else ''))
             await self.ctx.send(msg)
             continue_ = await self.wait_for_answer(answers, delay * delay_factor, timeout,
                                                    remains = question_pieces[1:],
@@ -298,9 +298,9 @@ class TriviaSession:
         for idx, prompt in enumerate(prompts, start=1):
             await asyncio.sleep(interval)
             if idx == len(prompts):
-                await self.ctx.send(f'...{prompt.strip()}')
+                await self.ctx.send(f'... {prompt.strip()}')
             else:
-                await self.ctx.send(f'...{prompt.strip()}')
+                await self.ctx.send(f'... {prompt.strip()} ...')
 
     def check_answer(self, answers):
         """Get a predicate to check for correct answers.
