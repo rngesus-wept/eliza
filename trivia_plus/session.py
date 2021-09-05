@@ -168,7 +168,8 @@ class TriviaSession:
             await self.ctx.send(msg)
             continue_ = await self.wait_for_answer(answers, delay * delay_factor, timeout,
                                                    remains = question_pieces[1:],
-                                                   slow_reveal=reveal_s, half_reveal=reveal_h)
+                                                   slow_reveal=reveal_s, half_reveal=reveal_h,
+                                                   quizbowl_interval=qb_interval)
             if continue_ is False:
                 break
             if any(score >= max_score for score in self.scores.values()):
