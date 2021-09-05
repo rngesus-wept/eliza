@@ -1,9 +1,11 @@
+# -*- py-indent-offset: 4 -*-
 """Module for Trivia cog."""
 import asyncio
 import math
 import pathlib
 from collections import Counter
-from typing import List, Literal
+from schema import Schema, Optional, Or, SchemaError
+from typing import Any, Dict, List, Literal
 
 import io
 import yaml
@@ -23,9 +25,28 @@ from .converters import finite_float
 from .log import LOG
 from .session import TriviaSession
 
-__all__ = ["Trivia", "UNIQUE_ID", "get_core_lists"]
+__all__ = ("Trivia", "UNIQUE_ID", "InvalidListError", "get_core_lists", "get_list")
 
 UNIQUE_ID = 0xB3C0E453
+TRIVIA_LIST_SCHEMA = Schema(
+    {
+        Optional("AUTHOR"): str,
+        Optional("DESC"): str,
+        Optional("CONFIG"): {
+            Optional("max_score"): int,
+            Optional("timeout"): Or(int, float),
+            Optional("delay"): Or(int, float),
+            Optional("slow_reveal"): Or(int, float),
+            Optional("half_reveal"): Or(int, float),
+            Optional("bot_plays"): bool,
+            Optional("reveal_answer"): bool,
+            Optional("payout_multiplier"): Or(int, float),
+        },
+        str: [str, int, bool, float],
+    }
+)
+METADATA_KEYS = ['AUTHOR', 'CONFIG', 'DESC']
+
 
 _ = Translator("Trivia", __file__)
 
@@ -36,7 +57,6 @@ class InvalidListError(Exception):
     pass
 
 
-METADATA_KEYS = ['AUTHOR', 'CONFIG', 'DESC']
 
 
 @cog_i18n(_)
@@ -58,6 +78,7 @@ class Trivia(commands.Cog):
             reveal_answer=True,
             payout_multiplier=0.0,
             allow_override=True,
+            use_spoilers=False,
         )
 
         self.config.register_member(wins=0, games=0, total_score=0)
@@ -99,7 +120,8 @@ class Trivia(commands.Cog):
                 "Slow reveal interval: {slow_reveal}\n"
                 "Half reveal interval: {half_reveal}\n"
                 "Payout multiplier: {payout_multiplier}\n"
-                "Allow lists to override settings: {allow_override}"
+                "Allow lists to override settings: {allow_override}\n"
+                "Use spoilers in answers: {use_spoilers}"
             ).format(**settings_dict),
             lang="py",
         )
@@ -173,6 +195,19 @@ class Trivia(commands.Cog):
                     "server."
                 )
             )
+
+    @triviaset.command(name="usespoilers", usage="<true_or_false>")
+    async def trivaset_use_spoilers(self, ctx: commands.Context, enabled: bool):
+        """Set if bot will display the answers in spoilers.
+
+        If enabled, the bot will use spoilers to hide answers.
+        """
+        settings = self.config.guild(ctx.guild)
+        await settings.use_spoilers.set(enabled)
+        if enabled:
+            await ctx.send(_("Done. I'll put the answers in spoilers next time."))
+        else:
+            await ctx.send(_("Alright, I won't use spoilers to hide answers anymore."))
 
     @triviaset.command(name="botplays", usage="<true_or_false>")
     async def triviaset_bot_plays(self, ctx: commands.Context, enabled: bool):
@@ -292,6 +327,13 @@ class Trivia(commands.Cog):
                 _("There was an error parsing the trivia list. See logs for more info.")
             )
             LOG.exception("Custom Trivia file %s failed to upload", parsedfile.filename)
+        except SchemaError as e:
+            await ctx.send(
+                _(
+                    "The custom trivia list was not saved."
+                    " The file does not follow the proper data format.\n{schema_error}"
+                ).format(schema_error=box(e))
+            )
 
     @commands.is_owner()
     @triviaset_custom.command(name="delete", aliases=["remove"])
@@ -304,7 +346,7 @@ class Trivia(commands.Cog):
         else:
             await ctx.send(_("Trivia file was not found."))
 
-    @commands.group(invoke_without_command=True)
+    @commands.group(invoke_without_command=True, require_var_positional=True)
     @commands.guild_only()
     async def trivia(self, ctx: commands.Context, *categories: str):
         """Start trivia session on the specified category.
@@ -659,14 +701,7 @@ class Trivia(commands.Cog):
             path = next(p for p in self._all_lists() if p.stem == category)
         except StopIteration:
             raise FileNotFoundError("Could not find the `{}` category.".format(category))
-
-        with path.open(encoding="utf-8") as file:
-            try:
-                dict_ = yaml.safe_load(file)
-            except yaml.error.YAMLError as exc:
-                raise InvalidListError("YAML parsing failed.") from exc
-            else:
-                return dict_
+        return get_list(path)
 
     async def _save_trivia_list(
         self, ctx: commands.Context, attachment: discord.Attachment
@@ -728,9 +763,10 @@ class Trivia(commands.Cog):
                 return
 
         buffer = io.BytesIO(await attachment.read())
-        yaml.safe_load(buffer)
-        buffer.seek(0)
+        trivia_dict = yaml.safe_load(buffer)
+        TRIVIA_LIST_SCHEMA.validate(trivia_dict)
 
+        buffer.seek(0)
         with file.open("wb") as fp:
             fp.write(buffer.read())
         await ctx.send(_("Saved Trivia list as {filename}.").format(filename=filename))
@@ -754,6 +790,30 @@ def get_core_lists() -> List[pathlib.Path]:
     """Return a list of paths for all trivia lists packaged with the bot."""
     core_lists_path = pathlib.Path(__file__).parent.resolve() / "data/lists"
     return list(core_lists_path.glob("*.yaml"))
+
+
+def get_list(path: pathlib.Path) -> Dict[str, Any]:
+    """
+    Returns a trivia list dictionary from the given path.
+
+    Raises
+    ------
+    InvalidListError
+        Parsing of list's YAML file failed.
+    SchemaError
+        The list does not adhere to the schema.
+    """
+    with path.open(encoding="utf-8") as file:
+        try:
+            trivia_dict = yaml.safe_load(file)
+        except yaml.error.YAMLError as exc:
+            raise InvalidListError("YAML parsing failed.") from exc
+
+    try:
+        TRIVIA_LIST_SCHEMA.validate(trivia_dict)
+    except SchemaError as exc:
+        raise InvalidListError("The list does not adhere to the schema.") from exc
+    return trivia_dict
 
 
 def get_trivia_list_size(trivia_dict: dict) -> int:
