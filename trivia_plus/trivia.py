@@ -303,7 +303,11 @@ class Trivia(commands.Cog):
     @commands.is_owner()
     @triviaset_custom.command(name="upload", aliases=["add"])
     async def trivia_upload(self, ctx: commands.Context):
-        """Upload a trivia file."""
+        """Upload a trivia file.
+
+        The file should be a YAML whose name reflects your desired label, e.g.
+        `foods.yaml` for `[p]trivia food`. More hints on how to write the YAML
+        are here: https://pastebin.com/DHeEjvUg"""
         if not ctx.message.attachments:
             await ctx.send(_("Supply a file with next message or type anything to cancel."))
             try:
