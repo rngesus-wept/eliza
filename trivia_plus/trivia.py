@@ -12,7 +12,7 @@ import yaml
 import discord
 
 from redbot.core import Config, commands, checks
-from redbot.cogs.bank import is_owner_if_bank_global
+from redbot.core.bank import is_owner_if_bank_global
 from redbot.core.data_manager import cog_data_path
 from redbot.core.i18n import Translator, cog_i18n
 from redbot.core.utils import AsyncIter
@@ -31,7 +31,7 @@ UNIQUE_ID = 0xB3C0E453
 TRIVIA_LIST_SCHEMA = Schema(
     {
         Optional("AUTHOR"): str,
-        Optional("DESC"): str,
+        Optional("DESCRIPTION"): str,
         Optional("CONFIG"): {
             Optional("max_score"): int,
             Optional("timeout"): Or(int, float),

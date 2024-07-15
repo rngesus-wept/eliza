@@ -4,7 +4,6 @@ from .session import *
 from .log import *
 
 
-def setup(bot):
+async def setup(bot):
     """Load Trivia."""
-    cog = Trivia()
-    bot.add_cog(cog)
+    await bot.add_cog(Trivia())

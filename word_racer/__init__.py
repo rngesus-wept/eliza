@@ -1,4 +1,4 @@
 from .wordracer import WordRacer
 
-def setup(bot):
-    bot.add_cog(WordRacer())
+async def setup(bot):
+    await bot.add_cog(WordRacer())
